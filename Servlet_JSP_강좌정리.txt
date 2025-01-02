@@ -1,5 +1,5 @@
 
-Sevlet/JSP 강좌정리
+Servlet/JSP 강좌정리
 
 1.  자바 개발 플랫폼 3가지
  
@@ -16,7 +16,46 @@ Sevlet/JSP 강좌정리
 	  예>    오라클(Servlet/JSP spec 제공: 인터페이스)
 	              |
 	     Tomcat서버       Resin서버   ... 
-            (Servlet/JSP spec를 구현함. *.jar 형태로 제공)
-      - 
+            (Servlet/JSP spec를 구현함. .jar 형태로 제공)
+      
+      - jsp-api.jar 와 servlet-api.jar 가 제공됨.
+      - 개발프로그램 형태: 웹 어플리케이션 개발이 가능.
 
   3) Java ME ( Java Micro Edition )
+      - 개발프로그램 형태:  휴대용 장치에서 실행되는 개발이 가능.
+     
+
+2. 환경설정
+
+  1) Java SE 환경 구축: JDK 17 설치
+
+     - JDK 설치후 2개의 환경변수 설정
+      JAVA_HOME=C:\Program Files\Java\jdk-17  <=== JDK의 홈디렉터리 경로 설정
+      PATH=%JAVA_HOME%\bin;기본PATH                                   <=== 윈도우의 프로그램에 명령어 경로 설정
+           C:\Program Files\Java\jdk-17\bin;기본PATH   
+  
+  2) Eclipse 설치
+     - http://www.eclipse.org
+     - JDK 17 지원여부 확인 필수.
+     - eclipse-jee-2024-06-R-win32-x86_64.zip
+       설치는 압축풀면 됨.
+  
+  3) Tomcat 서버 ( Tomcat 컨테이너 )
+    
+     - http://jakarta.apache.org 
+     - JDK 17 버전을 지원하는 Tomcat 10 다운로드.
+     - jsp-api.jar 와 servlet-api.jar 가 제공됨.
+     - apache-tomcat-10.1.28.zip
+       설치는 압축풀면 됨.
+
+    * tomcat9 vs tomcat10
+ 
+       tomcat9: JDK11까지만 지원됨.
+                패키지명은 javax.servlet 로 시작됨.
+
+       tomcat10: JDK17부터 지원됨.
+                패키지명은 jakarta.servlet 로 시작됨.
+                
+     
+
+      
