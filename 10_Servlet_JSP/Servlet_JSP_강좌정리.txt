@@ -208,7 +208,7 @@ Servlet/JSP 강좌정리
 				          src/main/java 에 저장
 
 	      <---------------------
-	                 응답
+	                 응답 (html)
 
  8. 3가지 컴포넌트 웹 브라우저에서 요청하는 URL
 
@@ -283,4 +283,21 @@ Servlet/JSP 강좌정리
 				 
  d. html 랜더링					 
 
-				        
+			
+ 9. 서블릿 ( servlet )
+ 
+   1. 서블릿 특징
+     - *.java 로 작성됨.
+     - 저장위치는 이클립스의 src/main/java 에 저장되고
+       반드시 패키지를 사용해야 된다.
+     - main 메서드가 없음. 즉 시작점이 없다.
+       이유는 사용자가 요청하는 컴포넌트가 시작점 역할을 한다.
+
+     - 직접 new 하지 않음. Tomcat 컨테이너가 필요한 시점에 생성(new) ~  소멸까지 해줌.
+      즉 Tomcat 컨테이너가 서블릿/JSP 동적 컴포넌트를 관리해 줌.
+
+     - 실행결과는 html로 나옴.
+     - Servlet 6.0 버전은 Tomcat 10 이상 필요하고 패키지명은 javax가 아닌 jakarta 패키지로 시작된다.
+     - Tomcat10 의 servlet-api.jar 에 포함된 패키지를 사용해서 서블릿을 구현할 수 있다.
+     - 참조할 API 문서는 https://tomcat.apache.org/tomcat-10.1-doc/servletapi/index.html 이다.
+
