@@ -96,7 +96,7 @@ Servlet/JSP 강좌정리
      1) Context Root
        - 기본값은 프로젝트명으로 되어있음. ( 변경 가능 )
        - 웹브라우저에서 요청시 사용됨.
-         반드시 /로 시작해야 됨.
+
 
            http://localhost:8090/컨텍스트명
 
@@ -105,7 +105,7 @@ Servlet/JSP 강좌정리
 
          컨텍스트명(논리적인경로       webapps안의 실제폴더(물리적인 경로)
         --------               -----------------------
-          /docs                   docs        <== http://localhost:8090/docs/index.html
-	 /examples		 examples     <== http://localhost:8090/examples/index.html
+          docs                   docs        <== http://localhost:8090/docs/index.html
+	 examples		 examples     <== http://localhost:8090/examples/index.html
 	    /			 ROOT        <== http://localhost:8090/index.jsp
 	                                         http://localhost:8090/ 
