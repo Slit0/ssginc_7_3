@@ -192,3 +192,66 @@ Servlet/JSP 강좌정리
 		       css
 		       js
 		       image
+
+
+
+ 7. 서버에 작성 가능한 3가지 컴포넌트 
+
+
+    클라이언트              요청          서버(tomcat: 8090)
+   (웹브라우저)  ----------------------->  
+                                       1) html (정적 컴포넌트)
+                                          src/main/webapp 에 저장
+				       2) jsp  (동적 컴포넌트)
+				          src/main/webapp 에 저장
+				       3) 서블릿 (동적 컴포넌트)
+				          src/main/java 에 저장
+
+	      <---------------------
+	                 응답
+
+ 8. 3가지 컴포넌트 웹 브라우저에서 요청하는 URL
+
+   문법: 
+         http://서버IP:port번호/컨텍스트명/자원(html/JSP/Servlet)
+
+
+    1) 정적 컴포넌트 ( html ) - 디렉터리 없는 경우
+
+     요청 URL:  http://서버IP:port번호/컨텍스트명/html자원
+
+
+
+
+    클라이언트                         서버(tomcat: 8090)
+   (웹브라우저)                          main.html
+           a. http://localhost:8090/컨텍스트명/main.html
+	   ----------------------->  
+	                             b. main.html 검색
+				       만약 없으면 404 에러 발생
+				       있으면 다운로드 해줌
+           <----------------------
+	    c. main.html 다운로드
+
+   d. main.html
+    랜더링
+
+    1) 정적 컴포넌트 ( html ) - 디렉터리 있는 경우
+
+     요청 URL:  http://서버IP:port번호/컨텍스트명/디렉터리명/html자원
+
+
+
+
+    클라이언트                         서버(tomcat: 8090)
+   (웹브라우저)                          html/main.html
+           a. http://localhost:8090/컨텍스트명/html/main.html
+	   ----------------------->  
+	                             b. main.html 검색
+				       만약 없으면 404 에러 발생
+				       있으면 다운로드 해줌
+           <----------------------
+	    c. main.html 다운로드
+
+   d. main.html
+    랜더링
