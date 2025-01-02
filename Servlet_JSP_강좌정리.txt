@@ -45,8 +45,11 @@ Servlet/JSP 강좌정리
      - http://jakarta.apache.org 
      - JDK 17 버전을 지원하는 Tomcat 10 다운로드.
      - jsp-api.jar 와 servlet-api.jar 가 제공됨.
+       ( Servlet 6.0 and Pages 3.1 )
      - apache-tomcat-10.1.28.zip
        설치는 압축풀면 됨.
+
+     - 기본 port 번호: 8080  ( 만약 Oracle DB 설치하면 내부적으로 tomcat을 설치함(8080) )
 
     * tomcat9 vs tomcat10
  
@@ -56,7 +59,12 @@ Servlet/JSP 강좌정리
        tomcat10: JDK17부터 지원됨.
                 패키지명은 jakarta.servlet 로 시작됨.
                 
-     
+     - 필요시 환경변수 설정가능
+
+       CATALINA_HOME=C:\servlet_study\apache-tomcat-10.1.28  <== bin 디렉터리 전까지
+       
+
+
 3. eclipse 와 Tomcat 연동
 
  1) eclipse 실행
@@ -70,5 +78,32 @@ Servlet/JSP 강좌정리
    - JDK 17로 변경
  
       window > preference > java > compiler > 17 로 변경   
-      window > preference > java > installed JRES >  기존 jre 체크된 것을 삭제하고 
+      window > preference > java > installed JRES >  기존 jre 체크된 것은 삭제하고 
+                                                     우리 환경에 맞는 C:\Program Files\Java\jdk-17 선택.
      
+
+  2) eclipse와 tomcat 연동 (*****************)
+
+     - 교안 13 페이지 참조.
+
+
+
+4. 프로젝트 생성
+
+   - File > New > Dynamic Web Project 선택.  ( 프로젝트명: HelloTest )
+   - Web Module 에서 출력된 내용은 다음과 같다.
+
+     1) Context Root
+       - 기본값은 프로젝트명으로 되어있음. ( 변경 가능 )
+       - 웹브라우저에서 요청시 사용됨.
+
+           http://localhost:8090/컨텍스트명
+
+	   예> http://localhost:8090/a
+ 
+
+         컨텍스트명(논리적인경로       webapps안의 실제폴더(물리적인 경로)
+        --------               -----------------------
+          docs                   docs        <== http://localhost:8090/docs/index.html
+	 examples		 examples
+				 ROOT
