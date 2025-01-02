@@ -57,5 +57,18 @@ Servlet/JSP 강좌정리
                 패키지명은 jakarta.servlet 로 시작됨.
                 
      
+3. eclipse 와 Tomcat 연동
 
-      
+ 1) eclipse 실행
+   - C:\servlet_study\eclipse 에 workspace 작성
+   - C:\servlet_study\eclipse\workspace 경로를 작업디렉터리로 지정
+   - Java EE 퍼스펙티브 선택 ( 기본 )
+   - 한글인코딩 설정
+      a. window > preference > general > workspace 선택하고 text file encoding 값을 utf-8 로 설정 (기본)
+      b. window > preference > web > html,css,jsp 선택하고 Encoding 값을 utf-8 로 설정 (기본)
+
+   - JDK 17로 변경
+ 
+      window > preference > java > compiler > 17 로 변경   
+      window > preference > java > installed JRES >  기존 jre 체크된 것을 삭제하고 
+     
