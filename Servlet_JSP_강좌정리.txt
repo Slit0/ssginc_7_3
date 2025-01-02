@@ -1,0 +1,22 @@
+
+Sevlet/JSP 강좌정리
+
+1.  자바 개발 플랫폼 3가지
+ 
+  1) Java SE ( Java Standard Edition)
+      - 자바 spec.
+      - 환경구축방법: JDK 17 설치
+      - 개발프로그램 형태: 비웹 환경의 로컬로 실행되는 프로그램 개발이 가능.
+
+  2) Java EE ( Java Enterprise Edition )
+     
+      - Servlet/JSP spec. ( spec는 인터페이스 라고 생각하자 )
+        실제로 Servlet/JSP spec를 구현한 구현체는 Tomcat 서버가 제공하는 구현체를 사용할 것이다.
+
+	  예>    오라클(Servlet/JSP spec 제공: 인터페이스)
+	              |
+	     Tomcat서버       Resin서버   ... 
+            (Servlet/JSP spec를 구현함. *.jar 형태로 제공)
+      - 
+
+  3) Java ME ( Java Micro Edition )
