@@ -55,10 +55,15 @@ Servlet/JSP 강좌정리
  
        tomcat9: JDK11까지만 지원됨.
                 패키지명은 javax.servlet 로 시작됨.
+		패키지 관리를 Oracle로 했음.
 
        tomcat10: JDK17부터 지원됨.
                 패키지명은 jakarta.servlet 로 시작됨.
+                패키지 관리를 Oracle 아닌 Apache에서 관리함.
                 
+             서블릿관련 API 문서
+	     https://tomcat.apache.org/tomcat-10.1-doc/servletapi/index.html
+
      - 필요시 환경변수 설정가능
 
        CATALINA_HOME=C:\servlet_study\apache-tomcat-10.1.28  <== bin 디렉터리 전까지
@@ -117,6 +122,9 @@ Servlet/JSP 강좌정리
 
       - 용도: 실제 tomcat의 배포경로(depoy path)인 webapps 에 만들어지는 물리적인 폴더인 웹어플리케이션을
              찾을때 사용하는 논리적인 이름을 context라고 부른다.
+
+      - 변경방법
+        이클립스 servers 탭 > tomcat 서버 클릭 > module > edit > Path 에  context명 수정( 반드시  / 로 시작)
 
    2) Content Directory
 
