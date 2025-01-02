@@ -94,7 +94,7 @@ Servlet/JSP 강좌정리
    - Web Module 에서 출력된 내용은 다음과 같다.
 
      1) Context Root
-       - 기본값은 프로젝트명으로 되어있음. ( 변경 가능 )
+       - 기본값은 프로젝트명으로 되어있음. ( 언제든지 변경 가능 )
        - 웹브라우저에서 요청시 사용됨.
 
 
@@ -103,9 +103,84 @@ Servlet/JSP 강좌정리
 	   예> http://localhost:8090/a
  
 
-         컨텍스트명(논리적인경로       webapps안의 실제폴더(물리적인 경로)
+         컨텍스트명(논리적인경로       webapps안의 실제폴더(물리적인 경로, 웹어플리케이션)
         --------               -----------------------
           docs                   docs        <== http://localhost:8090/docs/index.html
 	 examples		 examples     <== http://localhost:8090/examples/index.html
 	    /			 ROOT        <== http://localhost:8090/index.jsp
 	                                         http://localhost:8090/ 
+						 ( servers > web.xml >  <welcome-file-list> 태그안에
+						   메인 홈 페이지에 해당하는 파일명이 설정되어있음.
+						   이 파일명은 url에 지정하지 않아도 자동으로 찾음 )
+
+	   a                     HelloTest  <== http://localhost:8090/a
+
+      - 용도: 실제 tomcat의 배포경로(depoy path)인 webapps 에 만들어지는 물리적인 폴더인 웹어플리케이션을
+             찾을때 사용하는 논리적인 이름을 context라고 부른다.
+
+   2) Content Directory
+
+      - 개발자가 만든 소스가 저장되는 eclipse 디렉터리이다.
+
+
+   
+   3) web.xml
+    
+     - 배치 지시자 ( deployment descriptor )라고 부르고
+       생성된 웹 어플리케이션(HelloTest)의 전반적인 설정정보 담당하는 역할.
+
+     * 웹 어플리케이션 설정 정보를 등록하는 방법 2가지
+      
+       가. web.xml
+
+       나. 어노테이션 ( @ 으로 시작 )
+         예> @WebServlet()
+	     ....
+
+
+
+5. eclipse 에서 생성된 웹 어플리케이션 디렉터리 구조
+
+    HelloTest
+      Java Resource
+          src/main/java  <== 소스파일( java ) 저장
+	  libraries
+	     JRE System Library <== JDK 라이브러리
+	     Server Runtime     <== jsp-api.jar 와 servlet-api.jar
+
+      src
+         main
+	     java   <== 소스파일( java ) 저장
+
+	     webapp <== 웹 관련 파일(html,jsp,css,js,img등)이 이클립스에 저장하는 디렉터리이다.
+	       
+	        WEB-INF <== 대문자로 지정, 웹 어플리케이션에서는 필수.
+		            WEB-INF 폴더내에 저장된 파일은 웹 브라우저에서(외부) 접근이 불가 ( 보안 이슈 )
+			    
+		    lib  <== 외부에서 가져와서 사용하는 라이브러리(.jar) 등록 폴더.
+		           나중에 mybatis.jar 와 mysql-connector.jar 2개의 jar 파일을 저장할 예정임.
+
+		    web.xml  <== 웹 어플리케이션(HelloTest)의 전반적인 설정정보 담당.
+
+	        *.html 
+		*.jsp  <== jsp 파일
+		*.css
+		*.js
+		image
+
+
+  6. tomcat 의 배포된 디렉터리 구조 (*******************)
+ 
+     tomcat/webapps   <==== 배포경로 ( deploy path )
+
+                  HelloTest  <== 웹 어플리케이션 (물리적인 디렉터리 )
+                       META-INF
+		       WEB-INF
+		           classes <== *.java에 대한 *.class 파일들이 저장
+			   lib     <== *.jar 저장 
+			   web.xml <== 설정 정보 저장
+			   
+		       main.jsp
+		       css
+		       js
+		       image
