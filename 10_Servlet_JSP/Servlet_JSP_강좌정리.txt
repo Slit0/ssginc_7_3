@@ -98,7 +98,7 @@ Servlet/JSP 강좌정리
    - File > New > Dynamic Web Project 선택.  ( 프로젝트명: HelloTest )
    - Web Module 에서 출력된 내용은 다음과 같다.
 
-     1) Context Root
+     1) Context Root ( 논리적인 이름 )
        - 기본값은 프로젝트명으로 되어있음. ( 언제든지 변경 가능 )
        - 웹브라우저에서 요청시 사용됨.
 
@@ -136,10 +136,12 @@ Servlet/JSP 강좌정리
     
      - 배치 지시자 ( deployment descriptor )라고 부르고
        생성된 웹 어플리케이션(HelloTest)의 전반적인 설정정보 담당하는 역할.
+       (예>서블릿 맵핑, welcome file list, .. )
 
      * 웹 어플리케이션 설정 정보를 등록하는 방법 2가지
       
-       가. web.xml
+       가. web.xml ( 기본 )
+         - Spring framework에서도 xml 이용해서 환경정보를 설정한다.
 
        나. 어노테이션 ( @ 으로 시작 )
          예> @WebServlet()
@@ -183,7 +185,7 @@ Servlet/JSP 강좌정리
 
                   HelloTest  <== 웹 어플리케이션 (물리적인 디렉터리 )
                        META-INF
-		       WEB-INF
+		       WEB-INF (필수 )
 		           classes <== *.java에 대한 *.class 파일들이 저장
 			   lib     <== *.jar 저장 
 			   web.xml <== 설정 정보 저장
@@ -336,6 +338,16 @@ Servlet/JSP 강좌정리
 	    최종적으로 사용자가 만든 서블릿에서 ServletContext를 얻는 방법은 다음과 같아.
 	   예> ServletContext sc = getServletContext(); (*********************)
 
+     ServletContext(인터페이스)
+      ==> jakarta.servlet 패키지
+          addFilter(), createFilter()
+	  addServlet(), createServlet()
+	  setAttribute(name,value), getAttribute(name), getAttributeNames(), removeAttribute(name)
+	  getContextPath()
+          getInitParameter(String key|name): 문자열로 값을 반환
+          getInitParameterNames():  name(key)값만 반환, Enumeration 반환 ( Iterator 비슷한 기능)
+	  ..
+
      GenericServlet(추상 클래스)
       ==> jakarta.servlet 패키지
           init()
@@ -343,15 +355,17 @@ Servlet/JSP 강좌정리
 
      HttpServlet(추상 클래스)
       ==> jakarta.servlet.http 패키지
-          doGet(HttpServletRequest req, HttpServletResponse resp): 클라이언트에서 get 방식 요청시 처리하는 메서드
+          doGet(HttpServletRequest req, HttpServletResponse resp): 기본, 클라이언트에서 get 방식 요청시 처리하는 메서드
           doPost(HttpServletRequest req, HttpServletResponse resp): 클라이언트에서 post 방식 요청시 처리하는 메서드
 	  doDelete(..), doPut(..)
+	
+	 => method 불일치 예> get요청 ---> doPost 처리하고자 하면 405 에러 발생됨.
 
 
      사용자정의 서블릿
      ==>  위에서 살펴봤던 메서드를 그냥 사용 및 재정의 할 수 있다.
  
-   3) doGet(기본) 또는 doPost 를 반드시 재정의 해야 된다.
+   3) doGet(기본) 또는 doPost 인 서비스 메서드를 반드시 재정의 해야 된다.
 
     예>  package com.servlet;
 
@@ -360,6 +374,12 @@ Servlet/JSP 강좌정리
                  //실제 코드 작업
 	 }
 	}
+
+         HttpServletRequest API
+
+
+         HttpServletResponse API
+
 
    4) 서블릿 맵핑 ( servlet mapping )
 
