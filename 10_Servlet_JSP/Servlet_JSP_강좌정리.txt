@@ -555,3 +555,51 @@ Servlet/JSP 강좌정리
     - 한글처리가 자동으로 설정  
       단, tomcat 9는 한글이 깨짐. 따라서 한글처리를 명시적으로 해줘야 된다.
          request.setCharacterEncoding("utf-8"); 
+
+
+14. scope
+
+  1) 개념
+    - 자바의 변수(로컬변수,인스턴스변수,static변수)처럼 tomcat 컨테이너가 
+      자동으로 생성해주는 3가지 객체의 scope 의미한다.
+
+  2) 3가지 scope
+   
+    - 공통적인 특징은 변수처럼 데이터를 저장할 수 있는 능력이 있다.
+
+   가. request scope
+      - HttpServletRequest API
+      - 저장방법:  request.setAttribute(String name, Object obj);
+        조회방법:  request.getAttribute(String name);
+	삭제방법:  request.removeAttribute(String name);
+
+      - 저장된 데이터의 범위(scope, lifecycle)는  doGet 메서드안에서만 유지되어 사용가능하다.
+        즉 사용자가 요청~응답 범위에서만 사용이 가능하다. (***********)
+
+   나. session scope
+      - HttpSession API
+
+	 HttpSession session = request.getSession();
+
+      - 저장방법:  session.setAttribute(String name, Object obj);
+        조회방법:  session.getAttribute(String name);
+	삭제방법:  session.removeAttribute(String name);
+
+      - 저장된 데이터의 범위(scope, lifecycle)는  요청한 웹브라우저와 scope가 동일하다.(브라우저가 다르면 사용불가)
+        즉 사용자가 요청시 사용한 웹브라우저를 계속 open 된 상태이면 사용 가능하다.
+	만약 close 하면 데이터가 제거된다.
+     
+      - 용도: 로그인
+
+   다. application scope
+      - ServletContext API
+
+         ServletContext application = getServletContext(); 
+
+      - 저장방법:  application.setAttribute(String name, Object obj);
+        조회방법:  application.getAttribute(String name);
+	삭제방법:  application.removeAttribute(String name);
+
+       - 저장된 데이터의 범위(scope, lifecycle)는  tomcat 컨테이너와 scope가 동일하다
+        즉 tomcat 컨테이너를 종료하지 않으면 계속적으로 사용 가능하다.
+	만약  tomcat 컨테이너를 종료하면 데이터가 제거된다.
