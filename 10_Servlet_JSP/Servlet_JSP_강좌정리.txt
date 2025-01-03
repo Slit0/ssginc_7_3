@@ -382,14 +382,23 @@ Servlet/JSP 강좌정리
               getParameterNames() <==  name값들만 반환
               setAttribute(name,value), getAttribute(name), getAttributeNames(), removeAttribute(name)
               getRequestDispatcher(String path) <== 지정된 path로 요청함. JS의 location.href 비슷한 기능. 
+	                                            forward 방법으로 부른다.
 	      getCookies() <=== Cookie[] 반환,  쿠키 정보를 얻음.
               getSession() <=== HttpSession 반환, 세션 정보를 얻음.
               getHeader(name) <== header 값 조회
 
 
-         HttpServletResponse API
+         HttpServletResponse API (인터페이스)
           ==> 응답관련 작업 담당
+	      addCookie(Cookie c) <=== 쿠키정보를 웹브라우저에 추가하는 메서드
+	      sendRedirect(String location) <== 지정된 location로 요청함. JS의 location.href 비슷한 기능. 
+	                                          redirect 방법으로 부른다.
 
+              setContentType(String type) <== MIME타입이라고 부름. 
+	                                      서버가 클라이언트에게 전달할 데이터타입을 의미함.
+					      예>text/html
+	      getWriter() < === PrintWriter 타입 반환.
+	                        PrintWriter 의 print(값) 이용해서 웹브라우저에게 응답을 보냄.
 
    4) 서블릿 맵핑 ( servlet mapping )
 
