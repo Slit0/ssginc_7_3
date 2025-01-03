@@ -421,11 +421,98 @@ Servlet/JSP 강좌정리
 
     - 서블릿매핑 정보를 저장하는 2가지 방법
 
-      가. web.xml
+      가. web.xml (기본)
+                  <servlet>
+		    <servlet-name>TestServlet2</servlet-name>
+		    <servlet-class>com.servlet.TestServlet2</servlet-class>
+		  </servlet>
+		  
+		  <servlet-mapping>
+		    <servlet-name>TestServlet</servlet-name>
+		    <url-pattern>/test</url-pattern>
+		  </servlet-mapping>
 
-      나. 어노테이션 (기본)
+      나. 어노테이션 
          - @WebServlet("/my")
 	   public class MyServlet extends HttpServlet{
 
 
+   서블릿을 요청하는 최종 URL 문법은 다음과 같다.
+
+    문법:  http://서버ip:port번호/컨텍스트명/서블릿맵핑
+
+    예>  http://localhost:8090/app01/test
+
+
+
  ////////////////////////////////////////////////////////////////////////////////////////
+
+ 10. 서블릿의 LifeCycle
+
+    - Tomcat 컨테이너가 서블릿(JSP)을 생성~삭제까지 관리해줌.
+      생성 때 또는 삭제할때 콜백되는 메서드가 제공된다.
+
+    1) init() 메서드
+      - 서블릿이 생성될 때 호출
+      - 한번만 호출됨. 
+      ( 
+        하나의 서블릿으로 여러 클라이언트 요청을 처리함.
+        여러 클라이언트가 하나의 서블릿으로 공유가 가능함. ( thread-unsafe )
+      )
+
+    2) 서비스 메서드
+      - 서블릿에 요청할 때 호출
+      - doGet(HttpServletRequest request, HttpServletResponse response) 또는 
+        doPost(HttpServletRequest request, HttpServletResponse response)
+      - 클라이언트가 요청할 때마다 매번 실행
+        ( 2개의 파라미터 변수인 
+	  HttpServletRequest request 와 HttpServletResponse response 는 
+	  로컬변수이기 때문에 매번 생성됨  ( thread-safe )
+	 )
+
+    3) destroy() 메서드
+       - 서블릿이 삭제될 때 호출
+       - 확인하는 방법은 서블릿이 수정후 기다리면 tomcat 컨테이너가 재실행되면서 확인이 가능.
+
+    
+ 11. 서블릿의 thread-safe 와 thread-unsafe
+
+    1) 인스턴스 변수
+      - 서블릿은 단 한번만 생성되기 때문에 인스턴스 변수가 여러 사용자들간에 공유가 가능
+        따라서  thread-unsafe 해짐.
+
+    2) doGet 메서드의 로컬변수
+      - 로컬변수이기 때문에 thread-safe 해짐.
+
+  결론: 여러 사용자가 공유할 목적이 아닌경우에는 반드시 로컬변수로 사용해야 된다.
+      만약 인스턴스 변수 및 static 변수로 만들면 여러 사용자가 공유할 수 있게 된다.
+
+
+12. 서블릿의 응답처리
+
+   1) 개념
+     - 서블릿에서 html 작성해서 웹 브라우저에게 html 응답하는 작업의미.
+     - HttpServletResponse API 이용.
+
+   2) 순서
+
+     가. MIME 타입 지정
+       --> 웹브라우저에게 전달하는 데이터 타입을 알려주는 작업이다.
+
+        response.setContentType( "text/html" );
+
+
+    나. I/O 객체 얻기
+      
+       PrintWriter out = response.getWriter();
+
+    
+    다.  print(값) 이용해서 값 출력 ( 웹 브라우저에서 랜더링 됨 )
+
+       out.print("<html>");
+       ...
+
+       out.print("</html>");
+
+ 
+13. 서블릿 요청처리
