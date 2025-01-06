@@ -588,7 +588,12 @@ Servlet/JSP 강좌정리
       - 저장된 데이터의 범위(scope, lifecycle)는  요청한 웹브라우저와 scope가 동일하다.(브라우저가 다르면 사용불가)
         즉 사용자가 요청시 사용한 웹브라우저를 계속 open 된 상태이면 사용 가능하다.
 	만약 close 하면 데이터가 제거된다.
-     
+
+	이론적으로는 웹브라우저를 close하지 않으면 저장된 데이터를 계속 사용이 가능하다.
+	하지만 보안이슈로 일정시간이 지나도록 특정한 작업을 하지 않으면 자동으로 저장된 데이터가 삭제된다.
+        tomcat의 time-out은 30분이다. 수정도 가능.( web.xml 설정 또는 
+setMaxInactiveInterval(int seconds)메서드 이용 )
+
       - 용도: 로그인
 
    다. application scope
@@ -603,3 +608,171 @@ Servlet/JSP 강좌정리
        - 저장된 데이터의 범위(scope, lifecycle)는  tomcat 컨테이너와 scope가 동일하다
         즉 tomcat 컨테이너를 종료하지 않으면 계속적으로 사용 가능하다.
 	만약  tomcat 컨테이너를 종료하면 데이터가 제거된다.
+
+   라. page scope
+
+
+15. 필터(filter)
+
+  1) 용도
+    - 서블릿에 요청하기전 및 응답하기 후에 특별한 작업이 가능.
+
+  2) 구현
+    - 서블릿과 마찬가지로 필터 클래스를 작성하고 등록해야 된다.
+    - 필터는 여러개 등록 가능하고 web.xml에 등록된 순서대로 필터가 실행된다.
+
+    가. 패키지
+    나. implments Filter
+    다. 메서드 재정의
+
+       doFilter( request, response, FilterChain chain){
+       
+	    chain.doFilter( request, response );  // 연결
+       }
+    라. 필터 맵핑 (web.xml 등록)
+          <filter>
+	    <filter-name>MyFilter</filter-name>
+	    <filter-class>com.filter.MyFilter</filter-class>
+	  </filter>
+	  
+	  <filter-mapping>
+	    <filter-name>MyFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	  </filter-mapping>
+ 
+
+ 16. DB 연동 ( MyBaits 이용 )
+
+   1) 2 개의 jar 필요. 
+     
+     - mybatis-3.5.14.jar
+     - mysql-connector-j-8.0.33.jar
+     - JavaSE 에서는 프로젝트 선택 > 마우스 오른쪽 클릭 > build path > Configure Build path > Libraries.. >
+       class path 선택 > Add External Jars... > 2 개의 jar 파일 선택.
+
+     - JavaEE 에서는 WEB-INF/lib 안에 2개의 jar 파일 복사. <== 자동으로 build path 됨
+
+   2) DB 연동위한 4가지 정보 설정
+      
+      -jdbc.properties
+      -com.config 패키지 이용
+
+   3) DTO 작성
+    
+     - com.dto.EmpDTO.java
+
+
+   4) 2 개의 xml
+
+      - Configuration.xml
+      - EmpMapper.xml
+      - com.config 패키지 이용
+
+   5) MySqlSessionFactory.java
+
+      - Configuration.xml 읽기
+      - com.config 패키지 이용
+
+   6) DAO, Service 작성
+
+     - com.dao.EmpDAO
+     - com.service.EmpService, com.service.EmpServiceImpl 
+
+   
+   7) 서블릿 작성
+
+     - com.servlet.EmpListServlet
+
+   
+  * Emp 테이블의 목록보기 아키텍쳐
+
+                                   Tomcat
+                                                        EmpService
+    웹브라우저 ------------------->  EmpListServlet <---> EmpServiceImpl <---> EmpDAO <---> MySQL 
+           <-------------------
+
+
+17.  요청 위임
+
+   
+   1) 개념
+
+     가. 일반적인 경우
+
+
+                         요청
+         웹브라우저  ------------------------>  서블릿 
+                  <-----------------------
+		         응답
+
+
+     나. 요청 위임한 경우
+
+                            요청
+         웹브라우저  ------------------------>  서블릿 
+                                               |
+					       |  요청위임	( 서블릿이 JSP에게 요청 의미 )
+
+                  <-----------------------     ? ( 서블릿, JSP(*), html )
+		            응답
+
+
+    2) 요청위임 방법 2가지
+
+      가. forward 방식
+         - HttpServletRequest API 이용.
+	 - 문법:
+
+	   request.getRequestDispatcher("타겟").forward(request, response);
+
+         - 특징:
+	    URL이 변경 안됨.( 계속 서블릿으로 남아있음 )
+	    하나의 request로 서블릿 및 JSP까지 사용함.
+            서블릿에서 3가지 scope(request,session,application)에 데이터를 저장하고
+	    jsp에서 가져올때 모든 scope에 저장된 데이터를 참조할 수 있다.
+
+
+      나. redirect 방식
+         - HttpServletResponse API 이용.
+         - 문법:
+	  
+	     response.sendRedirect("타겟");
+  
+         - 특징:
+	    URL이 변경됨.( 서블릿에서 타겟 URL(jsp)로 변경됨 )
+	    두개의 request로 서블릿(100번지 request)하고 JSP(200번지 request)를 각각 사용함.
+
+            서블릿에서 3가지 scope(request,session,application)에 데이터를 저장하고
+	    jsp에서 가져올때 request scope만  저장된 데이터를 참조할 수 없다.
+	    
+
+18. 세션관리( session tracking )
+
+ 1)개요
+
+  - HTTP 프로토콜이 connectionLESS, stateLESS 인 특징으로 인해서
+    이전 페이지에서 작업했던 상태및데이터를 현재 페이지에서 사용할 수 없게 된다.
+    그런데 이것을 알 수 있도록 처리하자. (세션관리 라고 부른다. )
+
+ 2) 구현방법 2가지
+
+  가. 세션 이용
+    - tomcat 서버에 여러 서블릿(jsp)이 사용할 수 있는 공유데이터를 저장하는 방법이다.
+    - HttpSession API 이용.
+    - 작업순서
+      a. 공유데이터 저장하는 서블릿
+         - 빨간색 저장소(세션)를 얻어야 된다.
+	   // 세션이 있으면 반환하고 없으면 생성해서 반환.
+	   HttpSession session = request.getSession(); (*****)
+	   HttpSession session = request.getSession(true);
+	   -------------------------------------------------
+	   // 세션이 있으면 반환하고 없으면 null 반환.	
+	   HttpSession session = request.getSession(false);
+
+
+
+      b. 저장된 공유데이터를 사용하는 서블릿
+
+  나. 쿠키 이용
+   - 웹브라우저(클라이언트)에 여러 서블릿(jsp)이 사용할 수 있는 공유데이터를 저장하는 방법이다.
+   - Cookie API 이용.
