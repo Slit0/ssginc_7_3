@@ -769,9 +769,72 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
 	   // 세션이 있으면 반환하고 없으면 null 반환.	
 	   HttpSession session = request.getSession(false);
 
+         - 공유데이터 저장
+	   session.setAttribute("key", "홍길동");
+
+      b. 저장된 공유데이터를 사용하는 JSP(서블릿)
+     
+         - 빨간색 저장소(세션)를 얻어야 된다.
+	   HttpSession session = request.getSession(); 
+
+	 - 공유데이터 참조
+	   String str = (String)session.getAttribute("key");
+          
+         - str 값 체크하기
+	   if(str != null){
+		// a 작업을 거치후 의미
+                // 필요한 작업 하기
+	   }else{
+               // a 작업을 거치지 않았음을 의미 ( 예> 로그인 )
+	       // a 작업을 거치도록 redirect|forward 해줌
+	       response.sendRedirect("a작업");
+	   }
+
+      c. 삭제
+
+        - 전체 세션 삭제
+	  session.invalidate();
+          
+	  예> 로그아웃
+
+        - 엔트리 삭제
+	  
+	  session.removeAttribute(key);
+
+	- time-out 이용한 삭제
+          session.setMaxInactiveInterval(초단위);  // 지정된 초가 지난후 세션 삭제됨.
+
+      특징:
+        - 요청한 웹브라우저와 동일한 scope를 갖는다. 
+	- 요청한 웹브라우저의 id 값이 자동으로 서버에 전달된다.
+					  
+					        서버
+	                   jsessionid=AAA     
+	   크롬웹브라우저  -------------------->    세션(AAA)
+           (AAA)                                     
+                           jsessionid=BBB
+	   앳지웹브라우저  -------------------->    세션(BBB)
+           (BBB)
+        - 세션에 저장하는 데이터는 Object 이다. 따라서 모든 데이터를 저장할 수 있다.
+
+      세션관련 메서드
+        HttpSession session = request.getSession();
+
+	session.setAttribute(key,value); // 세션에 값을 저장. value는 Object 타입.
+	session.getAttribute(key);       // 세션에 저장된 값을 조회.  형변환 필요. 
+	session.removeAttribute(key);    // 세션에 저장된 엔트리 삭제
+
+	session.invalidate();              // 세션 즉시 삭제 (저장소 삭제 의미)
+	session.setMaxInactiveInterval(초) //  지정된 초 이후에 세션 삭제
+
+	session.getId();                    // jsessionid 얻기
+	session.isNew();                    // 조회된 session이 처음 만든 세션이냐?
+	session.getCreationTime();          // 세션이 생성된 시간을 long 타입으로 리턴.
+
+     용도:
+       로그인, 장바구니
 
 
-      b. 저장된 공유데이터를 사용하는 서블릿
 
   나. 쿠키 이용
    - 웹브라우저(클라이언트)에 여러 서블릿(jsp)이 사용할 수 있는 공유데이터를 저장하는 방법이다.
