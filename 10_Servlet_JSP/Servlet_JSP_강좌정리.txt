@@ -1018,10 +1018,41 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
 
 
       b. import 지정
+
          서블릿:  import java.util.ArrayList;
                 import java.util.Date;
+
 	 JPS:  <%@ page import="java.util.Date" %>
                <%@ page import="java.util.ArrayList" %>
 
+   나. include directive
+    
+     문법: <%@ include  file="jsp파일" %> <== 지정된 jsp파일내용이 정적으로 치환됨. 정적 include
+          <jsp:include page="jsp파일"  flush="true" /> <== 지정된 jsp파일내용이 실행된 결과값(동적)으로 치환됨. 동적 include
+
+     기능: 화면 재사용. html의 <iframe> 태그와 비슷한 기능.
+
+
+   다. taglib directive
+     문법: <%@ taglib prefix=""  uri="" %>
+     기능: JSTL 사용시 사용됨.
+
+
+   5) declaration 태그 ( 거의 사용안됨 )
+
+      문법: <%!  자바코드  %>
+      기능: 서블릿에서 인스턴스 변수, 인스턴스 메서드 지정시 사용됨.
+   
+
+   6) scriptlet 태그 (*************)
+      - 가장 많이 사용됨.
+
+      문법: <%  자바코드  %>
+      기능: 서블릿에서 doGet 메서드내의 코드 구현
+
+   7)  expression 태그
+
+      문법: <%=  변수 %>
+      기능: 웹 브라우저에 변수값을 출력
 
 20. Servlet + JSP ( MVC 모델, Model 2 Architecture )
