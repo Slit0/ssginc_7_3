@@ -917,3 +917,111 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
 							           response.addCookie(c);
 								}
 							     }
+
+###########################################################################################
+19. JSP
+
+  1) 특징
+   - 동적 컴포넌트 ( 서버에서 실행되어 동적으로 결과를 만듬, 실행결과는 html 만듬 )
+   - *.jsp 이고 저장 경로는 html과 동일한 src/main/webapp 에 저장.
+   - 서블릿은 요청하면 doGet|doPost가 실행됨.
+     JSP 요청하면 3단계를 거쳐서 실행됨
+
+       가. 변환 단계
+         *.jsp ---->*_jsp.java ( 서블릿이라고 생각하자)
+
+       나. 컴파일 단계
+         *_jsp.java -----------> *_jsp.class
+
+       다. 실행 단계
+         *_jsp.class --------------> html 반환
+
+   - 서블릿은 대부분이 java 코드이고 일부분은 html 코드이다. ( 서블릿은 비즈니스 로직 처리 잘함 )
+     JSP는 대부분이 html코드이고 일부분이 java 코드이다.   ( jSP는 화면 처리 잘함 )
+
+  2) 웹 어플리케이션 개발 방법 2가지
+
+    가. Model 1 Architecture
+       - 과거에는 사용되었으나 현재는 사용안함.
+       - JSP 만 이용해서 웹 어플리케이션 개발하는 방식의미
+
+       예>                             Tomcat
+          웹브라우저 ------------------> JSP <------> Service <----> DAO <--> MySQL
+
+
+
+    나. Model 2 Architecture ( MVC )
+       - 현재 사용중.
+       - 서블릿 + JSP
+
+        예>                             Tomcat
+          웹브라우저 ------------------> Servlet  <------> Service <----> DAO <--> MySQL
+					|
+					|  요청위임 
+					|
+                  <------------------ JSP
+
+   3) JSP 구성요소
+  
+     가. html 태그
+     나. JSP 태그
+         a. directive 태그
+	      - page directive 태그
+	            <%@ page  속성명="속성값"  속성명="속성값" ...        %>
+
+	      - include directive 태그
+                    <%@ include file="jsp파일" %>
+
+	      - taglib directive 태그
+                    <%@ taglib prefix="속성값"  uri="속성값" %>
+
+	 b. declaration 태그
+	     - 서블릿의 doGet 메서드밖의 자바코드 ( 인스턴스 변수,인스턴스 메서드)
+
+	       <%!  자바코드 %>
+
+	 c. scriptlet 태그 (*************)
+             - 서블릿의 doGet 메서드안의 자바코드
+
+	       <%  자바코드 %>
+	
+	 d. expression 태그
+
+	       <%= 변수 %>
+
+	
+	* JSP 액션태그
+	 
+	 <jsp:식별자  속성명="속성값" />
+	
+	 수업에서 배울 JSP 액션태그는 다음과 같다.
+	 <jsp:include page="jsp파일"  flush="true" />
+
+
+     다. EL 태그
+     라. JSTL(taglib) 태그
+
+
+  4) directive 태그
+
+    가. page directive
+
+      문법: <%@ page  속성명="속성값" ... %>
+      기능: JSP에게 특정 설정정보를 알려주는 용도.
+
+
+      a. MIME 타입 지정
+
+        서블릿:  response.setContentType("text/html;charset=utf-8"); 
+
+	JPS:  <%@ page  contentType="text/html; charset=UTF-8"  %>
+
+
+      b. import 지정
+         서블릿:  import java.util.ArrayList;
+                import java.util.Date;
+	 JPS:  <%@ page import="java.util.Date" %>
+               <%@ page import="java.util.ArrayList" %>
+
+
+20. Servlet + JSP ( MVC 모델, Model 2 Architecture )
