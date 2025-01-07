@@ -1055,4 +1055,103 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
       문법: <%=  변수 %>
       기능: 웹 브라우저에 변수값을 출력
 
+   
+   8) 내장객체( 내장 변수 )
+
+     개념: scriptlet 태그안에 선언되지 않고 사용가능한 변수를 의미.
+          내부적으로 미리 선언되어 있음.
+
+
+    9) JSP 주석
+
+      <%--  --%>
+
 20. Servlet + JSP ( MVC 모델, Model 2 Architecture )
+
+
+     - 현재 사용중.
+       - 서블릿 + JSP
+
+        예>                             Tomcat
+          웹브라우저 ------------------> Servlet  <------> Service <----> DAO <--> MySQL
+					|
+					|  요청위임 
+					|
+                  <------------------ JSP
+
+   - MVC 모델
+
+     M: Model ( Service + DAO 담당)
+     V: View  ( JSP 담당 )
+     C: Controller ( 서블릿 담당 )
+
+
+21. 게시판 구현 ( MVC )
+
+ 1) 테이블 작성
+
+    create table board (
+       num INT PRIMARY KEY  AUTO_INCREMENT,
+       title VARCHAR(100) NOT NULL,
+       author VARCHAR(50) NOT NULL,
+       content VARCHAR(2000) NOT NULL,
+       writeday DATE DEFAULT (current_date),
+       readcnt INT DEFAULT 0
+    );
+
+   insert into board ( title, author, content )
+   values ( '테스트', '홍길동', '테스트입니다.');
+   commit;
+
+  2) MyBatis 환경설정
+     - 2개의 jar를 WEB-INF/lib 복사
+     - jdbc.properties
+       Configuration.xml
+       BoardMapper.xml
+       MySqlSessionFactory.java
+     - com.dto.BoardDTO.java
+
+  3) 게시판 목록보기
+
+                     /list                       BoardService 
+   웹브라우저 -------> BoardListServlet <----> BoardServiceImpl <----> BoardDAO <--------> MySQL
+                          |
+			  |
+			  |
+	  <--------    list.jsp
+
+  4) 게시판 글쓰기 ( 2 단계 )
+
+             get      /writeUI
+    웹브라우저 -------> BoardWriteUIServlet (doGet)
+                          |
+			  |
+			  |
+	  <--------    write.jsp
+
+
+             post    /write    
+    웹브라우저 -------> BoardWriteServlet <----> BoardServiceImpl <----> BoardDAO <--------> MySQL
+                          | (doPost)
+			  |
+			  |
+	  <--------   BoardListServlet
+
+
+  5) 글 자세히 보기
+
+                     /retrieve
+    웹브라우저 -------> BoardRetrieveServlet <----> BoardServiceImpl <----> BoardDAO <--------> MySQL
+                          | 
+			  |
+			  |
+	  <--------   retrieve.jsp
+ 
+  6) 글수정하기
+
+                   /update
+    웹브라우저 -------> BoardUpdateServlet <----> BoardServiceImpl <----> BoardDAO <--------> MySQL
+                          | 
+			  |
+			  |
+	  <--------   retrieve.jsp
