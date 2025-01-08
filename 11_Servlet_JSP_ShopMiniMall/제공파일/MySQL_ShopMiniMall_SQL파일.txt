@@ -1,11 +1,7 @@
--- DRP DATABASE SHOP
--- DROP DATABASE shop;
 
--- CREATE DATABASE SHOP
 CREATE DATABASE shop;
 use shop;
 
--- CREATE USER SHOP
 -- delete from mysql.user where User ='shop';
 -- delete from mysql.db where User ='shop';
 
