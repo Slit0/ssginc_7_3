@@ -1,4 +1,4 @@
-
+-- DROP  DATABASE shop;
 CREATE DATABASE shop;
 use shop;
 
