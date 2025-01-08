@@ -1,13 +1,13 @@
 -- DRP DATABASE SHOP
-DROP DATABASE shop;
+-- DROP DATABASE shop;
 
 -- CREATE DATABASE SHOP
 CREATE DATABASE shop;
 use shop;
 
 -- CREATE USER SHOP
-delete from mysql.user where User ='shop';
-delete from mysql.db where User ='shop';
+-- delete from mysql.user where User ='shop';
+-- delete from mysql.db where User ='shop';
 
 CREATE USER shop@'%' IDENTIFIED BY 'shop';
 
@@ -19,7 +19,7 @@ use shop;
 -- 회원
 create table member
    ( userid varchar(20) PRIMARY KEY,
-     passwd varchar(20) not null,
+     passwd varchar(255) not null,
      username varchar(20) not null,
      post varchar(6) not null,
      addr1 varchar(500) not null,
