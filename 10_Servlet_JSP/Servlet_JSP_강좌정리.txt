@@ -999,6 +999,8 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
 
 
      다. EL 태그
+       - 문법: ${key} 
+
      라. JSTL(taglib) 태그
 
 
@@ -1154,4 +1156,17 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
                           | 
 			  |
 			  |
-	  <--------   retrieve.jsp
+	  <--------  BoardListServlet
+
+
+  7) 글삭제하기
+
+                   /delete
+    웹브라우저 -------> BoardDeleteServlet <----> BoardServiceImpl <----> BoardDAO <--------> MySQL
+                          | 
+			  |
+			  |
+	  <--------  BoardListServlet
+
+
+   8) 페이징 처리
