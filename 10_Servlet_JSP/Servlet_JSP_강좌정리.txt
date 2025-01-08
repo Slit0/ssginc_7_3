@@ -1170,3 +1170,175 @@ setMaxInactiveInterval(int seconds)메서드 이용 )
 
 
    8) 페이징 처리
+    
+     - 레코드가 정렬
+     -필요한 값 정리
+      List<BoardDTO> list;
+      int curPage; // 현재페이지
+      int perPage=3; // 페이지당 보여줄 레코드 갯수
+      int totalRecord; // 전체 레코드 갯수
+
+      ==> PageDTO 클래스에 모두 저장.
+
+
+
+22. EL ( Expression Language )
+ 
+  1) 기능
+     특정값을 웹브라우저에 출력.
+
+  2) 문법:
+
+      ${리터럴값|key}  <== scope에 저장된 key 값
+
+  3) 특징
+     ${리터럴값+1} <== 산술연산 가능
+     ${리터럴값 > 1} <== 비교연산 가능
+     ${리터럴값 > 1 && 리터럴값 < 30} <== 논리연산 가능
+   
+   - null 값은 비어있는 값으로 출력하고
+     null 값 비교는 empty 사용.
+     예> 널 값비교: ${empty xxx2}
+
+   - 조건 및 반복 처리 불가 ( 해결: JSTL )
+
+  4) ${key}
+   
+    - 서블릿에서 scope에 저장된 값을 출력할 때 사용.
+
+     예>  //서블릿
+          request.setAttribute("userid","홍길동");
+
+         //JSP에서 JSP 태그 이용한 방법
+         <%
+            String userid = (String)request.getAttribute("userid");
+	 %>
+	 <%= userid %>  <== 홍길동 출력
+
+         //JSP에서 EL 이용한 방법 
+         ${userid}  <== 홍길동 출력
+  
+    5) 명시적인 scope 지정
+      - 기본은 request
+
+       request:${requestScope.xxx} <br>
+       session:${sessionScope.xxx} <br>
+       application:${applicationScope.xxx} <br>
+
+
+
+23. JSTL ( Jsp Standard Tag Library )
+
+   1)개요
+    - JSP에서 사용한 커스텀 태그 의미.
+    예>
+       <for start=1 end=5>
+         hello
+       </for>
+     
+     - 2가지 필요
+       *.java
+       *.tld ( tag library definition)
+      
+    결론은 전세계의 선배 개발자들이 JSP에서 유용하게 
+    사용할 만한 커스텀 태그를 만들어 제공이 된다.
+    실습에서는 Apache에서 제공하는 JSTL를 사용할 것이다.
+
+   2) 구현방법
+
+     가. 2개의 jar를 build path ( Tomcat 10.1 버전에 최적화 )
+
+        jakarta.servlet.jsp.jstl-3.0.1.jar
+	jakarta.servlet.jsp.jstl-api-3.0.0.jar
+
+	WEB-INF/lib 폴더에 복사.
+
+      
+     나. JSP에서 JSTL 사용 등록 ( Tomcat 10.1 버전에 최적화 )
+     
+        문법: <%@ taglib prefix="속성값"  uri="속성값" %>
+
+           <%@ taglib prefix="c"  uri="jakarta.tags.core" %>
+	   <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+	   <%@ taglib prefix="fmt"  uri="jakarta.tags.fmt" %>
+	   <%@ taglib prefix="sql"  uri="jakarta.tags.sql" %>
+	   <%@ taglib prefix="x"  uri="jakarta.tags.xml" %>
+	
+     다. JSTL + EL 사용
+
+       a. 값 출력
+          request.setAttribute("xxx", "홍길동");
+
+
+          EL만 사용:${xxx} <br>
+          JSTL 사용: <c:out value="${xxx}" />
+ 
+       b. 변수 사용
+           request.setAttribute("xxx", "홍길동");
+
+             <h1>set 커스텀 태그 실습</h1>
+	   변수저장:
+	   <c:set var="id" value="${xxx}" />
+	   <hr>
+	   이름:${id}<br>
+	   이름:<c:out value="${id}" /><br>
+	 
+       c. 조건 ( 단일 if문 )
+
+            <c:if test="${username =='홍길동'}">
+	      안녕하세요. 홍길동님
+	   </c:if>
+
+       c. 조건 ( choose 문 )
+
+           <c:choose>
+	    <c:when test="${age > 50}">
+	       중년입니다.
+	    </c:when>
+	    <c:when test="${age > 40}">
+	       장년입니다.
+	    </c:when>
+	    <c:otherwise>
+	       청년입니다. 
+	     </c:otherwise>	
+	   </c:choose>
+
+	d. 반복문
+
+	  가. range 반복
+
+	        <c:forEach var="변수명" begin="시작값" end="끝값">
+		   반복처리:${변수명}
+		</c:forEach>
+
+          나. scope 에 저장된 데이터 반복
+
+	        List<Person> list = Arrays.asList(new Person("홍길동", 20), 
+						        new Person("이순신", 30) );
+		request.setAttribute("xxx", list);
+
+		<h1>2. 반복- scope에 저장된 데이터</h1>
+		   <c:forEach var="p"  items="${xxx}">
+		     이름:${p.username}, 나이:${p.age}<br>
+		   </c:forEach>
+
+	  다. scope 에 저장된 데이터 반복2 - 상태값 조회
+	      <c:forEach var="p"  items="${xxx}" varStatus="status">
+		     index:${status.index} <br>
+		     count:${status.count} <br>
+		     first:${status.first} <br>
+		     last:${status.last} <br>
+		   </c:forEach>
+
+
+          라. url 경로 설정
+
+                   <h1>1. 이전 방식의 경로 설정</h1>
+		   상대경로: <a href="target.jsp">이전방식:상대경로</a> <br>
+		   절대경로: <a href="/app14/target.jsp">이전방식:절대경로</a> <br>
+		  
+		   <h1>2. JSTL 이용한 경로 설정</h1>
+		   상대경로: <a href="<c:url value='target.jsp' />">JSTL방식:상대경로</a> <br>
+		   절대경로: <a href="<c:url value='/target.jsp' />">
+		   JSTL방식:절대경로(/만 지정하면 자동으로 컨텍스트명(app14)를 자동으로 설정함)
+		   </a>
