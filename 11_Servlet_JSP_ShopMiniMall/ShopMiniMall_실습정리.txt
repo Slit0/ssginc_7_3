@@ -111,3 +111,100 @@ ShopMiniMall 프로젝트
                            |
 			   |                                          
 			goodsList.jsp
+
+
+ 10. 상품 자세히 보기
+
+ 
+                       /goodsRetrieve               GoodsService
+  웹브라우저 ------------> GoodsRetrieveServlet -----> GoodsServiceImpl <-------> GoodsDAO <-->MySQL
+                           |
+			   |                                          
+			goodsRetrieve.jsp
+
+
+  11. 장바구니 저장
+
+    CartDTO.java
+    CartMapper.xml
+   위 파일을 Configuration.xml에 등록하기
+
+
+                       /cartAdd               CartService
+  웹브라우저 ------------> CartAddServlet -----> CartServiceImpl <-------> CartDAO <-->MySQL
+                           |
+			   |                                          
+			 성공: goods/cartAddSuccess.jsp
+			 실패: 로그인하지 않은 경우
+			     및
+			    로그인 했으나 time-out(30분) 된 경우
+
+			    member/loginInvalidate.jsp
+
+12. 장바구니 목록보기
+
+   Cart와 Goods 간 조인해서 
+   CartList.jsp에서 필요한 데이터를 한번에 가져오자.
+
+
+                       /cartList               CartService
+  웹브라우저 ------------> CartListServlet -----> CartServiceImpl <-------> CartDAO <-->MySQL
+                           |
+			   |                                          
+			 성공: cartList.jsp
+			 실패: 로그인하지 않은 경우
+			     및
+			    로그인 했으나 time-out(30분) 된 경우
+
+			    member/loginInvalidate.jsp
+
+
+13. 장바구니 단일 삭제
+
+
+ 
+                       /cartDelete               CartService
+  웹브라우저 ------------> CartDeleteServlet -----> CartServiceImpl <-------> CartDAO <-->MySQL
+                           |
+			   |                                          
+			 성공: /cartList
+			 실패: 로그인하지 않은 경우
+			     및
+			    로그인 했으나 time-out(30분) 된 경우
+
+			    member/loginInvalidate.jsp
+
+
+14. 장바구니 다중 삭제 ( 선택된 항목만 삭제)
+
+
+ 
+                       /cartDeleteAll               CartService
+  웹브라우저 ------------> CartDeleteAllServlet -----> CartServiceImpl <-------> CartDAO <-->MySQL
+                           |
+			   |                                          
+			 성공: /cartList
+			 실패: 로그인하지 않은 경우
+			     및
+			    로그인 했으나 time-out(30분) 된 경우
+
+			    member/loginInvalidate.jsp
+
+
+16. 개별 주문전 confirm 화면보기 
+
+   OrderDTO.java
+   OrderMapper.xml
+   위 파일을 Configuration.xml에 등록하기
+
+ 
+                       /orderConfirm               OrderService
+  웹브라우저 ------------> OrderConfirmServlet -----> OrderServiceImpl <-------> OrderDAO <-->MySQL
+                           |
+			   |                                          
+			 성공: orderConfirm.jsp
+			 실패: 로그인하지 않은 경우
+			     및
+			    로그인 했으나 time-out(30분) 된 경우
+
+			    member/loginInvalidate.jsp
