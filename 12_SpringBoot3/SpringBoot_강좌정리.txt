@@ -238,7 +238,14 @@
       ==> 단위테스트용 *.java가 필요한 파일들
 
 
-     JRE System library
+     JRE System library ( JDK 17 라이브러리 )
      Maven Dependency
+     ==> pom.xml에 등록된 의존성 파일들(*.jar)이 저장
+     ==> 기본 저장 디렉터리는 C:\Users\ssginc73\.m2\repository 이다.
+         가끔식 네트워크 이슈로 다운로드가 안 될수 있음.
+	 해결은 강사 및 같은 조원들에게 요청 ( repository.zip )
 
-     pom.xml
+     pom.xml ( Project Object Model )
+      - 전반적인 설정정보 저장.
+       예> 버전, 의존성파일(dependency),....
+      - 계층구조로 되어있음 ( 부모에 해당되는 pom.xml 이 존재함 )
