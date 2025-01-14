@@ -174,8 +174,49 @@
 
    1) 로컬로 프로젝트 작성
 
-
+     STS > File > NEW > Spring Starter Project (Boot 용 프로젝트 )
 
    2) 웹사이트 이용 ( initializer 방법 )
 
     http://start.spring.io 
+
+    project: maven 선택
+
+
+
+
+ 4. 빌드툴(build tool)
+
+   - 개발할 때 도움을 받을 수 있는 툴.
+
+   - 전통적인 프로그램 개발 프로세스 ( 수동으로 설정 )
+
+
+   소스작성--->필요한jar다운로드 및 컴파일 ---> 단위테스트 ---> 패키징(jar, war) -----> 배포
+
+    
+                    
+           <----------------------------------------------------------->
+	     자동화 가능
+
+    - 종류 2가지
+
+     1) maven
+       - 설정정보를 pom.xml 파일에 설정
+       - 빌드 과정 단계
+         a. validate
+	 b. compile
+	 c. test
+	 d. package
+	 e. install ( 패키징 )
+	 f. deploy
+
+     
+     2) gradle
+       - 설정정보를 build.gradle 파일에 설정
+
+
+    - 필요한 의존성을 설정하는 방법
+      
+      http://mvnrepository.com 에서 필요한 키워드 입력하고  maven 또는 gradle 항목에서 복사해서 사용함.
+
