@@ -5,12 +5,12 @@
 
   1) 개요
 
-   - Road Johnson 이 'Export One-on-One J2EE Development without EJB' 책을 통해서 소개. 
+   - Road Johnson 이 'Export One-on-One J2EE Development without EJB(Enterprise Java Beans)' 책을 통해서 소개. 
    - 2003년 2월부터 오픈 소스로 시작된 프로젝트.
 
   2) 특징
    - 경량의 컴포넌트.
-   - IoC ( Inversion of Control: 제어의 역행) 컨테이너 기반에서 관리됨.
+   - IoC ( Inversion of Control: 제어의 역행) 컨테이너(스프링의 특정 클래스) 기반에서 관리됨.
      ( Serlvet/JSP가 tomcat 컨테이너에서 관리된것과 유사 )
      IoC 개념? 클래스를 직접 생성하지 않고 의존성도 직접 설정하지 않음. 모두 Spring에게 맡김.
 
@@ -38,5 +38,104 @@
 	  ..
 
                      
+  3) Spring Framework 생태계
+     
+     https://spring.io
+
+     - Spring Framework
+     - Spring Boot
+     - Spring Security
+     - Spring Data
+     - Spring AI
+       ...
+
+  4) Spring Framework 버전
+
+    https://spring.io/projects/spring-framework#learn
+
+    - 6.X ( 2022년 )
+      JDK 17+
+
+  5) 용어 정리
+   
+   가. POJO ( Plain Old Java Object)
+     - 일반적인 오래된 자바 객체라는 의미.
+     - 어떠한 클래스 또는 인터페이스를 상속 및 구현하지 않아서
+       어떤 개발환경에서도 사용가능한 특징을 가짐.
+         예>
+
+        
+	HttpServlet
+	    |
+	    |
+	 MyServlet ( MyServlet 는 웹어플리케이션 환경에서만 사용 가능한 제약이 됨 )
+
+   나. Java Beans
+      - EJB 에서 사용했던 용어
+      - 특정한 규칙을 가짐
+        a. public 기본 생성자만 존재
+	b. getter/setter 메서드 존재
+	c. implments Serialzable
+
+   다. Spring bean
+      - POJO 기반의 Spring 어플리케이션에서 만든 모든 자바 클래스 의미.
+
+  
+   라. IoC ( Inversion of Control : 제어의 역행 )
+      - 우리가 필요한 빈(클래스)를 직접 생성하거나 빈간에 의존성을 직접 설정하지 않고
+        우리대신에 외부(IoC Container)에서 필요한 빈을 생성 및 의존성을 설정하는 개념.
 
                    
+   마. IoC Container
+
+      - IoC 방법으로 빈(클래스)를 관리한다는 의미에서 IoC Container 라고 부름.
+        (Spring Container, Spring Context 모두 동일한 개념이다. )
+
+      - 하드웨어 개념이 들어갔으나  일반 클래스이다.  ( XXXApplicationContext )
+
+
+      * 계층 구조
+
+
+ BeanFactory(인터페이스) MessageSource(인터페이스)
+	        |
+                |
+	    ApplicationContext ( 인터페이스, org.springframework.context )
+
+	         |
+		 |
+            AnnotationConfigApplicationContext(클래스, Java SE 환경의 IoC Container 임)
+	    GenericXmlApplicationContext(클래스, Java SE 환경의 IoC Container 임)
+	    ..
+
+	    XXXWebApplicationContext(클래스, Java EE 환경의 IoC Container 임)
+
+  
+
+   바. 의존성 주입 ( Dependency Injection: DI )
+  
+      - 개념: 임의의 클래스에서 다른 클래스를 참조할 때
+            직접 생성하는 것이 아니고 외부에서 생성한후 생성자 또는 setter 메서드 이용해서 
+	    설정하는 방법 의미함.
+
+      - 종류 2가지
+
+        a. 생성자 주입 ( Constructor-based Dependency Injection )
+	b. setter 메서드 주입 ( setter-based Dependency Injection )
+
+     예>
+
+         BoardListServlet     BoardService                              BoardDAO
+	                       
+			        BoardDAO dao;
+			       public void setDao(BoardDAO dao){
+			         this.dao =dao;
+			       }
+
+			       public BoardService(BoardDAO dao){
+			         this.dao =dao;
+			       }
+	
+	BoardService service =
+	   new BoardServiceImpl(new BoardDAO());
+	//service.setDao(new BoardDAO());
