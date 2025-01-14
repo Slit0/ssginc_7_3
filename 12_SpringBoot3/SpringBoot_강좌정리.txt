@@ -137,5 +137,34 @@
 			       }
 	
 	BoardService service =
-	   new BoardServiceImpl(new BoardDAO());
-	//service.setDao(new BoardDAO());
+	   new BoardServiceImpl(new BoardDAO());  // 생성자 주입
+	//service.setDao(new BoardDAO());         //  setter 메서드 주입
+
+
+2. 환경 설정
+
+  1) JDK 17 설치
+  2) SpringBoot 3.2.8 ( Spring Framework 6.X 내장됨 )
+    => SpringBoot 3 버전은 JDK 17+ 필요함.
+  
+  3) 개발툴 설치
+    - STS ( Spring Tool Suite ) 툴 지원.
+    - 현재 지원되는 종류 2가지
+
+      sts3 : Spring Framework 와 Spring Boot를 각각 개발할 수 있는 개발툴.
+
+
+      sts4 : Spring Boot 만 지원되는 개발툴.
+     
+
+    - 한글 인코딩 확인
+       
+        window > preference > general > workspace 에서 UTF-8 확인
+
+    - JSP/CSS/jS 위한 web 플러그인 추가
+
+       hep > eclipse marketplace >  web 검색 > Eclipse Enterprise Java and  Web Developer Tool 3.36 설치
+
+  
+  4) tomcat 설치 안함.
+     이유는 SpringBoot에서는 내장 tomcat 을 사용한다.
