@@ -168,3 +168,14 @@
   
   4) tomcat 설치 안함.
      이유는 SpringBoot에서는 내장 tomcat 을 사용한다.
+
+
+ 3.  SpringBoot 프로젝트 작성
+
+   1) 로컬로 프로젝트 작성
+
+
+
+   2) 웹사이트 이용 ( initializer 방법 )
+
+    http://start.spring.io 
