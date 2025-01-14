@@ -276,6 +276,7 @@
      a. @EnableAutoConfiguration : pom.xml에 <dependency>태그로 등록된 라이브러리를 보고, 그에 알맞은 최적의 설정정보를 자동으로 설정해줌.
                                   예> spring-boot-starter-web 지정하면 자동으로 웹어프리케이션 개발 위한 설정들이 자동으로 셋팅됨.
      b. @ComponentScan : 자동으로 빈(클래스)를 찾아서 new 해줌.
+                         단, Application.java 가 가진 패키지의 서브패키지로 만들어야 됨.
      c. @SpringBootConfiguration : 자동으로 추가되는 설정 이외의 개발자가 필요시 추가적인 Configuration 설정이 가능함.
 
 
@@ -343,3 +344,25 @@
 	logging.level.com.exam=warn             # com.exam 패키지믄 warn 로 커스터마이징
 
 	logging.file.name=c:\\Temp\\app.log     # 파일로 로그 저장.
+
+#########################################################################
+
+9. 빈 ( 클래스) 생성
+
+  - 직접 new 하지 않음.
+  - 권장하는 방법은 권장패키지 구조를 이용하는 것이다.
+   https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html
+
+  - 자동생성 빈 생성 방법 2 step
+
+    step1: 권장패키지 구조로 만듬.
+    step2: 자동으로 생성할 빈을 어노테이션으로 지정해야됨.
+           - @Component 
+	   - @Service    <== ServiceImpl 역할
+	   - @Repository <== DAO 역할
+	   - @Controller <== 서블릿 역할
+	   - @Configuration <== 설정 정보를 추가할 때 ( application.properties 대신에 ) 
+
+
+   
+
