@@ -289,3 +289,57 @@
        ..
 
 #########################################################################################################
+
+8. 로깅 (logging) 처리
+
+  1)개념
+   - 어플리케이션을 개발할 때 문제가 발생되면 대부분 콘솔(console) 정보를 보고 문제를 해결.
+     콘솔에 출력되는 정보를 로그(log) 라고 부름.
+
+   - 필요시 로그 출력은 이전에는 System.out.println으로 해결했으나 앞으로는 전문적인 로그 관리 라이브러리를 사용해야 된다.
+
+   - 대표적인 로그 관리 라이브러리
+     a. log4j ( 구현체 )
+     b. logback (구현체, Spring Boot 기본 로그임 )
+
+   - SLF4j 
+    ==> 인터페이스로서 Log4j와 Logback 구현체들이 SLF4j 인터페이스를 implments해서 만들어짐.
+        따라서 실제로 SLFj4 사용하면 Log4j에서 logback으로 변경시 코드를 수정할 필요가 없다.
+
+  - 로그 레벨 5가지
+
+      trace
+      debug
+      info (기본)
+      warn
+      error
+
+   동작방식은 지정된 레벨 및 하위까지 포함해서 로그가 출력됨.
+
+  - 구현 방법
+
+    가. Logger 생성
+  
+       // Logging의 인터페이스 기능인 slf4j 사용.
+       import org.slf4j.Logger;
+       import org.slf4j.LoggerFactory;
+
+       Logger logger = LoggerFactory.getLogger(클래스명.class);	 
+
+    나. 로그레벨에 해당되는 메서드 호출
+
+       logger.trace(값);
+       logger.debug(값);
+       logger.info(값);
+       logger.warn(값);
+       logger.error(값);
+
+    다. application.propeties에서 로그레벨 변경
+     
+       문법:  logging.level.벨=로그레벨
+
+       logging.level.root=warn  # 전체 패키지 로그 설정
+       #logging.level.org.springframework=info  # org.springframework 패키지믄 info로 커스터마이징
+	logging.level.com.exam=warn             # com.exam 패키지믄 warn 로 커스터마이징
+
+	logging.file.name=c:\\Temp\\app.log     # 파일로 로그 저장.
