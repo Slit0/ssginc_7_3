@@ -208,7 +208,7 @@
 	 b. compile
 	 c. test
 	 d. package
-	 e. install ( 패키징 )
+	 e. install ( 패키징 )  clean (퍄키징 삭제)
 	 f. deploy
 
      
@@ -220,3 +220,25 @@
       
       http://mvnrepository.com 에서 필요한 키워드 입력하고  maven 또는 gradle 항목에서 복사해서 사용함.
 
+
+5.  maven 빌드툴의 기본 디렉터리 구조
+
+     src/main/java
+      ==> *.java 가 저장
+      ==> 패키지 지정
+
+     src/main/resources
+     ==> *.java 제외한 나머지 파일들
+       ( 예> jdbc.properties, Configuration.xml, Mapper.xml 등 )
+
+     src/test/java
+      ==> 단위테스트용 *.java 저장
+
+     src/test/resources
+      ==> 단위테스트용 *.java가 필요한 파일들
+
+
+     JRE System library
+     Maven Dependency
+
+     pom.xml
