@@ -457,3 +457,38 @@ public class Application implements CommandLineRunner{
 			   this.dao = dao;
 			  }
 
+13.  빈의 scope
+https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#page-title
+
+   1) 개념
+      ApplicationContext에서 생성된 빈(클래스)는 싱글톤(singleton)으로 관리된다.
+      즉 단 한번만 생성됨. 
+      따라서 bean을 요청하면 항상 동일한 인스턴스(100번지)를 반환하게 된다.
+
+   2) scope 값 종류
+
+     singleton : 기본, 단 한번만 생성됨. 따라서 bean을 요청하면 항상 동일한 인스턴스(100번지)를 반환하게 된다.
+                 여러 사용자가 공유가 가능 ( thread-unsafe )
+     
+     prototype : bean을 요청하면 매번 새롭게 생성해서 반환.
+                 여러 사용자가 공유 불가 ( thread-safe)
+
+     request : web 환경,  HttpServletRequest scope와 동일
+
+     session : web 환경,  HttpSession scope와 동일
+
+     application : web 환경,  ServletContext scope와 동일
+
+   
+   3) scope 값 변경
+https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-reference.pdf
+
+     - @Scope 이용
+
+     - 문법:
+
+        @Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON) <== @Scope("singleton")
+	@Scope(value=ConfigurableBeanFactory.SCOPE_PROTOTYPE) <== @Scope("prototype")
+	..
+
+   
