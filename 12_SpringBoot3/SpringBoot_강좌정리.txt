@@ -651,6 +651,71 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 
 
    나. target object ( 핵심기능 클래스 )
+       @Service("deptService")
+	public class DeptServiceImpl implements DeptService{
 
+		@Override
+		public String sayEcho() {
+			return "안녕하세요";
+		}
+
+		@Override
+		public List<String> list() {
+			return Arrays.asList("홍길동","이순신");
+		}
+
+	}
 
    다. aspect ( 부가기능 클래스 )
+
+      @Component
+	@Aspect
+	public class LoggingAspect {
+
+		public void loggingPrint() {
+			 //로그처리 담당
+		}
+		
+	}
+
+   라. pointcut 지정
+
+     - target object 의 어떤 메서드를 호출했을 때 join할 지 표현식을 의미함.
+     https://docs.spring.io/spring-framework/reference/6.1/core/aop/ataspectj/pointcuts.html#aop-pointcuts-examples
+
+     @Pointcut("execution(public String sayEcho())")
+	public void businessService() {}
+
+ 
+   마. advice 지정
+
+      - target object 의 
+                  메서드 호출전 ( before advice, @Before )
+		  메서드 호출후 ( after advice , @After ) 
+		  메서드 호출해서 성공시 ( after returning advice, @AfterReturning )
+                  메서드 호출해서 에러발생시 ( after throwing advice, @AfterThrowing ) 
+	          메서드 호출전,호출후,성공시,에러발생시 모두 포함하는 경우 ( around advice, @Around)
+
+      // advice + pointcut 같이 표현
+	@Before("execution(public String say2*())")
+	public void loggingPrint1() {
+		 //로그처리 담당
+		logger.info("LOGGER:{}", "@Before 어드바이스1" );
+	}
+	
+	// advice와 pointcut 분리
+	@Pointcut("execution(public String sayEcho2())")
+	public void businessService() {}
+	
+	@Before("businessService()")
+	public void loggingPrint2() {
+		 //로그처리 담당
+		logger.info("LOGGER:{}", "@Before 어드바이스2" );
+	}
+	
+	@Before("businessService()")
+	public void loggingPrint3(JoinPoint point) {
+		 //로그처리 담당
+//		logger.info("LOGGER:{},{}", "@Before 어드바이스3", point.getSignature() );
+		logger.info("LOGGER:{},{}", "@Before 어드바이스3", point.getSignature().getName() );
+	}
