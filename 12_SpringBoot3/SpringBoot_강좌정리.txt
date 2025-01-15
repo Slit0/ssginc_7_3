@@ -492,3 +492,15 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 	..
 
    
+14. 빈의 초기화 작업 및 cleanup 작업
+
+   - 서블릿의 lifecycle과 비슷한 개념 ( 예> init()과 destroy() )
+   - 구현
+     
+      @PostConstruct
+      public void start(){
+         //초기화
+      }	
+	
+      @PreDestroy
+      public void shutdown(){}	
