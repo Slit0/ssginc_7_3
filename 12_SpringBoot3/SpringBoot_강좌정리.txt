@@ -503,4 +503,40 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
       }	
 	
       @PreDestroy
-      public void shutdown(){}	
+      public void shutdown(){
+        // cleanup
+      
+      }	
+
+ 
+15. profile
+
+ 1) 개념
+  - 개발할 때 다양한 환경을 구축해서 개발함
+
+  예> dev 환경(개발환경), Q/A 환경,  prod 환경(배포환경)
+
+
+    //개발환경
+
+    Application <---------> DeptServiceImpl <---------> LightDAO  <----> H2, Redis (경량 DB)
+
+
+     //배포환경
+
+    Application <---------> DeptServiceImpl <---------> EnterpriseDAO  <----> MySQL, Oracle( enterprise DB)
+
+  
+ 2) 구현방법
+
+  가. 각 환경에 맞는 application.properties 작성하자.
+
+    - application.properties ( 기본 )
+      ==> spring.profiles.active=prod
+
+    - 문법: application-프로파일명.properties
+     예> application-dev.properties
+         ==> H2 연동설정 정보
+
+        application-prod.properties
+	==> MySQL 연동설정 정보
