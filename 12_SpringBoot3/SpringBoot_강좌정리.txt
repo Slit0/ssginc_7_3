@@ -519,17 +519,17 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 
     //개발환경
 
-    Application <---------> DeptServiceImpl <---------> LightDAO  <----> H2, Redis (경량 DB)
+    Application <---------> DeptServiceImpl <---------> H2DAO  <----> H2, Redis (경량 DB)
 
 
      //배포환경
 
-    Application <---------> DeptServiceImpl <---------> EnterpriseDAO  <----> MySQL, Oracle( enterprise DB)
+    Application <---------> DeptServiceImpl <---------> MySQLDAO  <----> MySQL, Oracle( enterprise DB)
 
   
- 2) 구현방법
+ 2) 구현방법 1 -  프로파일에 따른 properties 선택하는 방법
 
-  가. 각 환경에 맞는 application.properties 작성하자.
+   각 환경에 맞는 application.properties 작성하자.
 
     - application.properties ( 기본 )
       ==> spring.profiles.active=prod
@@ -540,3 +540,117 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 
         application-prod.properties
 	==> MySQL 연동설정 정보
+
+ 2) 구현방법 2 -  프로파일에 따른 빈 선택하는 방법
+
+
+   예>     
+	@Repository
+	@Profile("prod")
+	public class MySQLDAO {
+
+
+
+	@Repository
+	@Profile("dev")
+	public class H2DAO {
+
+
+
+16. AOP ( Aspect Oriented Programming : 관점 지향 프로그래밍 )
+
+  1) 개념
+
+   // 현재코드
+                            
+   웹브라우저 <---------------> Servlet <---------> Service <-------------> DAO <--------> mysql
+                           - 핵심코드              - 핵심코드                - 핵심코드
+			   - 부수코드(로깅)          - 부수코드(로깅)            - 부수코드(로깅)
+ 
+	
+	핵심코드: 로그인, 회원가입, 장바구니, ......
+
+	부수코드: 예외처리, 로깅, 보안, 트랜잭션처리,....
+
+ 
+    결론은 혼합(핵심+부수)된 코드를 핵심코드와 부수코드를 분리해서  부수코드가 필요한 레이어에서 주입받아서 사용하도록 하자.
+
+
+     웹브라우저 <---------------> Servlet <---------> Service <-------------> DAO <--------> mysql
+                           - 핵심코드              - 핵심코드                - 핵심코드
+			   
+
+			     부수코드구현클래스
+			      -부수코드(로깅)
+
+  2) AOP 기술
+
+    가. AspectJ
+      - AOP 원천기술 ( 1995년 )
+      - 다양한 주입시점이 있음
+      예> 핵심코드를 가진 Servlet의 특정 메서드 호출할 때,
+         핵심코드를 가진 Servlet의 변수값이 변경될 때,
+         핵심코드를 가진 Servlet이 객체생성 될 때,
+	 ...
+
+
+
+    나. Spring AOP
+      - 원천기술인 AspectJ에서 일부분만 빌려서 사용함.
+        따라서 pom.xml에 <dependency> 필요.
+      - 단 하나의 주입시점만 가짐. ( 핵심코드를 가진 Servlet의 특정 메서드 호출(************)할 때)
+
+
+ 3) 용어정리
+
+   가. aspect : 부가기능 구현 클래스
+   나. joinpoint :  target object 와 aspect가 만나는 시점 의미.
+                   원천기술인 AspectJ는 다양한 시점이 있으나 Spring AOP에서는 메서드 호출 시점이다.
+   다. pointcut  :  target object 의 어떤 메서드를 호출했을 때 join할 지 표현식을 의미함. 예> list()
+
+   라. advice    : target object 의 
+                  메서드 호출전 ( before advice )
+		  메서드 호출후 ( after advice ) 
+		  메서드 호출해서 성공시 ( after returning advice )
+                  메서드 호출해서 에러발생시 ( after throwing advice ) 
+	          메서드 호출전,호출후,성공시,에러발생시 모두 포함하는 경우 ( around advice)
+   마. weaving   : 조인(주입) 의미
+   바. target object : 핵심 클래스 의미
+
+
+
+     // 핵심클래스                                         // 부가기능 구현 클래스
+
+    public class DeptServiceImpl{                      public class LogPrintAspect{
+							 
+							  public void print(){
+							     logger.info(...);
+							  }
+        // 핵심기능: 목록보기
+        public List<String> list(){                     }
+           ....
+	    
+	}
+
+	public int insert(){                     }
+           ....
+	    
+	}
+
+    }
+
+  4) 실습
+   
+   가.  의존성 설정
+	<!-- AOP 설정-->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-aop</artifactId>
+	</dependency>
+	<!-- AOP 설정-->
+
+
+   나. target object ( 핵심기능 클래스 )
+
+
+   다. aspect ( 부가기능 클래스 )
