@@ -879,3 +879,21 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
       - DAO 대신에 DeptMapper 주입받음.
 
 ###########################################################
+18. 개발용 데이터 초기화
+https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.data-initialization
+
+   1) 개념
+     실제 DB에 만들어진 테이블 및 데이터를 사용하지 않고
+     개발중에 동적으로 테이블 생성 및 데이터도 저장할 수 있는 방법이다.
+
+   2) 구현 방법
+
+    가. schema.sql 와 data.sql 작성
+     src/main/resource 에  schema.sql 와 data.sql 작성.
+
+     프로젝트를 실행할때마다 매번 생성된다.
+
+    나. application.properties 에서 데이터 초기화 활성화
+
+     # 데이터 초기화 활성
+      spring.sql.init.mode=always  # never
