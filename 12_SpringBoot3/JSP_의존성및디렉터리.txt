@@ -22,3 +22,28 @@ src/main/resources/META-INF/resources/WEB-INF/views/sayHello.jsp
 # application.properties 설정
 spring.mvc.view.prefix=/WEB-INF/views/
 spring.mvc.view.suffix=.jsp
+
+#########################################################################################################
+# 정적 파일 설정
+- src/main/resources 폴더에 static 폴더 만들고 이곳에 css/js/image 데이터 저장하면 됨.
+
+     예>
+        src/main/resources
+	                  static폴더
+			     - css
+                                  style.css
+                             - js
+			          script.js
+			     - images
+			          xxx.png
+
+     <head>
+	  <meta charset="UTF-8">
+	  <title>Insert title here</title>
+	 <link rel="stylesheet" type="text/css" href="css/style.css">
+	 <script type="text/javascript" src="js/script.js"></script>
+	</head>
+	<body>
+	    <h1>static 파일 처리</h1>
+	    <img src="images/ktds.png" width="100" height="100">
+	</body>
