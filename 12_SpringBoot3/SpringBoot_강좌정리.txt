@@ -740,7 +740,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 	}
 
 
-17. MyBatis + MySQL 연동
+17. MyBatis + MySQL 연동 방법1
 
  1) 2개의 jar 필요
    - mybatis.jar
@@ -852,3 +852,30 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 			this.session = session;
 		}
 	
+
+
+17. MyBatis + MySQL 연동 방법2
+
+   - DAO 대신에 @Mapper 어노테이션을 가진 인터페이스 이용.
+
+   1) DAO 삭제
+   2) DeptMapper.xml 과 자동 연동하는 인터페이스 작성
+      
+     - DeptMapper.java 작성
+     - 반드시 DeptMapper.java의 패키지와 
+       DeptMapper.xml의 namespace와 동일해야 된다.
+
+     - DeptMapper.java 구현은 다음과 같다.
+
+       id값과 일치하는 메서드를 지정함.
+       parameterType과 일치하는 파라미터타입을 지정함.
+       resultType과 일치하는 리턴타입을 지정함.
+      
+     - @Mapper 지정.
+
+    
+    3) Service 작업
+     
+      - DAO 대신에 DeptMapper 주입받음.
+
+###########################################################
