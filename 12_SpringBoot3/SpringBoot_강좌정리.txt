@@ -897,3 +897,61 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 
      # 데이터 초기화 활성
       spring.sql.init.mode=always  # never
+
+
+###########################################################
+
+19. Spring MVC
+
+  1) 서블릿/JSP 의 MVC 아키텍쳐
+
+   요청URL: http://localhost:8090/컨텍스트명/서블릿맵핑
+     
+     예> http://localhost:8090/app/test
+
+            요청
+   웹브라우저 ----------> 서블릿    <------------------> 서비스 <-----------> DAO <-------> MySQL
+                     -개발자가 생성
+		     -서블릿맵핑(/test)
+		     -중요작업 2가지
+		       a. 로직처리후 서비스 연동
+		          (사용자입력데이터 얻기 예> request.getParameter("key")
+                           세션처리  예> HttpSession session =request.getSession();
+                                     조건체크후 session.setAttribute("dto", dto);
+				     ..
+                       b. jsp 선택
+		         - forward
+			 - redirect
+         <-------------
+	    응답
+
+    - JSP가 기본적으로 지원됨.
+
+  2) SpringMVC 의 아키텍쳐
+
+   요청URL: http://localhost:8090/컨텍스트명/서블릿맵핑/요청맵핑값
+     
+     예> http://localhost:8090/app/list
+        http://localhost:8090/app/write
+        http://localhost:8090/app/delete
+  
+           요청                                    @Controller     @Service         @Repository       
+  웹브라우저 ------------> DispatcherServlet서블릿 <---> Controller <---> 서비스 <-----------> DAO <-------> MySQL
+                      - 제공됨.                     -중요작업 2가지
+		      - 서블릿맵핑(/)                a. 로직처리후 서비스 연동
+		                                 b. jsp 선택
+
+						  @RequestMapping("/list")
+						  public String aaa(){
+						     //게시판 목록보기
+						  }
+						  @RequestMapping("/write")
+						  public String bbb(int n){
+						     //게시판 글쓰기	
+						  }
+						  @RequestMapping("/delete")
+						  public void ccc(HttpServletRequest request){
+						     //게시판 글삭제	
+						  }
+
+     - JSP가 기본적으로 지원 안됨. 따라서 JSP 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 된다.
