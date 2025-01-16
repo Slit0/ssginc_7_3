@@ -839,3 +839,16 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
        선언적 트랜잭션 방식을 사용한다. (@Transactional 이용)
 
        
+    9) DAO 작업
+    
+      - SqlSession 역할의 SqlSessionTemplate 주입 받음.
+
+        @Repository
+	public class DeptDAO {
+
+		SqlSessionTemplate session;
+
+		public DeptDAO(SqlSessionTemplate session) {
+			this.session = session;
+		}
+	
