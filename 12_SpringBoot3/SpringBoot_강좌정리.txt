@@ -815,3 +815,27 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
 	mybatis.type-aliases-package=com.exam.dto
 
 ################################################################################
+
+
+    7) java 파일 작성
+
+                                    DeptService                     
+				    @Service                         @Repository
+    Application.java  <--------->  DeptServiceImpl <---------------> DeptDAO <-----------> MySQL
+    main()
+
+
+    8) 이전 MySqlSessionFactory.java 필요없음.
+       ( Configuration.xml 읽어서 SqlSessionFactory 반환하고 
+         최종적으로 Service클래스에서 SqlSession  얻고 DAO클래스에서 전달해서 사용함.
+	 Service클래스에서 SqlSession 얻은 이유는 트랜잭션 처리하기 위해서이다.
+	 commit()/rollback() 직접 호출하는 방식임.
+	 )
+
+
+       SpringBoot에서는 SqlSession 역할의 SqlSessionTemplate 사용한다.
+       그리고  Service클래스 대신에 DAO에서 SqlSessionTemplate 을 직접 얻어서 사용한다.
+       이유는 commit()/rollback() 직접 호출하는 방법의 트랜잭션 처리가 아니기 때문이다.
+       선언적 트랜잭션 방식을 사용한다. (@Transactional 이용)
+
+       
