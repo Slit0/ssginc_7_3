@@ -955,3 +955,92 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 						  }
 
      - JSP가 기본적으로 지원 안됨. 따라서 JSP 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 된다.
+
+
+  3) Spring MVC 구현 순서
+
+
+    가. 웹 어플리케이션 개발 위한 의존성 추가
+
+      		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+     ==> 웹개발 위한 JAR 및 Tomcat 설치됨 ( 내장 tomcat )
+     ==> tomcat 의 기본 port는 8080
+        변경 가능하고 application.properties 에서 server.port=8090 설정한다.
+
+
+
+
+     ==> 만약 404 면  WhiteLabel Error page 보여준다.
+       이것은 내부적으로 SpringBoot가 404 페이지를 만들어서 제공함.
+       spring-boot-autoconfigure-3.2.8.jar
+       > org.springframework.boot.autoconfigure.web.servlet.error
+       > ErrorMvcAutoConfiguration.class 클릭 > 213 라인에 html 제공됨.
+
+
+    나. Controller 작성
+
+       - POJO 기반이고 @Controller 지정.
+
+       - 각 기능에 해당되는 메서드 작성하고 @RequestMapping("/요청매핑값") 설정한다.
+         이렇게 설정하면 요청 URL 다음과 같다.
+
+	  요청 URL: http://localhost:8090/컨텍스트명/서블릿맵핑명/요청맵핑명  (***********)
+
+          기본 컨텍스트명: ''
+	  서블릿맵핑명:   /
+
+        - 컨텍스트명 변경 가능하고 application.properties 에서 
+	  # context명 변경
+          server.servlet.context-path=/app 설정한다.
+	  
+    
+    다. JSP 설정
+
+      
+      a. JSP/CSS/jS 위한 web 플러그인 추가
+
+       hep > eclipse marketplace >  web 검색 > Eclipse Enterprise Java and  Web Developer Tool 3.36 설치
+
+      
+      b. JSP 의존성 추가
+        - SpringBoot는 JSP 지원안됨.
+
+        <dependency>
+	  <groupId>org.apache.tomcat.embed</groupId>
+	  <artifactId>tomcat-embed-jasper</artifactId>
+	  <scope>provided</scope>
+	</dependency>
+	<dependency>
+	  <groupId>jakarta.servlet.jsp.jstl</groupId>
+	  <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+	</dependency>
+	<dependency>
+	  <groupId>org.glassfish.web</groupId>
+	  <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+	</dependency>
+
+
+     c. 웹 디렉터리 명시적으로 생성
+      src/main/resources
+             /META-INF/resources/WEB-INF/views/sayHello.jsp
+
+
+      ==> jsp가 WEB-INF에 저장된다. 따라서 웹 브라우저에서 직접 jsp를 접근할 수 없다.
+          jsp 접근은 Controller 통해서 forward 또는 redirect로 접근이 가능하다.
+
+
+
+      d. JSP 알려주기
+
+        - Controller 에서 구현된 메서드 리턴값으로 알려준다.
+
+	예>
+	@RequestMapping("/list")
+	public String aaa() {
+		logger.info("LOGGER:{}", "aaa 호출");
+		return "/WEB-INF/views/sayHello.jsp";
+	}
