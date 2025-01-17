@@ -974,12 +974,13 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 
   2) SpringMVC 의 아키텍쳐
 
-   요청URL: http://localhost:8090/컨텍스트명/서블릿맵핑/요청맵핑값
+   요청URL: http://localhost:8090/컨텍스트명/서블릿맵핑/요청맵핑값 (**************)
      
      예> http://localhost:8090/app/list
         http://localhost:8090/app/write
         http://localhost:8090/app/delete
   
+                                                 @RestController
            요청                                    @Controller     @Service         @Repository       
   웹브라우저 ------------> DispatcherServlet서블릿 <---> Controller <---> 서비스 <-----------> DAO <-------> MySQL
                       - 제공됨.                     -중요작업 2가지
@@ -999,7 +1000,8 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 						     //게시판 글삭제	
 						  }
 
-     - JSP가 기본적으로 지원 안됨. 따라서 JSP 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 된다.
+     - Spring Boot는 JSP가 기본적으로 지원 안됨. 따라서 JSP 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 된다.
+       Spring Boot는 JSP 보다 Thymeleaf 지원.
 
 
   3) Spring MVC 구현 순서
@@ -1015,7 +1017,8 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
      ==> 웹개발 위한 JAR 및 Tomcat 설치됨 ( 내장 tomcat )
      ==> tomcat 의 기본 port는 8080
         변경 가능하고 application.properties 에서 server.port=8090 설정한다.
-
+          # context명 변경
+          server.servlet.context-path=/app 설정한다. 
 
 
 
@@ -1028,7 +1031,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 
     나. Controller 작성
 
-       - POJO 기반이고 @Controller 지정.
+       - POJO 기반이고 @Controller 또는 @RestController 지정.
 
        - 각 기능에 해당되는 메서드 작성하고 @RequestMapping("/요청매핑값") 설정한다.
          이렇게 설정하면 요청 URL 다음과 같다.
@@ -1069,13 +1072,22 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 	</dependency>
 
 
-     c. 웹 디렉터리 명시적으로 생성
-      src/main/resources
+     c. 웹 디렉터리 명시적으로 생성 방법 2가지
+
+
+       (1) src/main/resources 에 만드는 방법 ( 권장 )
+        src/main/resources
              /META-INF/resources/WEB-INF/views/sayHello.jsp
+
+       (2) src/main 에 만드는 방법
+        src/main/webapps/WEB-INF/views/sayHello.jsp
+	  
 
 
       ==> jsp가 WEB-INF에 저장된다. 따라서 웹 브라우저에서 직접 jsp를 접근할 수 없다.
           jsp 접근은 Controller 통해서 forward 또는 redirect로 접근이 가능하다.
+
+
 
 
 
@@ -1089,3 +1101,5 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 		logger.info("LOGGER:{}", "aaa 호출");
 		return "/WEB-INF/views/sayHello.jsp";
 	}
+
+       - Controller 에서 메서드에서 String 타입을 리턴하면 String에는 JSP 정보가 담긴다. (***********)
