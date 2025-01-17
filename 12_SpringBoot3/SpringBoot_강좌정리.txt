@@ -1352,3 +1352,33 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 			logger.info("LOGGER:JSESSIONID={}", s2);
 			return "main";
 		}	
+
+
+21. Controller에서 JSP에서 보여줄 데이터 저장 ( 모델 관리 )
+
+        1) 이전 서블릿 처리
+	   - scope에 저장했음.
+
+             public void doGet(HttpServletRequest request, HttpServletResponse response){
+                   
+		   //데이터저장
+		   request.setAttribute(key,value);
+		   session.setAttribute(key,value);
+		   application.setAttribute(key,value);
+
+	           //데이터 보기
+		   JSP를 forwared/redirect 해서 scope에 저장된 데이터 참조
+		   이때 ${key} 이용.
+
+
+
+	 2) Spring Controller  처리
+	    - JSP에서 보여주는 데이터를 model 이라고 부름.
+	    - scope에 저장함.
+
+         가. request scope에 모델 저장하는 방법
+
+	 나. session scope에 모델 저장하는 방법
+
+
+	 다. application scope에 모델 저장하는 방법
