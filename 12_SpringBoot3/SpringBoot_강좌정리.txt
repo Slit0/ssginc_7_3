@@ -1305,9 +1305,50 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 					   @RequestHeader("accept-language") String s2) {
 		
 			 logger.info("LOGGER:user-agent={}", s);
-			 logger.info("LOGGER:accept-language={}", s2);
+			 logger.info("LOGGER:accept-language={}", s2);  // ko-KR,ko
 			return "main";
 		}
 
+              - 나중에 다국어처리(I18N) 처리할 때 accept-language 헤더값을 사용하게 된다.
+
+
+
    3. 요청 쿠키값 보기
 
+         1) 이전 서블릿 처리
+            // 서블릿 쿠키 코드
+	@GetMapping("/set")
+	public String set(HttpServletRequest request, HttpServletResponse response) {
+		
+		Cookie c = new Cookie("userid", "홍길동");
+		c.setMaxAge(3600); // 1시간
+		response.addCookie(c);
+	
+		return "main";
+	}
+	
+	// 서블릿 쿠키 코드
+		@GetMapping("/get")
+		public String get(HttpServletRequest request, HttpServletResponse response) {
+			
+			Cookie [] cookies = request.getCookies();
+			for (Cookie c : cookies) {
+				String name = c.getName();
+				String value = c.getValue();
+				logger.info("LOGGER:{}={}", name, value);
+			}
+		
+			return "main";
+		}
+
+	 2) Spring Controller  처리
+
+	   // spring 쿠키 얻기
+		@GetMapping("/get2")
+		public String get2(@CookieValue("userid") String s,
+							@CookieValue("JSESSIONID") String s2) {
+	
+			logger.info("LOGGER:userid={}", s);
+			logger.info("LOGGER:JSESSIONID={}", s2);
+			return "main";
+		}	
