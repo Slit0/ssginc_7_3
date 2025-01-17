@@ -838,7 +838,52 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/pdf/spring-boot-referen
        이유는 commit()/rollback() 직접 호출하는 방법의 트랜잭션 처리가 아니기 때문이다.
        선언적 트랜잭션 방식을 사용한다. (@Transactional 이용)
 
-       
+        @Transactional 클래스 레벨 및 메서드 레벨 사용 가능.
+	==> @Target(value={TYPE, METHOD})
+
+    ########################################################
+      * 트랜잭션 처리 ( Service 클래스에서 처리 )
+	(1) Java SE ( JDBC, auto commit )
+
+	    public void tx(){
+	      Connection con = ~;
+            try{
+	con.setAutoCommit(false);
+	        int n = dao.insert(~);
+		int n2 = dato.delete(~);
+	con.commit();
+            }catch(Exception e){
+        con.rollback();
+	    }
+
+
+        (2) Java SE/EE ( MyBatis, auto commit 아님 )
+
+            public void tx(){
+
+	     SqlSession session = MySqlSesssionFactory.getSession();
+	     try{
+                 int n = dao.insert(~);
+		 int n2 = dato.delete(~);
+                 session.commit();
+	     }catch(Exception e){
+	         session.rollback();
+	     }finally{
+                session.close();
+	       
+          
+	 (3) Spring Framework/ SpringBoot ( auto commit )
+
+	      @Transactional  // 성공하면 모두 자동으로 commit 되고 하나라도 실패하면 모두 자동으로 rollback 됨
+              public void tx(){
+	        
+		 int n = dao.insert(~);
+		 int n2 = dato.delete(~);
+		
+	      }
+
+
+    ########################################################       
     9) DAO 작업
     
       - SqlSession 역할의 SqlSessionTemplate 주입 받음.
