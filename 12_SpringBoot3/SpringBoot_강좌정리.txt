@@ -1260,7 +1260,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
 21. Controller의 요청 처리 작업
 
-   - 사용자입력 데이터 얻기
+   1. 사용자입력 데이터 얻기
 
     1) 이전 서블릿 처리
      
@@ -1282,3 +1282,32 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	 null 값 대신에 초기화값 사용 가능. ( defaultValue = "초기값")
 
        - 전달되는 값이 정수이면 Controller 메서드에서 직접 Long(Integer) 타입의 정수로 저장 가능하다.
+
+    
+   2. 요청 헤더값 보기
+
+          1) 이전 서블릿 처리
+	      public void doGet(HttpServletRequest request, HttpServletResponse response){
+		 
+		  Enumeration<String> enu = request.getHeaderNames();
+		 while(enu.hasMoreElements()) {
+			 String key = enu.nextElement();
+			 String value = request.getHeader(key);
+			 
+			 logger.info("LOGGER:{}={}", key, value);
+		 }
+		   
+          2) Spring Controller  처리
+              - @RequestHeader() 이용
+               
+		@GetMapping("/main")
+		public String list(@RequestHeader("user-agent") String s,
+					   @RequestHeader("accept-language") String s2) {
+		
+			 logger.info("LOGGER:user-agent={}", s);
+			 logger.info("LOGGER:accept-language={}", s2);
+			return "main";
+		}
+
+   3. 요청 쿠키값 보기
+
