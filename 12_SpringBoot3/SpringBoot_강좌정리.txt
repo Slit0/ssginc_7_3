@@ -1209,3 +1209,50 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	}
 
 	최종 요청매핍값: /member/list
+
+      4) GET 및 POST 요청1 - 기본
+
+         // 요청맵핑값과 method 가 모두 다른 경우1
+	@RequestMapping(value = "/req/get", method = RequestMethod.GET )
+	public String req_get() {
+		logger.info("LOGGER:{}", "GET");
+		return "main";
+	}
+	
+	@RequestMapping(value = "/req/post", method = RequestMethod.POST )
+	public String req_post() {
+		logger.info("LOGGER:{}", "POST");
+		return "main";
+	}
+	
+       4) GET 및 POST 요청2 - method만 다른 경우
+
+         예> 게시판 글쓰기
+
+	   //가. 글쓰기 화면보기 ( GET 방식 )
+
+      @RequestMapping(value = "/write", method = RequestMethod.GET )
+	public String writeUI() {
+
+		return "write";
+	}
+		
+	   //나. 글쓰기       ( POST 방식 )
+
+      @RequestMapping(value = "/write", method = RequestMethod.POST )
+	public String write() {
+
+		return "~~~";
+	}
+
+       4) GET 및 POST 요청3 ( 권장 )
+
+         - @RequestMapping 문법 이후에 지원
+  
+           @RequestMapping(value = "/write", method = RequestMethod.GET )
+
+	  ==> @GetMapping("/write")
+
+	   @RequestMapping(value = "/write", method = RequestMethod.POST )
+
+          ==> @PostMapping("/write")
