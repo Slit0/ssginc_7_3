@@ -1001,7 +1001,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 						  }
 
      - Spring Boot는 JSP가 기본적으로 지원 안됨. 따라서 JSP 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 된다.
-       Spring Boot는 JSP 보다 Thymeleaf 지원.
+       Spring Boot는 JSP(*.jsp) 보다 Thymeleaf(*.html) 지원.
 
 
   3) Spring MVC 구현 순서
@@ -1099,7 +1099,63 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/howto.html#howto.d
 	@RequestMapping("/list")
 	public String aaa() {
 		logger.info("LOGGER:{}", "aaa 호출");
-		return "/WEB-INF/views/sayHello.jsp";
+		//return "/WEB-INF/views/sayHello.jsp";  // 문제점: 경로가 길다. 다른 view기술(thymeleaf)변경시 코드를 수정해야됨.
+		return "sayHello";  // 나중에 prefix와 suffix가 자동으로 설정됨.
 	}
 
-       - Controller 에서 메서드에서 String 타입을 리턴하면 String에는 JSP 정보가 담긴다. (***********)
+       - Controller 의 메서드에서 String 타입을 리턴하면 String에는 JSP 정보가 담긴다. (***********)
+
+       - /WEB-INF/views/sayHello.jsp  full 경로 지정할 때의 문제점 해결방법은 다음과 같다.
+	application.properties에  prefix 와 suffix 설정한다.
+	
+	 # JSP용 prefix 와 suffix 설정
+	spring.mvc.view.prefix=/WEB-INF/views/
+	spring.mvc.view.suffix=.jsp
+
+
+       - Controller에서 JSP 요청은 forward로 처리됨. 따라서 URL 변경이 안됨.
+        즉 Controller에서 request scope에 데이터를 저장하면 JSP에서 사용할 수 있다.
+
+  ######################################################################
+     * VSC의 Live Server 처럼 소스코드 변경시 바로 서버에 반영이 가능한 방법
+       - devtools 의존성 추가
+
+         <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+	 </dependency>
+
+
+
+
+    ######################################################################
+  
+      라. 정적 파일 ( CSS, JS, image )
+https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servlet.spring-mvc.static-content
+
+     설정방법:
+       src/main/resources
+                    static 폴더
+		      js 폴더
+		        -*.js
+		      css 폴더
+		        _ *.css
+		
+		      images 폴더
+		        - *.jpg
+			  ..
+		      
+     접근방법:
+       <head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" href="css/test.css">
+	<script src="js/test.js"></script>
+	</head>
+	<body>
+	 <h1>sayHello.jsp</h1>
+	  <p>안녕하세요</p>
+	  <img src="images/bottom1.gif" width="100" height="100" >
+	</body>
