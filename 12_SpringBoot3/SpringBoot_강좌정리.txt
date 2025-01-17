@@ -1256,3 +1256,29 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	   @RequestMapping(value = "/write", method = RequestMethod.POST )
 
           ==> @PostMapping("/write")
+
+
+21. Controller의 요청 처리 작업
+
+   - 사용자입력 데이터 얻기
+
+    1) 이전 서블릿 처리
+     
+       public void doGet(HttpServletRequest request, HttpServletResponse response){
+
+           String userid = request.getParameter("userid");
+           String [] hobbies = request.getParameterValues("hobby");
+ 
+           String userid2 = request.getParameter("userid2");  // null
+
+	  String age = request.getParameter("age");
+	  int age2 = Integer.parseInt(age);
+
+    2) Spring Controller  처리
+
+       - @RequestParam("/태그name값") 사용.
+         태그name값에 해당되는 파라미터는 필수(required)임. 따라서 일치하는 태그name값이 없으면 에러가 발생됨.
+	 옵션으로 변경가능하면 null 반환.( required=false )
+	 null 값 대신에 초기화값 사용 가능. ( defaultValue = "초기값")
+
+       - 전달되는 값이 정수이면 Controller 메서드에서 직접 Long(Integer) 타입의 정수로 저장 가능하다.
