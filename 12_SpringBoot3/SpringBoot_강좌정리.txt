@@ -1159,3 +1159,53 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	  <p>안녕하세요</p>
 	  <img src="images/bottom1.gif" width="100" height="100" >
 	</body>
+
+
+
+20. @RequestMapping 정리
+
+    1) 용도
+
+    - 요청 URL에서 (http://localhost:8090/컨텍스트명/서블릿맵핑명/요청맵핑명  ) 사용하는 요청맵핑명을 
+      @RequestMapping("/요청맵핑명")에 설정해서 요청에 대한 실제 처리를 위한 메서드를 선택하는 용도이다.
+
+    2) 다양한 패턴이 제공됨. ( 메서드 레벨 )
+
+       @RequestMapping("/list")
+       @RequestMapping(value="/list")
+       @RequestMapping(value={"/list", "/select"})
+       @RequestMapping(value="/board/list")
+       @RequestMapping(value="/member/list")
+      @RequestMapping(value="/list*")  // /list , /listA, /listB ,..
+      @RequestMapping(value="/list/*") // /list/xxx, /list/bbb, .. <== * 는 하나의 디렉터리 의미
+      @RequestMapping(value="/list/*/some") // /list/xxx/some, /list/bbb/some, ..
+
+      @RequestMapping(value="/list/**") // /list/xxx/yyy, /list/bbb, ..  <== ** 는 여러개의 디렉터리 의미
+
+
+      // 다음코드는 에러발생 해결방법은 다음과 같다.
+      https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servlet.spring-mvc.content-negotiation
+      spring.mvc.pathmatch.matching-strategy=ant-path-matcher
+      
+      @RequestMapping(value="/list/**/some") // /list/xxx/some, /list/bbb/ccc/some, ..
+
+
+    3) 클래스 레벨
+ 
+      - 클래스 레벨의 요청값과 메서드 레벨의 요청값이 결합되어 최종적으로 요청맵핑값이 정해짐.
+
+       예>
+        @Controller
+	@RequestMapping("/member")
+	public class MemberController {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	
+	@RequestMapping("/list")
+	public String list() {
+		logger.info("LOGGER:{}", "/member/list 호출");
+		return "sayHello";
+	}
+
+	최종 요청매핍값: /member/list
