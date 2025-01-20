@@ -1491,3 +1491,57 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
 		      application.setAttribute(key,value);
 
+
+
+22. Controller에서 메서드 리턴타입 종류
+
+
+   웹브라우저 ---------->DispatcherServlet ----------> Controller
+                                       <---------- a. 로직처리
+				                      DB연동해서 가져온 데이터(Model)를 scope에 저장
+				                   b. 뷰처리
+						      jsp(View)업 알려주는 작업
+
+
+
+    1) String 타입인 경우
+
+     - 뷰 정보를 설정한 것임.
+     - 모델은 파라미터로 설정함.
+
+    2) ModelAndView 타입인 경우
+
+     - 뷰 정보와 Model 정보를 각각 설정
+     예>
+       ModelAndView mav = new ModelAndView();
+		// 모델 저장
+		mav.addObject("userid", "홍길동" );
+		mav.addObject("passwd", "1234" );
+	
+		// 뷰 저장 (JSP)
+		mav.setViewName("main");
+
+
+    3) Model를 리턴타입으로 지정
+
+     
+     가. DTO 타입
+
+     예>
+
+       @GetMapping("/zzz")   // zzz.jsp
+       public @ModelAttribute("xxx")  LoginDTO a(){
+       
+         return new LoginDTO();
+       }
+   
+   나. ArrayList 타입
+
+     예>
+
+       @GetMapping("/zzz") // zzz.jsp
+       @ModelAttribute("xxx") 
+       public ArrayList<LoginDTO> a(){
+       
+         return new ArrayList<LoginDTO>();
+       }
