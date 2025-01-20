@@ -1656,3 +1656,36 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 		
 		return "redirect:xxx";
 	}
+
+ 26. PRG 패턴 ( Post-Redirect-Get 패턴 )
+
+ 1)개념
+   post 요청에 대해서 GET 방식의 웹페이지로 리다이렉트 요청하는 패턴.
+   즉 post 요청으로 시작해서 GET 요청으로 종료하라는 의미.
+
+   PRG 패턴을 적용하지 않으면 다음과 같은 문제가 발생됨
+   가. 새로고침하면 동일한 요청이 연속적으로 보내지는 이슈가 발생됨. ( 멱등 이슈 )
+   나. URL 복사해서 사용하면 405 에러가 발생 이슈
+   
+   예>
+     @GetMapping("/main")
+	public String list() {
+		return "main";
+	}
+	
+	
+	@PostMapping("/write")
+	public String write(@RequestParam("userid") String id, 
+			            @RequestParam("passwd")  String pw,
+			            @RequestParam("age")  Long age) {
+
+		
+		logger.info("LOGGER:{},{},{}", id, pw, age);
+		return "redirect:success";  // success.jsp
+	}
+	
+	
+	@GetMapping("/success")
+	public String success() {
+		return "success";
+	}
