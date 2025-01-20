@@ -1552,3 +1552,39 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
     public void  login3() {
 		
      }
+
+
+23.  JSON 통신
+
+                JSON
+  웹 브라우저 ----------------------> Controller
+          <---------------------
+	        JSON
+
+
+  1) 요청시  From JSON to DTO(List) : @RequestBody
+
+                      JSON
+     웹 브라우저 ----------------------> Controller
+   {userid:'홍길동',                      LoginDTO에 저장
+    passwd:'1234'}                       String userid;
+                                         String passwd;
+
+   
+   [{userid:'홍길동1',passwd:'1234'},     List<LoginDTO에> lilst
+    {userid:'홍길동2',passwd:'1234'}]
+
+
+
+  2) 응답  : From DTO(List) to JSON : @ResponseBody
+
+    웹 브라우저  <--------------------- Controller
+                    JSON
+
+   {userid:'홍길동',                      LoginDTO에 저장
+    passwd:'1234'}                       String userid;
+                                         String passwd;
+
+   
+   [{userid:'홍길동1',passwd:'1234'},     List<LoginDTO에> lilst
+    {userid:'홍길동2',passwd:'1234'}]
