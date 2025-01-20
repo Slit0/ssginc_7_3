@@ -1637,3 +1637,22 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	                          URL이 변경 안됨. request scope에 저장된 데이터는 jsp에서 참조 가능.
 
      }
+
+ 
+ 25.  redirect 의 flash scope
+
+   -  request scope <  flash scope  < session scope
+
+     flash scope 는 redirect 했을 때 한 번만 사용가능한 방법이다.
+
+   - RedirectAttributes 모델과 m.addFlashAttribute("userid", "이순신") 이용
+
+    예>
+      @GetMapping("/redirect-flash")
+	public String aaa2(RedirectAttributes m) {
+		logger.info("LOGGER:{}", "redirect-flash 호출");
+		
+		m.addFlashAttribute("userid", "이순신");
+		
+		return "redirect:xxx";
+	}
