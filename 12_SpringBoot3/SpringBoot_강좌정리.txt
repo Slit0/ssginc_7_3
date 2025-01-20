@@ -1775,6 +1775,8 @@ https://commons.apache.org/proper/commons-fileupload/
 
     1) 이전 Servlet 코드
     
+      웹브라우저 ------>   필터    ---> 서블릿
+
       a. public class MyFilter implments Filter{
                 
            	public void doFilter(ServletRequest request, 
@@ -1807,3 +1809,41 @@ https://commons.apache.org/proper/commons-fileupload/
 
     2) Spring 코드
 
+        웹브라우저 ------>   필터    ---> 서블릿(DispatcherServlet) ------> Controller
+
+         a. public class MyFilter implments Filter{
+                
+           	public void doFilter(ServletRequest request, 
+			ServletResponse response, 
+			FilterChain chain) throws IOException, ServletException {
+	
+		//서블릿 요청전 코드 작업 ( 요청 필터 )
+		System.out.println("MyFilter.요청 필터");
+		
+		chain.doFilter(request, response);
+		
+		//서블릿 응답후 코드 작업 ( 응답 필터 )
+		System.out.println("MyFilter.응답 필터");
+		
+	}
+
+         }
+	 
+
+	 b. web.xml 대신에 설정정보를 저장할 새로운 빈을 작성
+https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servlet.spring-mvc.error-handling.error-pages-without-spring-mvc
+	   - // MyFilter 등록
+		@Configuration
+		public class WebConfig implements WebMvcConfigurer {
+
+			// 직접 등록
+			@Bean
+			public FilterRegistrationBean<MyFilter>  myFilter(){
+				FilterRegistrationBean<MyFilter> filter = 
+						new FilterRegistrationBean<MyFilter>(new MyFilter());
+				
+				filter.addUrlPatterns("/*");  // web.xml의 <url-pattern>/*</url-pattern>
+				return filter;
+			}
+			
+		}
