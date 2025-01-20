@@ -1556,6 +1556,8 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
 23.  JSON 통신
 
+  - JSP가 필요 없음.
+
                        JSON
   웹 브라우저           ----------------------> Controller
   (js,jQuery(ajax)) <---------------------
@@ -1589,3 +1591,49 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
    
    [{userid:'홍길동1',passwd:'1234'},     List<LoginDTO에> lilst
     {userid:'홍길동2',passwd:'1234'}]
+
+
+    나중에는 다음과 같다.
+
+                           JSON
+    웹브랑우저       --------------------------------> Controller
+    (React.js)   <-------------------------------
+                           JSON
+
+
+
+24. redirect 와 forward
+
+   1) 이전 Servlet 코드
+
+       public void doGet(HttpServletRequest request, HttpServletResponse response ){
+
+        //리다이렉트 방식
+	response.sendRedirect("타겟");
+
+	//forward 방식
+	request.getRequestDispatcher("타겟").forward(request, response);
+
+
+    2) Spring 방식
+
+     @GetMapping("/xxx") 
+    public String  login3() 
+
+    }
+
+    @GetMapping("/main")  
+    public String  login() {
+
+	//기본
+	return "xxx"; //xxx.jsp
+
+	//리다이렉트 방식	
+	return "redirect:xxx"; // xxx.jsp아니고 요청맵핑값이다. 즉 @GetMapping("/xxx")으로 리다이렉트 요청함
+	                          URL이 변경됨. request scope에 저장된 데이터는 jsp에서 참조 불가.
+
+	//forward 방식
+        return "forward:xxx"; // xxx.jsp아니고 요청맵핑값이다.  즉 @GetMapping("/xxx")으로 forward 요청함
+	                          URL이 변경 안됨. request scope에 저장된 데이터는 jsp에서 참조 가능.
+
+     }
