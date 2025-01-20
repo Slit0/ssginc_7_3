@@ -1769,3 +1769,41 @@ https://commons.apache.org/proper/commons-fileupload/
 	spring.servlet.multipart.max-file-size=3MB  
 	# 한번 요청 최대 크기, 기본은 10MB.
 	spring.servlet.multipart.max-request-size=15MB
+
+
+ 28. Filter 적용
+
+    1) 이전 Servlet 코드
+    
+      a. public class MyFilter implments Filter{
+                
+           	public void doFilter(ServletRequest request, 
+			ServletResponse response, 
+			FilterChain chain) throws IOException, ServletException {
+	
+		//서블릿 요청전 코드 작업 ( 요청 필터 )
+		System.out.println("MyFilter.요청 필터");
+		
+		chain.doFilter(request, response);
+		
+		//서블릿 응답후 코드 작업 ( 응답 필터 )
+		System.out.println("MyFilter.응답 필터");
+		
+	}
+
+         }
+     
+      b. web.xml 등록
+
+        <filter>
+	    <filter-name>MyFilter2</filter-name>
+	    <filter-class>com.filter.MyFilter2</filter-class>
+	  </filter>
+	  <filter-mapping>
+	    <filter-name>MyFilter2</filter-name>
+	    <url-pattern>/*</url-pattern>
+	  </filter-mapping>
+  
+
+    2) Spring 코드
+
