@@ -1545,3 +1545,10 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
        
          return new ArrayList<LoginDTO>();
        }
+
+   ¥Ÿ. void ≈∏¿‘
+
+     @GetMapping("/main3")  // main3.jsp
+    public void  login3() {
+		
+     }
