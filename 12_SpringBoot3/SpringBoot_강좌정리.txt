@@ -1689,3 +1689,73 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 	public String success() {
 		return "success";
 	}
+
+
+ 27. 파일업로드
+
+   - 기존 Servlet 또는 Spring Framework에서 파일 업로드를 구현할려면
+     의존성 추가 필요함.
+     하지만 SpringBoot에서는 의존성 파일이 내장되어 있음.
+
+   - 구현
+    1) jsp 파일 작업
+https://commons.apache.org/proper/commons-fileupload/
+      - 반드시 method와 enctype를 다음과 같이 설정해야 됨.
+        method="post"
+        enctype="multipart/form-data"
+
+    <form method="POST" enctype="multipart/form-data" action="">
+         파일: <input type="file" name="theFile"> <br>
+         내용: <input type="text" name="theText"> <br>
+
+   2) DTO 작성
+
+
+	     
+	public class UploadDTO {
+
+		MultipartFile theFile;
+		String theText;
+
+   3) Controller 작성
+      @PostMapping("/upload")
+	public String upload(UploadDTO dto) {
+		
+		
+		MultipartFile theFile = dto.getTheFile();
+		String theText = dto.getTheText();
+		
+		//byte[] byte_arr = theFile.getBytes();
+		String contentType =theFile.getContentType();
+		String name = theFile.getName();
+		String originalFilename
+		      = theFile.getOriginalFilename();
+		long size = theFile.getSize();
+		
+		logger.info("LOGGER:contentType: {}", contentType);
+		logger.info("LOGGER:name: {}", name);
+		logger.info("LOGGER:originalFilename: {}", originalFilename);
+		logger.info("LOGGER:size: {}", size);
+		
+		// 저장할 경로 설정
+		File f = new File("c:\\upload", originalFilename);
+		
+		// 파일 저장
+		try {
+			theFile.transferTo(f);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "uploadInfo";  //나중에 PRG 패턴으로 변경
+	}
+}
+   
+     4) JSP에서 업로드된 파일 정보 출력 
+
+       
+	 <h1>uploadInfo.jsp</h1>
+	 업로드 파일크기:${uploadDTO.theFile.size} <br>
+	 업로드 파일명:${uploadDTO.theFile.originalFilename}
