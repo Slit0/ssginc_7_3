@@ -1556,10 +1556,11 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
 23.  JSON 통신
 
-                JSON
-  웹 브라우저 ----------------------> Controller
-          <---------------------
-	        JSON
+                       JSON
+  웹 브라우저           ----------------------> Controller
+  (js,jQuery(ajax)) <---------------------
+   도구(Postman,          JSON
+      Talend)           
 
 
   1) 요청시  From JSON to DTO(List) : @RequestBody
