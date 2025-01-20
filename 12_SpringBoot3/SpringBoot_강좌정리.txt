@@ -1771,7 +1771,7 @@ https://commons.apache.org/proper/commons-fileupload/
 	spring.servlet.multipart.max-request-size=15MB
 
 
- 28. Filter 적용
+ 28. 인터셉터 1-  Filter 적용
 
     1) 이전 Servlet 코드
     
@@ -1847,3 +1847,68 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 			}
 			
 		}
+
+
+
+28. 인터셉터 2-  HandlerInterceptor 적용
+
+
+
+   웹브라우저 ------>   필터    ---> 서블릿(DispatcherServlet) --> 인터셉터(preHandle)     --> Controller
+                                                       <-- 인터셉터(postHandle)    <--
+
+				|
+				|
+	 <--	인터셉터	<---   jsp
+               (afterCompletion)
+
+     구현
+
+     a.  implments HandlerInterceptor
+	       @Component
+	public class MyHandlerInterceptor implements HandlerInterceptor {
+		private Logger logger = LoggerFactory.getLogger(getClass());
+		@Override
+		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+				throws Exception {
+			logger.info("LOGGER: {}", "preHandle 호출");
+			return true;
+		}
+
+		@Override
+		public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+				ModelAndView modelAndView) throws Exception {
+
+			logger.info("LOGGER: {}", "postHandle 호출");
+		}
+
+		@Override
+		public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+				throws Exception {
+
+			logger.info("LOGGER: {}", "afterCompletion 호출");
+		}
+
+		
+	}
+
+     b.  설정정보를 저장할 새로운 빈을 작성
+
+       // Interceptor 등록
+	@Configuration
+	public class WebConfig implements WebMvcConfigurer {
+
+		@Autowired
+		MyHandlerInterceptor xxx;
+		
+		@Override
+		public void addInterceptors(InterceptorRegistry registry) {
+			
+			registry.addInterceptor(xxx)
+				.addPathPatterns("/main","/xxx", "/yyy*", "/zzz/**/kkk");
+			
+			
+		}
+
+		
+	}
