@@ -1471,8 +1471,8 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
                b. Spring 방식 
 	       
-	         Model 생성방법 + key값을 세션에 저장한다는 설정추가 ( @SessionAttributes("xxx","key2") )
-
+	        - Model 생성방법 + key값을 세션에 저장한다는 설정추가 ( @SessionAttributes("xxx","key2") )
+                - 모든 Controller에서 @SessionAttributes("xxx","key2") 반복적으로 설정해야 된다.
 
 	 다. application scope에 모델 저장하는 방법
 
@@ -1489,4 +1489,5 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 		      @Autowired
 		      ServletContext application;
 
+		      application.setAttribute(key,value);
 
