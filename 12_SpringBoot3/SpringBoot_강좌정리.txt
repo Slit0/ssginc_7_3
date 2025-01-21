@@ -1915,6 +1915,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
 
 29. 예외처리
+https://docs.spring.io/spring-boot/docs/3.1.12/reference/html/web.html#web.servlet.spring-mvc.error-handling
 
  1) 개념
    - MyBatis 사용할 때 발생되는 예외는 모두 RuntimeException 계열이다.
@@ -1971,3 +1972,68 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 			}
 			
 	}
+
+
+30. 국제화 ( I18N: Internationalization )
+
+  1)개념
+    - 다국어 처리
+    예> 한국어, 영어, ...
+
+  2) 현재 Locale 정보 확인
+    
+    //현재 로케일 정보
+    // 요청헤더값 중에서 accept-language: ko-kr, ko  값이고 이것이 기본 Locale 임.
+    Locale locale = LocaleContextHolder.getLocale();
+    logger.info("LOGGER: 현재 Locale : {}", locale );
+
+  
+  3) SpringBoot에서 특정언어(Locale) 선택하는 방법
+
+    가. AcceptHeaderLocaleResolver
+       - 기본 LocaleResolver 임.
+       - accept-language:ko 헤더정보로 로케일(언어및국가)정보를 얻음.
+       - accept-language:ko 헤더정보를 서버에 전달한다.
+
+    나. CookieLocaleResolver
+       - 쿠키정보를 이용해서 로케일(언어및국가)정보를 얻음.
+       - setLocale(request, response, locale) 이용해서 Locale 변경 가능.
+       -  accept-language=ko 쿠키를 서버에 전달한다.
+
+    다. SessionLocaleResolver
+       - 세션정보를 이용해서 로케일(언어및국가)정보를 얻고 세션에 저장.
+       - 로케일정보는 querystring으로 서버에 전달한다.
+       예> ?lang=ko
+       - setLocale(request, response, locale) 이용해서 Locale 변경 가능.
+
+     
+   4) 구현방법
+
+    가. 리소스 번들 파일 작성
+
+       기본이 되는 messages.properties 작성하고
+       추가로 각 언어별 리소스번들파일 을 작성하고 encoding을 UTF-8로 변경한다.
+
+       문법: messages_국가별언어코드.properties
+
+       예> messages.properties
+          messages_ko.properties
+	  messages_ja.properties
+	  messages_en.properties
+
+       src/main/resource
+                 
+		   messages
+		         messages.properties
+			 messages_ko.properties
+			 messages_en.properties
+		      
+                   application.properties
+
+
+    나. 리소스번들파일 등록
+    https://docs.spring.io/spring-boot/docs/3.1.12/reference/html/features.html#features.internationalization
+      - application.properties 에 등록
+
+      # 리소스 번들 파일 등록 ( 파일명만 지정, 만약 폴더가 있으면 폴더도 지정해야 됨 )
+      spring.messages.basename=messages/message
