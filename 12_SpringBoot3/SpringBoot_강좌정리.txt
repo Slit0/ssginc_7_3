@@ -2075,7 +2075,10 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
 	 message:<spring:message code="greeting" text="기본 메시지" /> 
 
 
-   5) SessionLocaleResolver 구현
+   5) SessionLocaleResolver 구현1 - 명시적으로(수동으로) Controller에서 setLocale() 이용해서 로케일 변경
+
+   주의할점: SessionLocaleResolver 생성시 반드시 메서드명은 localeResolver() 사용해야 된다.
+
 
      가. 리소스번들 작성 및 등록
 
@@ -2132,4 +2135,60 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
 		
 		//
 		return "main";
+	}
+
+
+   5) SessionLocaleResolver 구현2 - 자동으로 Locale 변경 <== LocaleChangeInterceptor 이용
+
+       가. 리소스번들 작성 및 등록
+
+       -  src/main/resource
+                 
+		   messages
+		         messages.properties
+			 messages_ko.properties
+			 messages_en.properties
+		      
+       - application.properties 등록
+
+       spring.messages.basename=messages/message
+
+     
+     나.  SessionLocaleResolver 생성
+
+      - 기본인 AcceptHeaderLocaleResolver 대신에 SessionLocaleResolver를 사용하겠다는 의미.
+
+       @Configuration
+	public class WebConfig implements WebMvcConfigurer {
+
+
+		//SessionLocaleResolver
+		@Bean
+		public SessionLocaleResolver localeResolver() {  // 메서드는 반드시 localeResolver() 메서드만 가능하다.
+			SessionLocaleResolver localeResolver =
+				⅓new SessionLocaleResolver();
+			
+			//기본 locale 설정
+			localeResolver.setDefaultLocale(new Locale("ko"));
+			return localeResolver;
+		}
+	}
+
+
+     다. LocaleChangeInterceptor 생성하고 등록하기
+
+         // LocalChangeInterceptor 생성
+	@Bean
+	public LocaleChangeInterceptor localeChangeInterceptor() {
+		LocaleChangeInterceptor xxx = new LocaleChangeInterceptor();
+		// ?lang=en|ja|ko  또는 ?locale=en|ja|ko , ?xxx=en|ja|ko
+		// (default parameter name: "locale").
+		xxx.setParamName("lang");
+		return xxx;
+	}
+	
+	// LocalChangeInterceptor 등록
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		 registry.addInterceptor(localeChangeInterceptor());
 	}
