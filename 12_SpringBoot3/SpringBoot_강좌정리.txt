@@ -2037,3 +2037,32 @@ https://docs.spring.io/spring-boot/docs/3.1.12/reference/html/web.html#web.servl
 
       # 리소스 번들 파일 등록 ( 파일명만 지정, 만약 폴더가 있으면 폴더도 지정해야 됨 )
       spring.messages.basename=messages/message
+
+
+      # 일치하는 Locale이 없는 경우
+      spring.messages.fallback-to-system-locale=true|false ( 기본 true )
+     
+      true:    기본 리소스 번들 파일인 memssage.propeties를 적용하지 않고 제어판의 국가별 설정 정보로 적용됨.
+      false:   제어판의 국가별 설정 정보가 아닌  기본 리소스 번들 파일인 memssage.propeties 적용됨.
+
+
+    다. 리소스 번들 파일 참조
+https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/MessageSource.html
+	
+	* 계층구조
+
+			  MessageSource ( 인터페이스 )
+			    |
+			    |
+ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.properties 파일변경 사항을 자동체크해서 반영)
+
+
+       a. Controller에서 참조
+
+	   @Autowired
+        -   MessageSource messageSource;
+
+	-   messageSource.getMessage(String code, Object[] args, String defaultMessage, Locale locale);
+
+
+       b. JSP에서 참조
