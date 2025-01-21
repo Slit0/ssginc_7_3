@@ -1841,7 +1841,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 			public FilterRegistrationBean<MyFilter>  myFilter(){
 				FilterRegistrationBean<MyFilter> filter = 
 						new FilterRegistrationBean<MyFilter>(new MyFilter());
-				
+				//filter.serOrder(1);
 				filter.addUrlPatterns("/*");  // web.xml의 <url-pattern>/*</url-pattern>
 				return filter;
 			}
@@ -1856,7 +1856,7 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 
    웹브라우저 ------>   필터    ---> 서블릿(DispatcherServlet) --> 인터셉터(preHandle)     --> Controller
                                                        <-- 인터셉터(postHandle)    <--
-
+									       
 				|
 				|
 	 <--	인터셉터	<---   jsp
@@ -1911,4 +1911,63 @@ https://docs.spring.io/spring-boot/docs/3.2.12/reference/html/web.html#web.servl
 		}
 
 		
+	}
+
+
+29. 예외처리
+
+ 1) 개념
+   - MyBatis 사용할 때 발생되는 예외는 모두 RuntimeException 계열이다.
+    따라서 DAO 또는 Service에서 예외가 발생되면 자동으로 Controller에게 예외가 위임된다.
+    결국 Controller에서 예외처리를 해야 된다.
+    선언적 방법(@ExceptionHandler, @ControllerAdvice)으로 처리한다.
+
+    현재는 예외가 발생되었을 때 WhiteLabel Error page를 보여준다. 이 방법이 SpringBoot에서 제공하는 기본 에러페이지임.
+    그런데 이 방법을 커스터마이징해서 개발자가 만든 에러페이지를 보여주자.
+
+  웹브라우저 ---------------> Controller <--------> Service <----------> DAO <--------> MySQL
+
+ 
+ 2) 방법 2가지
+
+  가. 로컬
+    - 특정 Controller만 예외처리 가능
+
+   예>
+      @Controller
+      public class TestController {
+
+      ...
+        //로컬 예외처리
+	@ExceptionHandler(value = { IllegalArgumentException.class, NullPointerException.class } )
+	public String errorPage(Exception e, Model m) {
+		logger.info("LOGGER:{}", e.getMessage());
+		
+		m.addAttribute("errorMessage", e.getMessage());
+		return "errorPage";  // errorPage.jsp
+	}
+
+
+
+
+  나. 전역
+   - 모든 Controller 예외처리 가능
+
+   예> 
+     // @ControllerAdvice 
+	//@ControllerAdvice(basePackages = {"com.exam.controller"})
+	@ControllerAdvice(assignableTypes = TestController.class)
+	public class GlobalExceptionHandler {
+		private Logger logger = LoggerFactory.getLogger(getClass());
+		
+		   //전역 예외처리
+			@ExceptionHandler(value = { IllegalArgumentException.class,
+					NullPointerException.class } )
+			public String errorPage(Exception e, Model m) {
+				logger.info("LOGGER:{}", e.getMessage());
+				
+				m.addAttribute("errorMessage", e.getMessage());
+				return "errorPage";  // errorPage.jsp
+			}
+			
 	}
