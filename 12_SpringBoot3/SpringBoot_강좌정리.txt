@@ -2272,3 +2272,71 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
 	<body>
 	 <h1>main.jsp</h1>
 	 <button type="button" class="btn btn-primary">Primary</button>
+
+
+
+32. 사용자 입력 유효성 검사
+
+   1)개념
+   - 사용자 입력화면에서 입력된 데이터의 유효성 검사 방법.
+   예> 필수입력, 길이, 특수문자|대문자|소문자포함여부,..., 이메일(@ 지정여부)........
+
+   2)구현방식
+    가. html 속성 이용
+      예> required 속성
+         type="email"
+       <form action="target.html" method="get">
+		아이디: <input type="text" name="userid" required> <br>
+		비밀번호: <input type="password" name="passwd" maxlength="4"> <br>
+		email: <input type="email" name="passwd"> <br>
+		<input type="submit" value="로그인">
+	</form>
+
+    나. JS 및 jQuery 이용
+      
+       예> event.preventDefault()  
+
+        $("#myForm").on("submit", function(){
+              // 자동 submit 방지
+              event.preventDefault();
+          });
+
+    다. Spring의 유효성 체크
+
+       a. 의존성 추가
+          	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+
+       b. 사용자 입력 데이터를 저장할 DTO 생성 및 유효성 관련 어노테이션 설정
+https://docs.spring.io/spring-framework/reference/6.1/core/validation/beanvalidation.html
+
+         public class MemberDTO {
+
+		@NotNull  // null 허용 안함
+	//	@NotEmpty // null 및 공백문자 허용 안함.
+	//	@NotBlank // null 및 공백문자 및 space 허용 안함.
+		String userid;
+		
+		@NotNull 
+		String passwd;
+		
+		@Size(max = 4)
+		String username;
+		
+		String phone;
+		
+		@NotNull
+		@FutureOrPresent
+		LocalDate targetDate;
+
+
+       c. Controller 작업
+
+        
+	  가. GET 방식 요청의 화면 보기
+
+
+	  나. POST 방식 요청의 실제 요청처리
