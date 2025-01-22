@@ -2301,7 +2301,7 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
               event.preventDefault();
           });
 
-    다. Spring의 유효성 체크
+    다. Spring의 유효성 체크1 - @Valid 어노테이션
 
        a. 의존성 추가
           	<dependency>
@@ -2313,30 +2313,72 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
        b. 사용자 입력 데이터를 저장할 DTO 생성 및 유효성 관련 어노테이션 설정
 https://docs.spring.io/spring-framework/reference/6.1/core/validation/beanvalidation.html
 
-         public class MemberDTO {
-
-		@NotNull  // null 허용 안함
-	//	@NotEmpty // null 및 공백문자 허용 안함.
-	//	@NotBlank // null 및 공백문자 및 space 허용 안함.
-		String userid;
-		
-		@NotNull 
-		String passwd;
-		
-		@Size(max = 4)
-		String username;
-		
-		String phone;
-		
-		@NotNull
-		@FutureOrPresent
-		LocalDate targetDate;
+         public class MemberDTO { // Command object ( form backing object)
+	@NotNull(message = "userid 필수")  // null 허용 안함
+//	@NotEmpty // null 및 공백문자 허용 안함.
+//	@NotBlank // null 및 공백문자 및 space 허용 안함.
+	String userid;
+	
+	@NotNull (message = "passwd 필수")  
+	String passwd;
+	
+	@Size(max = 4, message = "최대 4글자")
+	String username;
+	
+	String phone;
+	
+	@NotNull (message = "targetDate 필수")
+	@FutureOrPresent(message = "현재 또는 미래날짜만 가능")               //@Past
+	LocalDate targetDate;
 
 
        c. Controller 작업
 
+	- 반드시 GET 과 POST 요청에서 DTO를 모델로 사용해야 된다. (************)
+	- 반드시 GET 과 POST 의 요청맵핑값이 같아야 된다.
+
         
 	  가. GET 방식 요청의 화면 보기
-
+                 @GetMapping("/member")
+		public String memberForm(Model m) {
+			
+			//DTO를 Model에 저장 필수
+			MemberDTO dto = new MemberDTO();
+			m.addAttribute("xxx", dto);
+			
+			return "memberForm";
+		}
 
 	  나. POST 방식 요청의 실제 요청처리
+
+            @PostMapping("/member")
+	public String member(@Valid  @ModelAttribute("xxx") MemberDTO dto,
+			              BindingResult result) {
+		
+		if(result.hasErrors()) {
+			return "memberForm";
+		}
+		
+		// 성공시 코드 작성
+		
+		return "main";
+	}
+
+       d. memberForm.jsp
+       https://docs.spring.io/spring-framework/reference/web/webmvc-view/mvc-jsp.html
+        - Spring의 form 태그라이브러리 필요.
+          <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+	  <form:form modelAttribute="xxx" method="post">
+	   <table>
+		<tr>
+			<td>userid:</td>
+			<td><form:input type="text" path="userid"/></td>
+			<td><form:errors  path="userid"/></td>
+		</tr>
+		<tr>
+			<td>passwd:</td>
+			<td><form:input type="text" path="passwd"/></td>
+			<td><form:errors  path="passwd"/></td>
+		</tr>
+		<tr>
