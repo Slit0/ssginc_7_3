@@ -2301,7 +2301,7 @@ ResourceBundleMessageSource   ReloadableResourceBundleMessageSource( *.propertie
               event.preventDefault();
           });
 
-    다. Spring의 유효성 체크1 - @Valid 어노테이션
+    다. Spring의 유효성 체크1 - @Valid 어노테이션 ( jakarta.validation 패키지 이용 )
 
        a. 의존성 추가
           	<dependency>
@@ -2382,3 +2382,137 @@ https://docs.spring.io/spring-framework/reference/6.1/core/validation/beanvalida
 			<td><form:errors  path="passwd"/></td>
 		</tr>
 		<tr>
+
+
+     다. Spring의 유효성 체크2 - @Validated 어노테이션 (org.springframework.validation.annotation.Validated 패키지)
+
+       a. 의존성 추가
+          	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+	
+       b. 사용자 입력 데이터를 저장할 DTO 생성 ( DTO에서 @NotNull 어노테이션 사용 안함. Controller에서 지정함 )
+
+         public class MemberDTO {
+
+
+		String userid;
+		String passwd;
+		String username;
+		String phone;
+		LocalDate targetDate;
+
+
+
+      c. Controller 작업
+	
+	 - @Validated 클래스 레벨에 지정
+	 - MembderDTO 무관
+
+
+          가. GET 방식 요청의 화면 보기
+              @GetMapping("/member")
+		public String memberForm() {
+			return "memberForm";
+		}
+
+
+	  나. POST 방식 요청의 실제 요청처리
+
+	     @PostMapping("/member")
+	    public String member(@NotBlank(message = "userid 필수")
+	                     @RequestParam String userid,
+	                     
+	                     @RequestParam String passwd,
+	                     
+	                     @Size(max = 4, message = "최대 4글자")
+	                     @RequestParam String username,
+	                     
+	                     @RequestParam String phone,
+	                     
+	                     @NotNull (message = "targetDate 필수")
+	                 	 @FutureOrPresent(message = "현재 또는 미래날짜만 가능")
+	                     @RequestParam LocalDate targetDate
+				         ) {
+	
+    d. memberForm.jsp
+
+      - MemberDTO 와 무관하기 하기 때문에 일반 html 구현함.
+      h1>회원가입 화면</h1>
+	 <form  method="post" action="member">
+		<table>
+			<tr>
+				<td>userid:</td>
+				<td><input type="text" name="userid"/></td>
+			</tr>
+			<tr>
+				<td>passwd:</td>
+				<td><input type="text" name="passwd"/></td>
+			</tr>
+			<tr>
+				<td>username:</td>
+				<td><input type="text" name="username"/></td>
+			</tr>
+			<tr>
+				<td>phone:</td>
+				<td><input type="text" name="phone"/></td>
+			</tr>
+			<tr>
+				<td>targetDate:</td>
+				<td><input type="date" name="targetDate"/></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="회원가입"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+ 
+
+     e.  에러발생시 처리는 전역 예외처리 방식이용 (@ControllerAdvice )
+
+       - @Validated 로 설정한 유효성체크는 에러발생시 ConstraintViolationException 예외가 발생되어
+         Whitelabel Error page가 보여진다.
+
+	 이 페이지를 사용자가 원하는 페이지로 보여주는 작업을 하자.
+
+        @ControllerAdvice
+	public class GlobalExceptionHandler {
+		private Logger logger = LoggerFactory.getLogger(getClass());
+		
+		   //전역 예외처리
+			@ExceptionHandler(value = { IllegalArgumentException.class,
+					ConstraintViolationException.class } )
+			public String errorPage(Exception e, RedirectAttributes m) {
+				logger.info("LOGGER:{}", e.getMessage());
+				
+				m.addFlashAttribute("errorMessage", e.getMessage());
+				return "redirect:member";  // errorPage.jsp
+			}
+			
+	}
+
+// 화면이 있는 StringBoot 문법임. ( SOAP 방식 , 2차 프로젝트 )
+
+
+ 
+   웹브라우저 ---------------> Controller <----> Service <--->DAO
+                               |
+			       |
+          <--------------    JSP(Thymeleaf)
+
+
+// 앞으로 배울 StringBoot 문법임. ( REST 방식, 최종 프로젝트 )
+
+                       JSON
+  도구         ---------------> Controller 
+(웹브라우저,      <---------------
+ (reactjs)             JSON
+ 모바일,       
+ TV,
+ ..)
+
+////////////////////////////////////////////////////////////////////////////////////////
