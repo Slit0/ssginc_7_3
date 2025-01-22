@@ -2735,3 +2735,178 @@ SpringBoot 버전의 ShopMiniMall
 	  
 	               static
 		           images 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+  10.회원가입
+
+    
+    가. 회원가입화면보기 
+      이전 MemberUIServlet.java(/signup) 에 해당되는 MemberController.java 작성
+
+       //회원가입 화면보기
+	@GetMapping("/signup")
+	public String signupForm() {
+		return "memberForm";
+	}
+  
+    나. id 중복체크
+
+       이전 MemberIdCheckServlet.java (/idCheck) 에 해당되는 MemberController.java 작성
+
+       
+	//id 중복체크
+	@GetMapping("/idCheck")
+	@ResponseBody
+	public String idCheck(@RequestParam String userid) {
+		
+		String mesg = "아이디 사용 가능";
+		
+		MemberDTO dto = memberService.idCheck(userid);
+		
+		if(dto!=null) {
+			mesg = "아이디 중복";
+		}
+		
+		return mesg;
+	}
+
+	MemberDTO.java 와 MemberMapper.java, MemberMapper.xml 작성하기
+
+
+     다. 회원가입 + @Valiated 유효성 체크
+
+        이전 MemberAddServlet.java (/memberAdd) 에 해당되는 MemberController.java 작성
+
+	 
+	  @Controller
+	  @Validated
+	  public class MemberController{
+
+	     //회원가입
+	@PostMapping("/signup")
+	public String signup(@RequestParam String userid,
+			             
+			             @Size(min = 2, message = "최소 2글자")
+			             @RequestParam String passwd,
+			             
+			             @NotBlank(message = "username 필수")
+			             @RequestParam String username,
+
+	- 에러 발생시 예외처리 담당. 
+
+	  @ControllerAdvice
+	public class GlobalExceptionHandler {
+		private Logger logger = LoggerFactory.getLogger(getClass());
+		
+		   //전역 예외처리
+			@ExceptionHandler(value = { IllegalArgumentException.class,
+					ConstraintViolationException.class } )
+			public String errorPage(Exception e, RedirectAttributes m) {
+				logger.info("LOGGER:{}", e.getMessage());
+				
+				m.addFlashAttribute("errorMessage", e.getMessage());
+				return "redirect:signup";  // /signup
+			}
+			
+	}
+
+
+      라. 회원가입
+
+ ########################################################################################        
+
+  11. 로그인 및 로그아웃
+
+    1) 로그인 화면 보기
+   
+      이전 LoginUIServlet.java (/loginForm) 에 해당되는 LoginController.java 작성
+
+       @Controller
+public class LoginController {
+
+
+
+	@GetMapping("/loginForm") 
+	public String main() {
+		
+		return "loginForm";
+	}
+
+
+     2) 로그인 + 유효성 체크 ( @Valiated 이용 )
+
+     이전 LoginServlet.java (/login) 에 해당되는 LoginController.java 작성
+
+        @Controller
+	@SessionAttributes(value = {"login"}) // Model에 "login" 키를 사용하면 HttpSession에 저장됨.
+	public class LoginController {
+
+	  
+	@PostMapping("/login")
+	public String login(@RequestParam Map<String, String> map,  Model m) {
+		
+		MemberDTO dto = memberService.login(map);
+		
+		if(dto!=null) {
+		  //정상 로그인	
+		  m.addAttribute("login", dto);
+		  return "redirect:main";
+		}
+		
+		//실패하면
+		m.addAttribute("errorMessage", "아이디와 비번 다시 확인하시오");
+		return "loginForm";  // loginForm.jsp
+		
+	}
+
+      3) 로그아웃
+
+      - 이전 LogoutServlet.java (/logout) 에 해당되는 LoginController.java 작성
+      - 로그인이후의 작업이기 때문에 로그인 여부를 확인해야 된다.
+	이 작업을 HandlerInterceptor 이용해서 할 생각임.
+
+
+	@GetMapping("/logout")
+	public String logout(SessionStatus status) {
+		
+		// @SessionAttributes 를 사용한 세션을 cleanup 시킴
+		status.setComplete();
+		
+		return "redirect:main";
+	}
+	
+////////////////////////////////////////////////////////////////////////////
+
+ 12. MyPage
+
+   이전 MyPageServlet.java (/mypage) 에 해당되는 MemberController.java 작성
+
+
+      @Controller
+@Validated
+@SessionAttributes("login")
+public class MemberController {
+
+	
+	MemberService memberService;
+	
+	public MemberController(MemberService memberService) {
+		this.memberService = memberService;
+	}
+	
+	// mypage
+	@GetMapping("/mypage")
+	public String mypage(Model m) {
+		
+		MemberDTO dto =
+				(MemberDTO)m.getAttribute("login");
+		
+		String userid = dto.getUserid();
+		MemberDTO mypageDTO = memberService.mypage(userid);
+		m.addAttribute("login", mypageDTO);
+		
+		return "mypage";
+	}
+
+////////////////////////////////////////////////////////////////////////////
