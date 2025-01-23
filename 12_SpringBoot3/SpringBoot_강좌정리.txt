@@ -2910,3 +2910,51 @@ public class MemberController {
 	}
 
 ////////////////////////////////////////////////////////////////////////////
+
+ 13. 상품 자세히 보기
+
+   이전 GoodsRetrieveServlet.java (/goodsRetrieve) 에 해당되는 GoodsController.java 작성
+
+   GoodService.java /GoodsServiceImpl.java  GoodsMapper.java GoodsMapper.xml 
+
+
+ 
+14. 장바구니 저장 및 유효성 체크 (gAmount 최소1 최대10, @Validated )
+
+   이전 CartAddServlet.java (/cartAdd) 에 해당되는  CartController.java 작성
+
+   CartDTO.java
+
+   CartService.java /CartServiceImpl.java  CartMapper.java CartMapper.xml 
+
+
+
+
+15. 장바구니 목록보기
+
+    이전 CartListServlet.java (/cartList) 에 해당되는  CartController.java 작성
+
+    CartService.java /CartServiceImpl.java  CartMapper.java CartMapper.xml 
+
+
+ 16. 장바구니 개별 삭제
+
+    이전 CartDeleteServlet.java (/cartDelete) 에 해당되는  CartController.java 작성
+
+    CartService.java /CartServiceImpl.java  CartMapper.java CartMapper.xml 
+
+  
+ 17. 장바구니 전체 삭제
+
+   이전 CartDeleteAllServlet.java (/cartDeleteAll) 에 해당되는  CartController.java 작성
+
+    CartService.java /CartServiceImpl.java  CartMapper.java CartMapper.xml 
+
+
+ 18. 개별주문 
+
+    이전 OrderConfirmServlet.java (/orderConfirm) 에 해당되는  OrderController.java 작성
+
+    OrderDTO.java
+
+   OrderService.java / OrderServiceImpl.java  OrderMapper.java OrderMapper.xml 
