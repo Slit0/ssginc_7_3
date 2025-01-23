@@ -4,30 +4,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
   <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
   <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
-  <script>
-  
-  	  $(document).ready(function(){
-  		  
-  		  $("#userid").on("keyup",function(){
-  			 
-  			  	$.ajax({
-  			  	   url:'userid-check',
-  			  	   method:'get',
-  			  	   dataType:"text",
-  			  	   data:{
-  			  		   "userid":$(this).val()
-  			  	   },
-  			  	   success:function(res, status ,xhr){
-  			  		   $("#result").text(res);
-  			  	   },
-  			  	   error:function(){}
-  			  	});
-  			  
-  		  });
-  		  
-  	  });
-  
-  </script>
  
   <div class="TodoApp">
     <div class="container">
