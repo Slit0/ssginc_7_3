@@ -21,3 +21,31 @@ SpringSecurity 강좌 정리
      - C:\springboot3_study\sts-4.27.0.RELEASE\workspace 에 붙여넣기
      - import > maven > Existing Maven Project 선택
      > Root Directory > workspace 에 있는 boot3.2.8_SpringSecurity01_제공파일 선택 > finish 
+
+
+   3) 실습2- 의존성 추가
+
+      - pom.xml
+       <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+
+     - 의존성 추가후 실행했을 때 상황
+
+       가. /home 요청했을 때  자동으로 login 화면이 보여짐. ( 인증작업을 하기 위해서 )
+       나. 사용자명과 비번 입력
+
+         사용자명: user
+	 비번:   c3991d3d-8bd5-4ee3-8a29-8d8e34f18828       <=== console에서 제공됨. 실행할때마다 매번 새로운 값이 제공됨.
+	                                                       암호화 되어 있음.(필수)
+							       세션(HttpSession) 기반.
+
+	 사용자명과 비번을 임의로 지정 가능
+	 # application.properties
+          spring.security.user.name=user
+	  spring.security.user.password=1234
+
+
+       다. 정확한 사용자명과 비번을 입력하면 	 /home 요청이 됨.						       
+							    
