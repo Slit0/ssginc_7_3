@@ -1,0 +1,23 @@
+
+SpringSecurity 강좌 정리
+
+
+  1) 개요
+
+    - 사용자의 인증(Authentication) 과 권한( Authorization )에 활용하는 
+      Spring 의 서브 프로젝트임.
+
+     Authentication(인증): id/pw 이용해서 회원임을 확인하는 작업.
+     Authorization(권한) : 인증후  접근 가능한 자원을 구분하는 작업.
+
+    
+    - SpringBoot3 에서는 Spring security 6.X 지원함.
+
+
+   
+   2) 실습1
+     
+     - 강사가 제공해준 프로젝트 파일을 다운받고 압축 풀기
+     - C:\springboot3_study\sts-4.27.0.RELEASE\workspace 에 붙여넣기
+     - import > maven > Existing Maven Project 선택
+     > Root Directory > workspace 에 있는 boot3.2.8_SpringSecurity01_제공파일 선택 > finish 
