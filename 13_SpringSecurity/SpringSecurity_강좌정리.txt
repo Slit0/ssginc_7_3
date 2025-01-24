@@ -192,3 +192,144 @@ SpringSecurity 강좌 정리
      7) 사용자 입력한 userid와 passwd 를 인증하는 AuthenticationProvider 작성.
 
 https://docs.spring.io/spring-security/site/docs/6.2.8/api/org/springframework/security/authentication/AuthenticationProvider.html
+
+        @Component
+public class AuthProvider implements AuthenticationProvider {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	AuthenticationService service;
+	
+	public AuthProvider(AuthenticationService service) {
+		this.service = service;
+	}
+
+	// 사용자가 입력된 userid와 passwd 이용해서 DB 연동해서 체크
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		logger.info("LOGGER:AuthProvider.authenticate 호출");
+		
+		String userid = (String)authentication.getPrincipal();
+		String passwd = (String)authentication.getCredentials(); //1234
+		
+		//DB 연동해서 체크. userid에 해당하는 MemberDTO 얻기
+		MemberDTO dto = service.findByUserid(userid);
+		
+		// passwd 와 encodedPasswd 비교
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		
+		UsernamePasswordAuthenticationToken token = null;
+		
+		if( dto != null && passwordEncoder.matches(passwd, dto.getPasswd())) {
+
+			// UsernamePasswordAuthenticationToken(Object principal, Object credentials, 
+			//                           Collection<? extends GrantedAuthority> authorities)
+			
+			MemberDTO new_dto = new MemberDTO();
+			new_dto.setUserid(userid);
+			new_dto.setPasswd(passwd); // 1234
+			new_dto.setUsername(dto.getUsername());
+			
+			List<GrantedAuthority> authorities = new ArrayList<>();
+			authorities.add(new  SimpleGrantedAuthority("USER")); // 현재는 모든 사용자의 role은 USER임.
+			//authorities.add(new  SimpleGrantedAuthority("ADMIN")); // 필요시 ADMIN 추가 가능
+			
+			
+			// 다음 token 정보가 세션에 저장된다.
+			token = new UsernamePasswordAuthenticationToken(new_dto, null, authorities);
+			
+			return token;
+		}
+			throw new BadCredentialsException("비밀번호가 일치하지 않음");
+		
+	}// end authenticate 메서드
+
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return true;
+	}
+
+}
+
+    8) 로그인후에 header.jsp에서  login 대신에  logout/mypage 보여주기
+
+       - 의존성 추가
+          	<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+		</dependency>
+		
+
+
+       가. security 적용전
+
+                  <!-- 로그인 안된 경우 화면 -->
+                     <c:if test="${empty login}">   
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                               <a class="nav-link" href="loginForm">Login</a>
+                            </li>
+                             <li class="nav-item">
+                               <a class="nav-link" href="signup">signup</a>
+                            </li>
+                        </ul>
+                     </c:if>
+
+
+       나. security 적용후
+        
+	 - security taglib 적용
+           https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/taglibs.html
+
+
+
+           <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+	        <!--  인증안된 화면 -->
+        		       <sec:authorize access="isAnonymous()">
+                             <li class="nav-item">
+                               <a class="nav-link" href="login">login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="signup">signup</a>
+                            </li>
+                       </sec:authorize>     
+                            
+        		       <!--  인증 된 화면 -->
+        		       <sec:authorize access="isAuthenticated()">
+                             <li class="nav-item">
+                               <a class="nav-link" href="logout">logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="mypage">mypage</a>
+                            </li>
+                        </sec:authorize>  
+                          
+
+       다. 로그아웃 기능
+        
+	 -  특별하게 추가할 코드가 없음. 
+	   /logout으로 요청하면 자동으로 로그아웃 처리됨.
+
+	   이유는 다음과 같이 설정되었기 때문이다.
+	   // 로그아웃 설정
+		http.logout((logout) ->
+				        logout.deleteCookies("remove")
+				        .invalidateHttpSession(true)
+				        .logoutUrl("/logout")  // SpringSecurity가 자동으로 로그아웃 처리해줄 요청매핑값
+				        .logoutSuccessUrl("/home") // logout 성공시 redirect 된 요청매핑값
+                   );
+
+
+   9) mypage 
+   
+      - Authentication 얻는 방법이 필요하다.
+     
+     //mypage
+	 @GetMapping("/mypage")
+	 public String mypage(Model m) {
+		 
+		 // AuthProvider 에서 저장시킨 Authentication 이 필요하다.
+		 Authentication auth = SecurityContextHolder.getContext().getAuthentication()
+
+////////////////////////////////////////////////////////////////////////////////////////////////
