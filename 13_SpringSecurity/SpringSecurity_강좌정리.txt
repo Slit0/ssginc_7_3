@@ -170,3 +170,25 @@ SpringSecurity 강좌 정리
        - 로그아웃 설정
          ==> 어떤 요청으로 로그아웃 할 건지 지정 가능 예> http://~/logout
 	 ==> 로그아웃이 성공시 리다이렉트 화면 정보
+
+   ==> com.exam.security.SecurityFilterChainConfig.java 
+
+  
+
+    6) static 관련 자원 허용 ( image, js, css 등 )
+
+       // 정적 리소스 spring security 대상에서 제외
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+	  return (web) ->
+	                  web
+	                      .ignoring()
+	                      .requestMatchers(
+	                        PathRequest.toStaticResources().atCommonLocations()
+	                      );
+	}
+
+ 
+     7) 사용자 입력한 userid와 passwd 를 인증하는 AuthenticationProvider 작성.
+
+https://docs.spring.io/spring-security/site/docs/6.2.8/api/org/springframework/security/authentication/AuthenticationProvider.html
