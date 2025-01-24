@@ -490,3 +490,38 @@ public class LoginController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			MemberDTO dto = (MemberDTO)auth.getPrincipal();
 			String userid = dto.getUserid();
+
+
+  8.  top.jsp 수정
+
+      <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+             <!-- 로그인 안된 경우 화면 -->
+                     <sec:authorize access="isAnonymous()">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                               <a class="nav-link" href="loginForm">Login</a>
+                            </li>
+                             <li class="nav-item">
+                               <a class="nav-link" href="signup">signup</a>
+                            </li>
+                        </ul>
+                     </sec:authorize>  
+                        
+                        <!-- 로그인된 경우 화면 -->
+                     <sec:authorize access="isAuthenticated()">   
+                        <ul class="navbar-nav">
+                             <li class="nav-item">
+                              안녕하세요. ${login.username}님
+                            </li>
+                            <li class="nav-item">
+                               <a class="nav-link" href="logout">Logout</a>
+                            </li>
+                             <li class="nav-item">
+                               <a class="nav-link" href="mypage">mypage</a>
+                            </li>
+                                <li class="nav-item">
+                               <a class="nav-link" href="cartList">cartList</a>
+                            </li>
+                        </ul>
+                     </sec:authorize>  
