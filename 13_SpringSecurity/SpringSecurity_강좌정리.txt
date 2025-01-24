@@ -334,3 +334,80 @@ public class AuthProvider implements AuthenticationProvider {
 		  MemberDTO dto = (MemberDTO)auth.getPrincipal();
 		 String userid = dto.getUserid();
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+SpringBoot + ShopMiniMall + Spring Security
+
+
+1. 의존성 추가
+  
+	   <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.security</groupId>
+		<artifactId>spring-security-taglibs</artifactId>
+	</dependency>
+
+
+2.  SpringFilterChain 구현
+
+  ==>  SecurityFilterChainConfig.java  작성
+  
+     //요청맵핑값 허용
+	http.authorizeHttpRequests(auth->
+				   auth.requestMatchers("/main","/signup","/idCheck","/login","/goodsRetrieve","/WEB-INF/**").permitAll()  
+	//		                               .requestMatchers("/**").permitAll()
+				       .anyRequest()
+				       .authenticated()
+		
+					  );
+ 3. AuthenticationProvider  구현 및 AuthenticationService 와 AuthenticationServiceImpl 작성
+
+  ==> 사용자가 입력된 userid 와 passwd 비교 체크 역할.
+      성공하면 MemberDTO를 Authentication 에 저장함.
+
+
+ 4.  MemberMapper.java 와 MemberMapper.xml 수정
+
+       # 추가
+	 <select id="findByUserid" resultType="MemberDTO" parameterType="string">
+	     select userid, passwd, username
+	     from member
+	     where userid=#{userid}
+	 </select>
+
+        # 추가
+         public MemberDTO findByUserid(String userid);
+
+
+ 5. LoginController.java 수정
+   
+    -@GetMapping("/login")  만 구현하면 됨.
+
+    @SessionAttributes(value = {"login"}) // Model에 "login" 키를 사용하면 HttpSession에 저장됨.
+public class LoginController {
+
+	
+	MemberService memberService;
+	
+	public LoginController(MemberService memberService) {
+		this.memberService = memberService;
+	}
+
+	@GetMapping("/login") 
+	public String main() {
+		return "loginForm";
+	}
+	
+}
+
+
+. 
+
+
+
+
+
+
