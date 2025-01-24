@@ -478,3 +478,15 @@ public class LoginController {
 		
 			String userid = memberDTO.getUserid();
 		
+      ´Ù. OrderController.java ¼öÁ¤
+
+          @GetMapping("/orderConfirm")
+         public String cartAdd(@RequestParam Integer num, Model m) {
+			
+	CartDTO cartDTO = orderService.orderConfirm(num);
+			
+	//		MemberDTO dto = (MemberDTO)m.getAttribute("login");
+
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			MemberDTO dto = (MemberDTO)auth.getPrincipal();
+			String userid = dto.getUserid();
