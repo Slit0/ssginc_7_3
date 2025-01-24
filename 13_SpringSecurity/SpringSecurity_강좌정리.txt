@@ -331,5 +331,6 @@ public class AuthProvider implements AuthenticationProvider {
 		 
 		 // AuthProvider 에서 저장시킨 Authentication 이 필요하다.
 		 Authentication auth = SecurityContextHolder.getContext().getAuthentication()
-
+		  MemberDTO dto = (MemberDTO)auth.getPrincipal();
+		 String userid = dto.getUserid();
 ////////////////////////////////////////////////////////////////////////////////////////////////
