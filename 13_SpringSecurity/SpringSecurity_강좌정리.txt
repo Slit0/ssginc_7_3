@@ -525,3 +525,7 @@ public class LoginController {
                             </li>
                         </ul>
                      </sec:authorize>  
+
+
+
+  9.  HandlerInterceptor 와 WebConfig.java  삭제하기
