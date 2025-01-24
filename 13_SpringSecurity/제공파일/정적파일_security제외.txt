@@ -1,0 +1,10 @@
+// 정적 리소스 spring security 대상에서 제외
+@Bean
+public WebSecurityCustomizer webSecurityCustomizer() {
+  return (web) ->
+                  web
+                      .ignoring()
+                      .requestMatchers(
+                        PathRequest.toStaticResources().atCommonLocations()
+                      );
+}
