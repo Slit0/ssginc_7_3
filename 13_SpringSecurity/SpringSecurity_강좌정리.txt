@@ -439,3 +439,42 @@ public class LoginController {
 	String userid = dto.getUserid();
 
 
+     가. MemberControll.java 수정
+        	@GetMapping("/mypage")
+		public String mypage(Model m) {
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MemberDTO dto = (MemberDTO)auth.getPrincipal();
+			
+			String userid = dto.getUserid();
+			MemberDTO mypageDTO = memberService.mypage(userid);
+			m.addAttribute("login", mypageDTO);
+			
+			return "mypage";
+		}
+
+     나. CartController.java 수정
+
+         - @GetMapping("/cartAdd")
+	public String cartAdd(){
+
+	     //성공
+//		MemberDTO memberDTO = (MemberDTO)m.getAttribute("login");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+               MemberDTO memberDTO = (MemberDTO)auth.getPrincipal();
+		
+		String userid = memberDTO.getUserid();
+
+
+         -  @GetMapping("/cartList")  // cartList.jsp
+		@ModelAttribute("cartList")
+		public List<CartDTO> cartList(Model m) {
+			
+	//		MemberDTO memberDTO = (MemberDTO)m.getAttribute("login");
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MemberDTO memberDTO = (MemberDTO)auth.getPrincipal();
+		
+		
+			String userid = memberDTO.getUserid();
+		
