@@ -34,6 +34,8 @@ SpringSecurity 강좌 정리
      - 의존성 추가후 실행했을 때 상황
 
        가. /home 요청했을 때  자동으로 login 화면이 보여짐. ( 인증작업을 하기 위해서 )
+          자동으로 /logout 기능도 제공됨.
+
        나. 사용자명과 비번 입력
 
          사용자명: user
@@ -116,7 +118,7 @@ SpringSecurity 강좌 정리
 
 
          
-	 - 회원가입시 비번은 반드시 암호화해야 된다.
+	 - 회원가입시 비번은 반드시 암호화해야 된다. (***************************)
 
 	  
 		//비번 암호화 (필수*******************************)
@@ -129,3 +131,42 @@ SpringSecurity 강좌 정리
 		dto.setPasswd(encodedPW);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    4) 사용자가 만든 로그인 화면 사용하기
+
+       - LoginController.java
+	 =>   @GetMapping(value={"/login"})
+		public String showHomePage() {
+			return "loginForm";
+		}
+        ==> @PostMapping 구현 안함.
+	    실제 로그인 체크 기능은 따로 구현함( implments AuthenticationProvider )
+
+       - loginForm.jsp /include/loginForm.jsp
+
+       - 반드시 method="post" 로 요청해야 된다.
+
+     
+    5) SecurityFilterChain 작성
+    https://docs.spring.io/spring-security/site/docs/6.2.8/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html#authorizeHttpRequests(org.springframework.security.config.Customizer)
+
+      웹브라우저 ---필터1-->필터2-->필터3---> Controller
+
+       - /home /signup 요청시 /login 리다이렉트됨.
+         그런데 인증이 필요없는 요청은 제외시켜야 됨.
+       - CSRF 비활성 ( 도메인간 요청 위조 )
+       https://docs.spring.io/spring-security/reference/6.1/features/exploits/csrf.html
+         ==> POST(저장)/PUT(수정)는 DB에 영향이 미침.
+	 ==> Spring Security는 기본적으로 CSRF 방지기능이 활성화되어 있음.
+       
+       - 사용자가 만든 로그인화면 정보를 알려줌.
+         예> LoginController에서 @GetMapping(value={"/login"}) 정보
+	    loginForm.jsp의 <form action="auth"> 정보
+	    loginForm.jsp의 name="userid" 와 name="passwd" 정보
+
+       - 성공시 리다이렉트 화면 정보
+       - 실패시 리다이렉트 화면 정보
+
+       - 로그아웃 설정
+         ==> 어떤 요청으로 로그아웃 할 건지 지정 가능 예> http://~/logout
+	 ==> 로그아웃이 성공시 리다이렉트 화면 정보
