@@ -72,7 +72,27 @@ REST 강좌정리
           예> curl ( client url, 텍스트 기반, Linux 등에서 많이 사용됨 )
 	     postman, Talend API ( GUI 기반 )
 
-  
+  //////////////////////////////////////////////////////////////////
+     * 맵핑요청시 사용하는 권장 방법 ( 엔드포인트(end-point) 값이라고 부른다. )
+
+       GET 요청: /rest/users       <== 모든 users 정보 조회
+       GET 요청: /rest/users/username       <== 모든 users 정보중에서 username 값만 조회
+       GET 요청: /rest/users/:id    <==  id에 해당되는 users 정보 조회
+
+       POST 요청: /rest/users
+                추가로 실제 저장할 데이터 지정: { "id":40, "username":"강감찬", birthdate:"2025-12-21"}
+		추가로 header 정보 설정:  Content-type: application/json 
+ 
+       PUT  요청: /rest/users/:id    <==  id에 해당되는 users 정보 조회
+		추가로 실제 수정할 데이터 지정: { "username":"강감찬", birthdate:"2025-12-21"}
+		추가로 header 정보 설정:    Content-type: application/json 
+
+
+       DELETE 요청: /rest/users/:id  <==  id에 해당되는 user 삭제 
+  //////////////////////////////////////////////////////////////////
+
+
+
    2) Controller 
 
         가. SOAP 방식
@@ -275,3 +295,149 @@ REST 강좌정리
 				   .age(20)
 				   .address("서울")
 			       .build();
+
+
+
+ 5. REST + MyBatis + MySQL
+
+   1) 의존성
+
+      <dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+ 	 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+	 </dependency>
+	 <dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.mybatis.spring.boot</groupId>
+	    <artifactId>mybatis-spring-boot-starter</artifactId>
+	    <version>3.0.3</version>
+	</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.33</version>
+	</dependency>
+
+   2) application.properties 4가지 정보 설정
+    
+        # 로그레벨 수정
+	#logging.level.root=info
+
+	#logging.level.org.springframework=info
+	logging.level.com.exam=info
+
+	# tomcat port 번호 변경
+	server.port=8090
+
+	# context명 변경
+	server.servlet.context-path=/app
+
+	# DB 연동
+	spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+	spring.datasource.url=jdbc:mysql://localhost:3306/testdb
+	spring.datasource.username=root
+	spring.datasource.password=1234
+	# DeptMapper 등록
+	mybatis.mapper-locations=com/exam/config/*Mapper.xml
+	# DTO 별칭
+	mybatis.type-aliases-package=com.exam.dto
+
+	#  SQL의 컬럼명: target_date   ,  DTO 변수명: targetDate  인 경우
+	#  별칭 또는 resultMap 으로 명시적으로 설정해서 사용했음.
+	#  이 작업을 자동으로 할 수 있다.
+	mybatis.configuration.map-underscore-to-camel-case=true
+
+	# // /** 설정시 적용
+	spring.mvc.pathmatch.matching-strategy=ant-path-matcher
+
+	# LocatDate 사용시 날짜 포맷 지정. 4자리년도-2자리월-2자일 예> 2025-05-23
+	spring.mvc.format.date=yyyy-MM-dd
+
+    3) 테이블 작성
+
+       use testdb;
+
+       create table user( 
+	   id int primary key,
+	   username varchar(20) not null,
+	   birthdate date
+       );
+
+       insert into user ( id, username, birthdate ) values ( 10, '홍길동', current_date() );
+       insert into user ( id, username, birthdate ) values ( 20, '이순신', current_date() );
+       insert into user ( id, username, birthdate ) values ( 30, '유관순', current_date() );
+       commit;
+
+      
+    4) UserDTO.java 작성
+
+        @AllArgsConstructor
+	@NoArgsConstructor
+	@Setter
+	@Getter
+	@ToString
+	@Alias("UserDTO")
+	public class UserDTO {
+
+		 int id;
+		 String username;
+		 LocalDate birthdate;
+		 
+	}
+
+
+   5) com.exam.mapper.UserMapper.xml  와  com.exam.mapper.UserMapper.java
+
+       <mapper namespace="com.exam.mapper.UserMapper">
+	   
+	   <select id="findAll" resultType="UserDTO">
+	       select id, username, birthdate
+	       from user
+	       order by id
+	   </select>
+		 
+	</mapper>
+
+	@Mapper
+	public interface UserMapper {
+
+		public List<UserDTO> findAll();
+	}
+
+    6) com.exam.service.UserService.java 와  com.exam.service.UserServiceImpl.java
+
+        public interface UserService {
+
+		public List<UserDTO> findAll();
+	}
+
+	@Service
+	public class UserServiceImpl implements UserService {
+
+		UserMapper mapper;
+		
+		public UserServiceImpl(UserMapper mapper) {
+			this.mapper = mapper;
+		}
+
+		@Override
+		public List<UserDTO> findAll() {
+			return mapper.findAll();
+		}
+
+	}
+
+     7) UserController.java  
+
+      
