@@ -140,6 +140,34 @@ REST 강좌정리
 		 }
 	     }
 
+     3) 클라이언트에서 서버에 파라미터 전달
+       
+         -  SOAP는 URL이 아닌 Query String를 이용해서 데이터를 전달한다.
+	    REST는 URL를 이용해서 데이터를 전달한다.
+
+           가. SOAP 방식
+	      - 만약 userid에 해당하는 1 값을 전달하고자 한다면 Query String을 주로 이용한다.	
+               
+	       http://localhost:8090/app/member?userid=1
+	       http://localhost:8090/app/member?userid=2
+
+              URL?  http://localhost:8090/app/member
+
+	      - Controller 에서 @RequestParam 이용해서 값을 얻음.
+
+	   나. REST 방식
+	     - 만약 userid에 해당하는 1 값을 전달하고자 한다면
+
+	       http://localhost:8090/app/member/1
+	       http://localhost:8090/app/member/2
+
+              URL?  http://localhost:8090/app/member/1
+  	            http://localhost:8090/app/member/2
+
+		    http://localhost:8090/app/member/값
+
+	    - Controller 에서 @PathVariable 이용해서 값을 얻음.
+
 3. REST 실습
   
    1) pom.xml
