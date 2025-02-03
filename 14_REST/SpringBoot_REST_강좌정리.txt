@@ -57,9 +57,15 @@ REST 강좌정리
       나. REST 방식
  
           GET 방식:  조회시 사용   ( SELECT 시)
+	           @GetMapping 이용
 	  POST 방식: 생성시 사용   ( INSERT 시)
+		   @PostMapping 이용
+		   header값 필수: Content-Type: application/json
 	  PUT 방식:  수정시 사용   ( UPDATE 시)
+	           @PutMapping 이용
+		    header값 필수: Content-Type: application/json
 	  DELETE 방식: 삭제시 사용 ( DELETE 시)
+	           @DeleteMapping 이용
 
 
        ==> PUT과 DELETE 까지 요청가능한 도구(tool)이 필요함
@@ -162,3 +168,82 @@ REST 강좌정리
 
 	# context명 변경
 	server.servlet.context-path=/app
+
+
+4.  lombok 라이브러리
+
+   - DTO 작성시 생성자, getter/setter 메서드, toString 메서드 등을 자동으로 제공함.
+   - 구현 방법
+
+    1) lombok 라이브러리 다운로드
+     
+       https://projectlombok.org/download  에서 lombok.jar 다운
+
+    2) pom.xml 의존성 설정
+       https://mvnrepository.com/ 에서 lombok 검색.
+
+          <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	</dependency>
+
+
+    3) C:\Users\ssginc73 에 붙여넣고 실행하기 ( 실행중인 STS에게 lombok 설정)
+
+        cmd창 열고 lombok.jar 실행
+
+	java -jar lombok.jar
+
+	specify location.. 선택하고 C:\springboot3_study\sts-4.27.0.RELEASE\SpringToolSuite4.exe 선택.
+
+	install/update 버튼 클릭.
+
+	install successful.. > Quit Installer 클릭
+
+	STS 다시 시작
+
+	maven > update project 클릭.
+
+       
+    4) DTO 작성
+
+        @AllArgsConstructor    // 파라미터 있는 생성자
+	@NoArgsConstructor     // 기본 생성자
+	@Setter                // setter 메서드 
+	@Getter                // getter 메서드
+	@ToString              // toString 메서드
+	@Slf4j                 // Logger 기능 제공.   log.info() 
+	public class UserDTO {
+
+		String username;
+		int age;
+		String address;
+		
+		
+	}
+
+     5) 빌더 패턴 ( Builder 패턴 )
+
+        - DTO 생성시 사용되는 패턴임.
+
+	예>
+	   
+		@Builder
+		@Getter
+		public class UserDTO2 {
+
+			String username;
+			int age;
+			String address;
+			
+			
+		}
+
+		// 3. 빌더 패턴 (*************************)
+		
+		UserDTO2 dto = UserDTO2.builder()
+				   .username("홍길동")
+				   .age(20)
+				   .address("서울")
+			       .build();
