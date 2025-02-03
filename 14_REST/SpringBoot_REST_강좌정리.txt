@@ -554,7 +554,7 @@ public class UserController {
 			//int n = service.save(dto);
 			ResponseEntity<UserDTO> entity = ResponseEntity.created(null).build(); // 201 상태코드 
 	//		entity = ResponseEntity.badRequest().build();   // 400 상태코드
-	//		entity = ResponseEntity.badRequest().build();   // 400 상태코드
+	//		entity = ResponseEntity.notFound().build();   // 404 상태코드
 	//		entity = ResponseEntity.noContent().build();   // 204 상태코드
 	//		entity = ResponseEntity.internalServerError().build();   // 500 상태코드
 			// 메서드가 제공되지 않는 경우는 status(상태값) 이용
@@ -578,3 +578,69 @@ public class UserController {
 						  .buildAndExpand(dto.getId())
 						  .toUri();
           ResponseEntity<UserDTO> entity = ResponseEntity.created(location).build()
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 7.  요청한 값이 존재하지 않을 때 응답처리 개선하기
+ 
+   - 현재 상황은 다음과 같다.
+
+        // GET  http://localhost:8090/app/rest/users/10
+	//  존재하지 않는 값 요청시 404 에러가 아닌 200 반환됨. ==>  나중에 404로 변경할 예정임.
+	@GetMapping("/rest/users/{id}")
+	public UserDTO findById(@PathVariable Long id) {
+		return service.findById(id);
+	}
+
+
+   - 404 응답처리로 개선1 - ResponseEntity.notFound().build() 이용
+
+	@GetMapping("/rest/users/{id}")
+	public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+		
+		UserDTO dto = service.findById(id);
+		if(dto != null) {
+			
+			return ResponseEntity.status(200).build();
+			
+		}else {
+			
+//			return ResponseEntity.status(404).build();
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+   - 404 응답처리로 개선2 - 예외클래스 명시적으로 발생해서 처리
+  
+     ==> 장점: 사용자 입장에서 발생된 예외 메시지를 확인할수 있음.
+             예외발생시 다음 정보를 확인할 수 있음.
+	     {
+		"timestamp": "2025-02-03T07:54:17.983+00:00",
+		"status": 404,
+		"error": "Not Found",
+		"trace": "com.exam.exception.UserException: 100 에 해당하는 데이터가 없음.\r\n\tat com.exam.controller.UserController.findById(UserController.java:118)\r\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\r\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\r\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\r\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:568)\r\n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)\r\n\tat org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)\r\n\tat org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)\r\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)\r\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)\r\n\tat org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)\r\n\tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)\r\n\tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)\r\n\tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)\r\n\tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)\r\n\tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)\r\n\tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)\r\n\tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\r\n\tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\r\n\tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\r\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\r\n\tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\r\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\r\n\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)\r\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\r\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\r\n\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)\r\n\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)\r\n\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)\r\n\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\r\n\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)\r\n\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)\r\n\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)\r\n\tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:389)\r\n\tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)\r\n\tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)\r\n\tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)\r\n\tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)\r\n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)\r\n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)\r\n\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)\r\n\tat java.base/java.lang.Thread.run(Thread.java:842)\r\n",
+		"message": "100 에 해당하는 데이터가 없음.",
+		"path": "/app/rest/users/100"
+		}
+
+
+                // 기본적으로 500 에러가 발생됨. 404 변경해야 됨.
+		@ResponseStatus(code = HttpStatus.NOT_FOUND)
+		public class UserException extends RuntimeException{
+
+			public UserException(String message) {
+				super(message);
+			}
+		}
+
+		
+		// 404 에 대한 개선2 - 사용자 예외 클래스 이용
+			@GetMapping("/rest/users/{id}")
+			public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+				
+				UserDTO dto = service.findById(id);
+				if(dto == null) throw new UserException(id+ " 에 해당하는 데이터가 없음.");
+				
+				return ResponseEntity.status(200).body(dto);
+			}
+	
