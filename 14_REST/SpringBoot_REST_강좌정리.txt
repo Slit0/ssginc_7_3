@@ -515,10 +515,49 @@ public class UserController {
    지금까지 코드가 가장 기본이되는 REST 코드임.
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+  6.  POST 요청 처리에 대한 응답처리 개선하기 
+
+      -현재는 DB에 저장이되고 클라이언트에게  200 상태코드값을 반환됨.
+       그런데 200 상태코드는 GET|PUT|DELETE 요청할 때도 반환되는 상태값이다.
+       따라서 POST 요청에 한정된 201 상태값으로 반환할 필요가 있음.
+
+   
+     1) 제대로 된 status code(201) 값을 반환하자.
+
+         //////////////////////////////////////////////////////////////////
+	   200:  OK (성공)
+	   201:  created      ( 요청이 성공되어 새로운 리소스가 생성되었음을 의미 )
+	   204:  no content   ( 요청에 대한 컨텐츠가 없을 때  예> PUT 했는데 id에 해당되는 레코드가 없을 때 )
+
+	   400:  bad request  ( 잘못된 문법으로 인해서 서버가 이해할 수 없음을 의미 )
+	   401:  unauthorized ( 엄밀히 말해서 미권한(unauthorized)이 아닌 미인증(unauthenticated) 임.
+	                         즉 인증작업이 필요한 상황에서 인증작업을 거치지 않았을 때 발생됨.
+	                        )
+
+	      authentication:  인증
+
+	      authorization:   권한
+
+           403: Forbidden     ( 요청할 권한이 없는 경우에 발생 )
+	   404: Not Found
+	   405: Method Not Allowd ( 예> GET 요청시 doPost 받을 때 )
 
 
+	   500: Internal Server Error ( 서버 오류 )
+	//////////////////////////////////////////////////////////////////
+  
+      - Controller에서 리턴타입을  ResponseEntity API 이용
 
-
-
-
-
+           	// POST 요청에 대한 응답처리 개선1 - 201 status code설정
+		@PostMapping("/rest/users2")
+		public ResponseEntity<UserDTO> save2(@RequestBody UserDTO dto) {
+			//int n = service.save(dto);
+			ResponseEntity<UserDTO> entity = ResponseEntity.created(null).build(); // 201 상태코드 
+	//		entity = ResponseEntity.badRequest().build();   // 400 상태코드
+	//		entity = ResponseEntity.badRequest().build();   // 400 상태코드
+	//		entity = ResponseEntity.noContent().build();   // 204 상태코드
+	//		entity = ResponseEntity.internalServerError().build();   // 500 상태코드
+			// 메서드가 제공되지 않는 경우는 status(상태값) 이용
+	//		entity = ResponseEntity.status(401).build();   // 401 상태코드
+			return entity;
+		}
