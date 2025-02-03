@@ -65,3 +65,100 @@ REST 강좌정리
        ==> PUT과 DELETE 까지 요청가능한 도구(tool)이 필요함
           예> curl ( client url, 텍스트 기반, Linux 등에서 많이 사용됨 )
 	     postman, Talend API ( GUI 기반 )
+
+  
+   2) Controller 
+
+        가. SOAP 방식
+
+	     @Controller
+	     public class MainController{
+
+	         //JSP 응답
+		 @GetMapping("/jsp")
+		 public String xxx(){
+
+                     return "hello"; // hello.jsp
+		 }
+
+		 //JSON 응답
+		 @GetMapping("/json")
+		 @ResponseBody
+		 public String yyy(){
+
+                     return "hello"; 
+		 }
+	     }
+
+
+	 나. REST 방식
+
+	    @Controller
+	     public class MainController{
+
+	         //JSON 응답
+		 @GetMapping("/json1")
+		 @ResponseBody
+		 public String xxx(){
+
+                     return "hello"; 
+		 }
+
+		 //JSON 응답
+		 @GetMapping("/json2")
+		 @ResponseBody
+		 public String yyy(){
+
+                     return "hello"; 
+		 }
+	     }
+
+          ==> 간결하게 구현 가능 :   @Controller  +  @ResponseBody ==> @RestController
+
+		
+            @RestController
+	     public class MainController{
+
+	         //JSON 응답
+		 @GetMapping("/json1")
+		 public String xxx(){
+
+                     return "hello"; 
+		 }
+
+		 //JSON 응답
+		 @GetMapping("/json2")
+		 public String yyy(){
+
+                     return "hello"; 
+		 }
+	     }
+
+3. REST 실습
+  
+   1) pom.xml
+
+        <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+ 	 <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-devtools</artifactId>
+		<scope>runtime</scope>
+		<optional>true</optional>
+	 </dependency>
+
+   2) application.properties
+    
+        # 로그레벨 수정
+	#logging.level.root=info
+
+	#logging.level.org.springframework=info
+	logging.level.com.exam=info
+
+	# tomcat port 번호 변경
+	server.port=8090
+
+	# context명 변경
+	server.servlet.context-path=/app
