@@ -561,3 +561,20 @@ public class UserController {
 	//		entity = ResponseEntity.status(401).build();   // 401 상태코드
 			return entity;
 		}
+
+
+     2) status code(201) +  새로 생성된 사용자 정보 링크  을 반환하자.
+
+       - 만약에  { "id":60, "username":"강감찬", birthdate:"2025-12-21"} 정보를 저장하고
+         마지막으로 사용자에게  201 +  http://localhost:8090/app/rest/users/60  링크 정보를 제공하자.
+
+	
+
+       - 구현방법
+        
+	  // http://localhost:8090/app/rest/users/60
+	URI location = ServletUriComponentsBuilder.fromCurrentRequest()  // http://localhost:8090/app/rest/users/
+						  .path("/{id}")  //  dto.getId() 값으로 치환됨.
+						  .buildAndExpand(dto.getId())
+						  .toUri();
+          ResponseEntity<UserDTO> entity = ResponseEntity.created(location).build()
