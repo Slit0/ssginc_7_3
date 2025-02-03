@@ -41,3 +41,27 @@ REST 강좌정리
         )                           
 	      <--------------------------
 	                응답(XML/JSON)
+
+
+ 2. REST 특징
+
+   1) 클라이언트 요청 방식
+
+      가. SOAP 방식
+
+	  GET  방식: 조회시 주로 사용. ( SELECT 시)
+	  POST 방식: 생성,수정,삭제 주로 사용 ( INSERT, UPDATE, DELETE 시)
+
+       ==> html의 form 태그에서 지원하는 방법은 method=GET|POST만 가능.
+
+      나. REST 방식
+ 
+          GET 방식:  조회시 사용   ( SELECT 시)
+	  POST 방식: 생성시 사용   ( INSERT 시)
+	  PUT 방식:  수정시 사용   ( UPDATE 시)
+	  DELETE 방식: 삭제시 사용 ( DELETE 시)
+
+
+       ==> PUT과 DELETE 까지 요청가능한 도구(tool)이 필요함
+          예> curl ( client url, 텍스트 기반, Linux 등에서 많이 사용됨 )
+	     postman, Talend API ( GUI 기반 )
