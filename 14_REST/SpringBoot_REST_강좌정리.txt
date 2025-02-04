@@ -736,3 +736,50 @@ public class UserController {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 9. Swagger ( Open API )
+
+   1) 개념
+     REST API를 사용하는 사용자는  REST 의 정보를 잘 알아야 된다.
+     예> 엔드포인트, method 정보, 파라미터 유무 및 필수(옵션) 등
+
+     위의 정보들을 매우 쉽게 알려주는 라이브러리를 사용할 수 있음.
+
+  2) Open API 와 Swagger 차이점
+
+        Open API (스펙, 인터페이스 개념)
+	  |
+	  |
+	  |
+        Swagger (구현체,  클래스 개념) 
+ 
+
+  3)  구현방법
+
+    가. 의존성 설정
+
+        <dependency>
+	  <groupId>org.springdoc</groupId>
+	  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	  <version>2.6.0</version>  // 버전에 주의할 것.
+       </dependency>
+
+       http://localhost:8090/app/swagger-ui/index.html
+
+    
+   나. 추가 설정
+            @Operation(
+		    summary = "id 용해서 user 조회",
+		     description = "user 조회"
+			)
+	    @Parameters({@Parameter(name = "id", description = "User의 pk값", required = true)})
+		@GetMapping("/rest/users/{id}")
+		public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+			
+			UserDTO dto = service.findById(id);
+			if(dto == null) throw new UserNotFoundException(id+ " 에 해당하는 데이터가 없음.");
+			
+			return ResponseEntity.status(200).body(dto);
+		}
+
+/////////////////////////////////////////////////////////////////////////////////////////
