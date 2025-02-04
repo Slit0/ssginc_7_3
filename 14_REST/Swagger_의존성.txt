@@ -12,7 +12,7 @@
         <dependency>
 	  <groupId>org.springdoc</groupId>
 	  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-	  <version>2.0.0</version>
+	  <version>2.6.0</version>
        </dependency>
 
       의존성 설정후  http://localhost:8090/app/swagger-ui/index.html 요청하면 됨.
