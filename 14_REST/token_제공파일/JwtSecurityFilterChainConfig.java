@@ -6,27 +6,27 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -38,32 +38,54 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableMethodSecurity
 public class JwtSecurityFilterChainConfig {
 
-	  @Bean
-	    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
-	        
-
-	        return httpSecurity
-	                .authorizeHttpRequests(auth -> 
-	                
-	                auth.antMatchers("/home","/users").permitAll()  // 회원가입 요청 허용.
-	                    .antMatchers("/authenticate").permitAll()
-	                    .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-	                    .anyRequest()
-	                    .authenticated())
-	                .csrf(AbstractHttpConfigurer::disable)
-	                .sessionManagement(session -> session.
-	                    sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .oauth2ResourceServer(
-	                        OAuth2ResourceServerConfigurer::jwt)
-	                .httpBasic(
-	                        Customizer.withDefaults())
-	                .headers(header -> {header.
-	                    frameOptions().sameOrigin();})
-	                .build();
-	    }
-
 	
-	  
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, 
+    	    HandlerMappingIntrospector handlerMappingIntrospector) throws Exception {
+    	
+    	logger.info("logger: SecurityFilterChainConfig().filterChain:{} ", httpSecurity);
+        
+    	 MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(handlerMappingIntrospector);
+    	// login 설정
+    	  // csrf 비활성화
+    	 httpSecurity
+          .csrf(AbstractHttpConfigurer::disable);
+          
+    	  httpSecurity.authorizeHttpRequests((authorize) -> authorize
+                  .requestMatchers(mvcMatcherBuilder.pattern("/home")).permitAll()
+                  .requestMatchers("/hello-world","/signup").permitAll()
+                  .requestMatchers(mvcMatcherBuilder.pattern("/authenticate")).permitAll()
+                  //import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+                  .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.OPTIONS,"/**")).permitAll()
+          		  .anyRequest()
+          		  .authenticated()
+          		);
+          	     
+ 
+    	  //기본 인증 활성화(인증 팝업창 활성화)작업.  기본인증 활성화? 사용자id와 pw를 묻는 웹페이지 대신에 인증하기 위한 팝업이 제공됨을 의미한다.
+    	  httpSecurity
+          .httpBasic(Customizer.withDefaults());
+          
+
+          
+          // 4. 상태가 없는 세션을 작성.  CSRF를 비활성화 한다면 반드시 세션에 상태가 없어야 된다. (******)
+          httpSecurity
+          				.sessionManagement(
+          				  session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)		
+          				);  
+          		
+          httpSecurity
+          		.oauth2ResourceServer((oauth2) -> oauth2
+          			    .jwt(Customizer.withDefaults())
+          				);
+
+        return httpSecurity.build();
+    }
+    
+	
+	
 	    @Bean
 	    public JWKSource<SecurityContext> jwkSource() {
 	        JWKSet jwkSet = new JWKSet(rsaKey());
@@ -103,7 +125,7 @@ public class JwtSecurityFilterChainConfig {
 	            return keyPairGenerator.generateKeyPair();
 	        } catch (Exception e) {
 	            throw new IllegalStateException(
-	                    "RSA Key Pair 생성 에러 발생", e);
+	                    "Unable to generate an RSA Key Pair", e);
 	        }
 	    }
 }
