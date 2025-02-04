@@ -614,7 +614,7 @@ public class UserController {
   
      ==> 장점: 사용자 입장에서 발생된 예외 메시지를 확인할수 있음.
              예외발생시 다음 정보를 확인할 수 있음.
-	     {
+	       {
 		"timestamp": "2025-02-03T07:54:17.983+00:00",
 		"status": 404,
 		"error": "Not Found",
@@ -644,3 +644,23 @@ public class UserController {
 				return ResponseEntity.status(200).body(dto);
 			}
 	
+
+   - 404 응답처리로 개선3 -  에러메시지 커스터마이징 하자.
+                       @RestControllerAdvice +  extends ResponseEntityExceptionHandler
+
+           // Rest 방식의 전역 예외처리
+	@RestControllerAdvice
+	public class CustomizedResponseEntityExceptionHandler
+			   extends ResponseEntityExceptionHandler {
+
+		
+		@ExceptionHandler({ UserNotFoundException.class })
+		public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
+			
+			// 에러메시지 저장할 ErrorDetails 생성
+			ErrorDetails errorDetails =
+					new ErrorDetails(ex.getMessage(), LocalDate.now(), request.getDescription(false));
+			
+		   return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		}
+	}
