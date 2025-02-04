@@ -664,3 +664,75 @@ public class UserController {
 		   return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
 		}
 	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 8. 사용자 입력 데이터 유효성 체크 - @Valid 이용
+
+   1) 의존성 설정
+
+   		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+   
+   2) UserDTO.java 에 유효성 관련 어노테이션 설정
+    
+          @AllArgsConstructor
+	@NoArgsConstructor
+	@Setter
+	@Getter
+	@ToString
+	@Alias("UserDTO")
+	public class UserDTO {
+
+	 @NotBlank(message = "id 필수") 
+	 Long id;
+	 
+	 @NotBlank(message = "username 필수") 
+	 String username;
+	 
+	 
+	 @Past(message = "과거 날짜만 가능")  
+	 LocalDate birthdate;
+	 
+	}
+
+    3) Controller 에서 @Valid 파라미터 설정.  
+         단 예외처리를 담당하는 BindingResult 필요없고  
+	 대신 CustomizedResponseEntityExceptionHandler.java 전역 예외 핸들러에서 처리함.
+
+       
+	@PostMapping("/rest/users")
+	public ResponseEntity<UserDTO> save3(@Valid  @RequestBody UserDTO dto) {  // SOAP 방식의 BindingResult 필요없음. 대신 ExceptionHandler가 처리함.
+		int n = service.save(dto);        
+		
+
+    4) ExceptionHandler 에서 예외처리
+
+      => ResponseEntityExceptionHandler 안에 사용자 입력 데이터 유효성 체크를 예외하는 메서드가 정의됨.
+         이것을 재정의하면 됨. ( handleMethodArgumentNotValid 메서드 재정의 )
+
+	// Rest 방식의 전역 예외처리
+	@RestControllerAdvice
+	public class CustomizedResponseEntityExceptionHandler
+			   extends ResponseEntityExceptionHandler {
+
+		
+		// 사용자 입력 데이터 유효성 예외 처리하는 메서드를 재정의함.
+		@Override
+		protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+				HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+			
+			// 에러메시지 저장할 ErrorDetails 생성
+			// ex.getMessage() 하면 출력되는 에러메시지가 너무 많다.
+			// ex.getFieldError().getDefaultMessage() 하면 예외 발생된 개별 에러메시지만 출력됨.
+			ErrorDetails errorDetails =
+							new ErrorDetails(ex.getFieldError().getDefaultMessage(), LocalDate.now(), request.getDescription(false));
+					
+			return new ResponseEntity(errorDetails, HttpStatus.BAD_REQUEST);  // 400 에러
+				   
+		}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
