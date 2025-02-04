@@ -982,3 +982,329 @@ public class UserController {
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+
+     나.  member 테이블
+
+         use testdb;
+
+	 create table member (
+	   
+	   userid varchar(255) primary key,
+	   passwd varchar(255) not null,
+	   username varchar(255) not null 
+	 );
+
+     다. application.properties 설정
+
+        # 로그레벨 수정
+	#logging.level.root=info
+
+	#logging.level.org.springframework=info
+	logging.level.com.exam=info
+
+	# tomcat port 번호 변경
+	server.port=8090
+
+	# context명 변경
+	server.servlet.context-path=/app
+
+	# DB 연동
+	spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+	spring.datasource.url=jdbc:mysql://localhost:3306/testdb
+	spring.datasource.username=root
+	spring.datasource.password=1234
+	# DeptMapper 등록
+	mybatis.mapper-locations=com/exam/config/*Mapper.xml
+	# DTO 별칭
+	mybatis.type-aliases-package=com.exam.dto
+
+	#  SQL의 컬럼명: target_date   ,  DTO 변수명: targetDate  인 경우
+	#  별칭 또는 resultMap 으로 명시적으로 설정해서 사용했음.
+	#  이 작업을 자동으로 할 수 있다.
+	mybatis.configuration.map-underscore-to-camel-case=true
+
+	# // /** 설정시 적용
+	spring.mvc.pathmatch.matching-strategy=ant-path-matcher
+
+	# LocatDate 사용시 날짜 포맷 지정. 4자리년도-2자리월-2자일 예> 2025-05-23
+	spring.mvc.format.date=yyyy-MM-dd
+
+
+    라. MemberDTO.java ( 유효성 체크 )
+
+	 @AllArgsConstructor
+	@NoArgsConstructor
+	@Setter
+	@Getter
+	@ToString
+	@Alias("MemberDTO")
+	public class MemberDTO {
+
+		@NotBlank(message = "userid 필수")
+		String userid;
+
+		String passwd;
+		
+		@NotBlank(message = "username 필수")
+		String username;
+		
+	}
+ 
+    마. MemberMapper.xml  과 MemberMapper.java
+
+        - 기능 3가지만 구현
+	  => 회원가입  ( 인증불필요 )
+	  => 로그인   ( 인증불필요, token 얻기 )
+	  => mypage ( 인증필요, token 이용해서 header에 설정: Authorization: Bearer 토큰값 )
+
+
+    바.  MemberService.java , MemberServiceImpl.java  ( 회원가입과 mypage 만 구현)
+
+		// 회원가입과 mypage만 구현하자.
+		public interface MemberService {
+			public int save(MemberDTO dto);
+			public MemberDTO findById(String userid);
+		}
+
+		@Service
+		public class MemberServiceImpl implements MemberService{
+
+			MemberMapper mapper;
+			
+			public MemberServiceImpl(MemberMapper mapper) {
+				this.mapper = mapper;
+			}
+
+			@Override
+			@Transactional
+			public int save(MemberDTO dto) {
+				return mapper.save(dto);
+			}
+
+			@Override
+			public MemberDTO findById(String userid) {
+				return mapper.findById(userid);
+			}
+
+		}
+
+
+    사. AuthenticationService.java,  AuthenticationServiceImpl.java ( 로그인 구현 )
+
+        // 로그인만 구현하자.
+	public interface AuthenticationService {
+
+		public MemberDTO authenticate(Map<String, String> map);;
+	}
+
+        // 로그인만 구현하자.
+	@Service
+	public class 현 implements AuthenticationService{
+
+		MemberMapper mapper;
+		
+		public AuthenticationServiceImpl(MemberMapper mapper) {
+			this.mapper = mapper;
+		}
+
+		@Override
+		public MemberDTO authenticate(Map<String, String> map) {
+			return mapper.authenticate(map);
+		}
+	}
+
+    아. MemberController.java ( 회원가입과 mypage 만 구현 )
+
+		@RestController
+		@Slf4j
+		public class MemberController {
+
+			MemberService service;
+			public MemberController(MemberService service) {
+				this.service = service;
+			}
+
+			//회원가입
+			/*
+			    Talend API 에서 다음과 같이 JSON 요청하자.
+			    POST 요청
+			    header값: Content-type:application/json
+			     {
+				"userid":"kim4832",
+				"passwd":"1234",
+				"username":"김유신"
+			      }
+			     위 JSON을 자바의 MemberDTO 에 저장됨. 
+			 */
+			 @PostMapping("/save")
+			 public ResponseEntity<MemberDTO> save(@Valid  @RequestBody MemberDTO dto) {
+				 log.info("비번 암호화전: {}", dto.getPasswd());
+				 //비번을 암호화 해야됨.
+				 String encodedPW = new BCryptPasswordEncoder().encode(dto.getPasswd());
+				 log.info("비번 암호화후: {}", encodedPW);
+				 
+				 dto.setPasswd(encodedPW);
+				 int n = service.save(dto);
+				 
+				 return ResponseEntity.created(null).build();  // 201 상태코드 반환됨.
+			 }
+			 
+			 //로그인 이후(인증후)의 요청가능
+			 @GetMapping("/mypage")
+			 public void mypage() {
+				 
+				 
+			 }
+		 
+		}
+
+     자.  com.exam.security.JwtTokenResponse.java
+      
+         - 용도: token 과 로그인한 userid 저장
+	       필요시 추가 정보 저장 가능함.
+
+	 com.exam.security.JwtTokenService.java
+
+	 - 용도: id와 pw이 저장된 Authentication 및 여러 추가 정보를 mix해서 최종적으로 token(문자열) 생성.
+
+	 com.exam.security.JwtSecurityFilterChainConfig.java
+
+	 - 용도: Security Filter Chain 용도
+
+
+
+     차. /home 과 /hello-world 요청처리하는 HomeController.java
+
+
+     카. JwtTokenProvider.java
+
+        용도: 입력된 id와 pw 이용해서 DB와 연동해서 검증작업후 최종적으로  token 반환해주는 역할.
+
+	package com.exam.security;
+
+		import java.lang.reflect.Member;
+		import java.util.ArrayList;
+		import java.util.List;
+		import java.util.Map;
+
+		import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+		import org.springframework.security.core.GrantedAuthority;
+		import org.springframework.security.core.authority.SimpleGrantedAuthority;
+		import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+		import org.springframework.security.crypto.password.PasswordEncoder;
+		import org.springframework.stereotype.Component;
+
+		import com.exam.dto.MemberDTO;
+		import com.exam.service.MemberService;
+
+		//용도: 입력된 id와 pw 이용해서 DB와 연동해서 검증작업후 최종적으로  token 반환해주는 역할.
+
+		@Component
+		public class JwtTokenProvider {
+
+			MemberService memberService;
+			JwtTokenService tokenService;
+			
+			public JwtTokenProvider(MemberService memberService, JwtTokenService tokenService) {
+				this.memberService = memberService;
+				this.tokenService = tokenService;
+			}
+
+
+			public String authenticate(Map<String, String> map) {
+				String encodedtoken=null;
+				
+				String userid = map.get("userid");
+				String passwd = map.get("passwd");
+				
+				MemberDTO dto = memberService.findById(userid);
+				
+				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				UsernamePasswordAuthenticationToken token = null;
+				if( dto != null && passwordEncoder.matches(passwd, dto.getPasswd())) {
+					
+					MemberDTO new_dto = new MemberDTO();
+					new_dto.setUserid(userid);
+					new_dto.setPasswd(passwd); // 1234
+					new_dto.setUsername(dto.getUsername());
+					
+					List<GrantedAuthority> authorities = new ArrayList<>();
+					authorities.add(new  SimpleGrantedAuthority("USER")); 
+					
+					// 다음 token 정보가 세션에 저장된다.
+					token = new UsernamePasswordAuthenticationToken(new_dto, null, authorities);
+		//			token = new UsernamePasswordAuthenticationToken(userid, null, authorities);
+
+				}//end if
+				
+				// Authentication 을 이용해서 token 생성
+				encodedtoken = tokenService.generateToken(token);
+						
+				return encodedtoken;
+			}
+		}
+
+     타.  AuthenticationController.java ( 로그인 처리 )
+
+        package com.exam.controller;
+
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.exam.security.JwtTokenProvider;
+import com.exam.security.JwtTokenResponse;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@Slf4j
+public class AuthenticationController {
+
+	/*
+	   로그인 요청은 반드시 POST
+	 
+	   로그인 요청: 
+	     header정보: Content-Type: application/json
+	     
+         {
+            id:"kim4832",
+	        pw:"1234"
+ 
+	      }
+
+
+       응답:
+         {
+            token: 암호화된토큰값 <== 내부적으로 사용자id+pw+추가하고자하는임의값
+	        userid:inky4832
+	      }
+
+	 
+	*/
+	JwtTokenProvider tokenProvider;
+	
+	public AuthenticationController(JwtTokenProvider tokenProvider) {
+		this.tokenProvider = tokenProvider;
+	}
+
+
+	@PostMapping("/authenticate")
+	public ResponseEntity<JwtTokenResponse> authenticate(@RequestBody Map<String, String> map) {
+		
+		String token  = tokenProvider.authenticate(map);
+		
+		JwtTokenResponse response = 
+				new JwtTokenResponse(token, map.get("userid"));
+		
+		return ResponseEntity.status(200).body(response);
+	}
+	
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
