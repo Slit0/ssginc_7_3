@@ -868,3 +868,44 @@ public class UserController {
 	}
 
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+11.  필터링 (filtering)
+
+   1) 개념
+
+     - 현재는 요청했을때 UserDTO를 JSON으로 반환함.
+       이때 JSON의 key값이 UserDTO 의 변수명으로 자동으로 설정된다.
+       또한 UserDTO 의 모든 변수값이 JSON으로 반환됨.
+
+   2) JSON의 key값 변경
+    
+      - @JsonProperty("키값")
+
+       예>  
+         public class UserDTO {
+
+	 Long id;
+	 
+	 @JsonProperty("name")
+	 String username;
+	 LocalDate birthdate;
+	 
+        }
+ 
+    3) UserDTO 변수 제외
+
+       - @JsonIgnore
+
+       예>
+          public class UserDTO {
+
+	 Long id;
+	 
+	 @JsonProperty("name")
+	 String username;
+	 
+	 @JsonIgnore
+	 LocalDate birthdate;
+	 
+	}
