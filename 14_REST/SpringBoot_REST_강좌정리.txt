@@ -823,3 +823,20 @@ public class UserController {
      레벨1:
      레벨2: GET/POST/PUT/DELETE  <== REST 개발시 일반적으로 레벨2까지만 대부분 구현함.
      레벨3: HATEOAS
+
+   
+    3) 구현
+
+     가. 의존성 설정
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	   <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
+
+     나. UserController 에서 HATEOAS 코드 추가
+
+        EntityModel       :  Model 저장 역할 ( 요청에 해당되는 UserDTO 저장 역할 )
+	WebMvcLinkBuilder :  link 생성 역할
+
+
+
