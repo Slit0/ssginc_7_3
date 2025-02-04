@@ -909,3 +909,76 @@ public class UserController {
 	 LocalDate birthdate;
 	 
 	}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+12. Rest + Spring Security + Token 기반
+
+   1) Token 처리
+
+    로그인 요청: 
+         {
+            id:"inky4832",
+	    pw:"1234"
+ 
+	 }
+
+
+     응답:
+         {
+            token: 암호화된토큰값 <== 내부적으로 사용자id+pw+추가하고자하는임의값
+	 }
+
+   클라이언트(reactjs)에서는 응답받은 token을 저장하고 나중에 로그인 이후의 요청(장바구니관련,mypage..)은 반드시 token 값을 전달해야된다.
+   header 에 token 값을 설정한다.
+
+       Authorization: Bearer 토큰값
+
+     
+    2) 구현 
+
+     가. 의존성 설정
+
+                 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		 <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		 </dependency>
+		 <dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-security</artifactId>
+	   </dependency>
+
+        <dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+	    </dependency>
+	
+	   	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+	     </dependency>   
+	     <dependency>
+	   		 <groupId>org.mybatis.spring.boot</groupId>
+	   		 <artifactId>mybatis-spring-boot-starter</artifactId>
+	    <version>3.0.3</version>
+		</dependency>
+		        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			    <groupId>mysql</groupId>
+			    <artifactId>mysql-connector-java</artifactId>
+			    <version>8.0.33</version>
+		</dependency>
+	    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
