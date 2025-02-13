@@ -18,3 +18,7 @@
 
    pw: KDTBCB
 
+
+## 미니프로젝트 2차 산출물 구글 드라이브 경로
+
+https://drive.google.com/drive/folders/1-SUnOjBBDsRqAHPPP_FwzzgOHOO604b9?usp=sharing
