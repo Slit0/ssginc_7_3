@@ -22,3 +22,7 @@
 ## 미니프로젝트 2차 산출물 구글 드라이브 경로
 
 https://drive.google.com/drive/folders/1-SUnOjBBDsRqAHPPP_FwzzgOHOO604b9?usp=sharing
+
+
+## Reactjs 강좌 녹화본 
+https://drive.google.com/drive/folders/1IRA0dhDsbn3h28QW-fhOvVaCHtcKIJ79?usp=sharing
