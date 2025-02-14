@@ -286,7 +286,25 @@ https://ko.reactjs.org/docs/components-and-props.html
 
 	  function 자식컴포넌트({속성명, 속성명}){}
 
+    
+
+    3) 구현방법2- 자식컴포넌트의 body 이용
+
+        가. 부모 코드
+
+            문법: <자식컴포넌트>
+                    자식에게전달할데이터  <== 일반데이터값 또는 JSX 가능
+	         </자식컴포넌트>
 
 
+	 나. 자식 코드
 
+	     - 자식코드에서는 함수 컴포넌트의 파라미터인 props로 부모에서 전달하는 데이터를 참조할 수 있다.
+		 props 변수에는 {children:전달값} 형식으로 전달됨 
 
+                 function 자식컴포넌트(props){
+		 
+		     props.children 참조
+		 }
+
+		 
