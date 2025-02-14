@@ -103,3 +103,9 @@ Reactjs v18.2.0 강좌정리
 		      이유는 <컴포넌트명 /> 형식으로 사용되어야 하기 때문에 일반 html과 구분 목적 )
 		      예> <App />
 		      이 파일에서 실제 화면을 구축하면 됨.
+
+     package.json   : maven 의 pom.xml 역할
+                      nodejs의 모듈 관리 설정 파일임.
+
+		      예> npm install axios  실행하면 package.json에 "axios": "^1.7.9" 추가됨
+		         npm uninstall axios 실행하면 제거됨.
