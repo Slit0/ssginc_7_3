@@ -109,3 +109,133 @@ Reactjs v18.2.0 강좌정리
 
 		      예> npm install axios  실행하면 package.json에 "axios": "^1.7.9" 추가됨
 		         npm uninstall axios 실행하면 제거됨.
+
+    README.md       : 실행 명령어 가이드
+                 
+		    예> 실행 : npm start
+		       배포  : npm run build
+
+
+  6. Reactjs에 실행가능한 컴포넌트 작성 방법
+
+    1) 클래스형 기반
+      - 거의 사용 안함.
+
+    2) 함수형 기반 (***********)
+
+      가. 함수 선언 ( 반드시 첫글자는 대문자로 지정, 일반적인 html태그와 구별하기 위함. )
+
+         function Home(){
+
+	 }
+
+      나. 함수안에서 화면을 구성(JSX)하고 return 해야 된다.
+
+	 function Home(){
+
+	    return (
+
+		 JSX 문법 ( html 비슷)
+	    );
+	 }
+       
+      다. 외부에서 사용하기 위해서 export|export default 한다.
+
+         export {Home}
+	 export default Home
+
+    
+      라. CSS 스타일 지정은 컴포넌트당 하나씩 작성한다.
+        
+	 예> Home.js, Home.css  만들고 import './Home.css'; 사용함.
+	    Menu.js, Menu.css  만들고 import './Menu.css'; 사용함.
+
+     마. 사용할 때는 import 하고 <컴포넌트 /> 형식으로 사용함.
+        예> <Home />
+	   <Menu />
+
+
+7. JSX
+
+   1) 개요
+     - JSX ( JavaScript XML)로서 Reactjs에서 UI구현시 사용됨.
+     - JSX는 랜더링 되기 전에 작동 가능한 JS로 바뀐다. ( babel 도구, https://babeljs.io/ )
+       결국은 JSX는 웹브라우저에서 실제 사용 불가능.
+
+   2)문법
+    
+     - 함수형 컴포넌트에서 return ( JSX ) 표현식 이용.
+       ()는 생략가능한데 JSX 한줄인 경우에 가능하다.
+       예>  return <div className="bottom">bottom 화면입니다.</div>
+
+   3)특징
+     가.반드시 단 하나의 root 태그가 존재해야 된다.
+     나.일반 html태그에서는 종료태그가 없는 태그가 존재가능( 예> <hr> , <br> , <img> )
+       하지만 JSP에서는 반드시 종료태그가 존재해야 됨.  ( 예> <hr></hr>, <br></br> )
+
+     다. 함수형컴포넌트에서의 변수값을 JSX 에서 출력할 수 있다.
+        문법: {변수값}  // JSP의 <%= 변수값 %> 동일한 기능
+     
+     라. {변수값} 에서 산술연산, 비교연산자, 논리 연산자, 3항연산자 등 모둑 가능
+      
+        예>  { age > 10 }
+	    { age + 10 }
+	    { age > 10 ? 값:값2 }
+	    { age > 10 && age < 20 }
+
+       단, 논리값(true/false), null, undefiend 는 {변수값} 사용시 출력안됨.
+    
+
+     마. JSX에서 CSS 적용하는 방법 2가지
+
+        a. className 속성
+	   - 일반적인 html에서는 class 속성을 이용해서 스타일을 지정한다.
+	     JSX에서는 class 값이 키워드이기 때문에 사용하지 못하고 대신 className 속성을 사용해야 된다.
+
+
+	b. style 속성
+
+           - 일반적인 html에서도 지원되는 속성.
+	     JSX에서는 중첩 {{css속성명:속성값}} 사용해야된다.
+	     예>
+	        var xxx ={color:red}
+
+		<p style={xxx} >
+		<p style={{color:red}} >
+
+            - 일반적인 html의 CSS 는 케밥표기법( 예> font-size:40px )사용하는데
+	      JSX 의 CSS 는 카멜표기법 ( 예> fontSize: 40px ) 사용한다.
+	      예> <p style={{color:'red', fontSize: '40px' }} >
+
+    바. 조건부 랜더링 (******************)
+
+      - 조건을 지정해서 true 인 경우에만 화면에 랜더링하자.
+       문법: { true  && <보여줄컴포넌트> }
+
+    
+    사. spread 연산자
+
+      문법: {...변수}
+
+      예>
+         원본코드:
+         <img src="a.jpg" width="100" height="100" >
+	 
+	 spread 적용코드:
+	 const attr ={src:"a.jpg", width:"100", height:"100">
+
+	 JSX: <img {...attr} >
+
+    아. JSX에서 이벤트처리시 이벤트 핸들러 속성은 반드시 카멜표기법을 사용해야된다.
+        ( onClick, onChange, onSubmit, ... )
+
+       예>
+          기존 html 이벤트 처리: <button onclick="콜백함수">ok</button>
+
+	  JSX 이벤트 처리: <button onClick="콜백함수">ok</button>
+
+    자. JSX 주석
+
+     문법: {/*  JSX   */}
+
+ ////////////////////////////////////////////////////////////////////////////////////
