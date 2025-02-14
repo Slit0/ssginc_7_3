@@ -64,11 +64,14 @@ function App() {
    const username="홍길동"
    const age = 20;
 
+   const user = {username:"이순신", userage:20}
+
   return (
     <div className="App">
       <Home username="홍길동" userage={20}/>
       <Home username={username} userage={age}/>
       <Home username={username} />
+      <Home {...user} />
     </div>
   );
 }
