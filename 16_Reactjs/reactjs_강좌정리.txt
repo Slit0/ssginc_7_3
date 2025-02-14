@@ -1,0 +1,80 @@
+Reactjs v18.2.0 강좌정리
+
+1. 개요
+
+  - facebook에서 제공하는 Front-end 프레임워크. ( JS 기반 )
+    예> React.js, Vue.js , Angular(구글)
+
+
+2. React 종류
+
+  1) React.js (*)
+     - 수업에서 배우는 내용
+     - CSR( Client Side Rendering : 클라이언트인 웹브라우저에서 화면을 만들고 랜더링함. )
+
+  2) Next.js
+     - SSR ( Server Side Rendering: JSP처럼 서버에서 화면을 만들고 만든 화면을 클라이언트에게 전송해서 랜더링함 )
+
+  3) React Native
+     - 모바일용 어플리케이션 개발시 사용. ( 모바일용 React )
+
+3. 환경설정
+ 
+   1) node 설치
+
+     http://nodejs.org
+      
+   2) VSC 설치 
+    
+      https://code.visualstudio.com/
+
+   3) VSC 플러그인
+
+     - live Server
+     - Auto Rename Tag
+     - Auto Close Tag
+     - Reactjs Snippets ( 함수기반 컴포넌트 개발용 )
+
+   4) 크롬에서 React 플러그인 설치
+
+
+4. React 프로젝트 생성
+
+   https://ko.legacy.reactjs.org/docs/create-a-new-react-app.html#createreact-app
+
+   1) 문법
+
+       npx create-react-app  프로젝트명
+
+     가. 설치
+
+	npm install npm -g  <== npm 최신버전 설치
+
+        npx create-react-app my-app	
+
+     나. 버전 변경
+
+        - package.json 에서 다음과 같이 변경한다.
+
+	 "react": "^19.0.0",        ==> "react": "^18.2.0"
+         "react-dom": "^19.0.0",    ==> "react-dom": "^18.2.0"
+
+	- 수정후 다시 다운로드 받기
+	  cd my-app
+	  npm install 
+ 
+     다. 성능측정 코드 삭제
+
+         src/index.js 에서 다음 코드 삭제하기
+
+	 5라인의 import reportWebVitals from './reportWebVitals'; 삭제
+	 17라인의 reportWebVitals(); 삭제
+
+   
+     라. 실행
+        
+	cd my-app
+	npm start
+
+	
+	http://localhost:3000/ 요청되어 화면이 랜더링됨.
