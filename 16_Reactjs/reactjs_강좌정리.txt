@@ -490,11 +490,17 @@ https://ko.reactjs.org/docs/components-and-props.html
        문법1:  set메서드(변경값)
             예> setNum(num+1);
 	       setNum(num>0?num-1:0); // 3항연산자
-
+	    
+	    - 배치로 실행됨. 따라서 num값은 한번만 변경됨
+              setNum(num+1);
+	      setNum(num+1);
+       
        문법2:  set메서드(arrow함수)
 
             예> setNum(변수=>리턴값)
 	       
 	       setNum(num=>num+1)
 
-
+	   -  arrow 함수 지정 :  매번 실행됨. 따라서 num값은 두번 변경됨
+		setNum(num=>num-1); // arrow 함수
+		setNum(num=>num-1); // arrow 함수	
