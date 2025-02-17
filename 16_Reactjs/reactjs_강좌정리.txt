@@ -361,4 +361,73 @@ https://ko.reactjs.org/docs/components-and-props.html
     이유는 React는 화면랜더링할 때 매번 똑같은 화면을 랜더링하지 않고
     수정된 항목만 랜더링한다. 이때 비교하기 위한 unique한 값이 필요함.
 
+    예>
+        // 반복할 배열 (원래는 서버에서 가져온 데이터임)
+		const userList = [{username:"홍길동1",age:20},
+		  {username:"홍길동2",age:30},
+		  {username:"홍길동3",age:40}
+		];
+
+       
+      {userList.map((ele,idx)=>{
+        return <div key={idx}> {ele.username}, {ele.age}</div>
+      })}
+
  //////////////////////////////////////////////////////////////////////////
+
+11.  이벤트 처리
+ 
+   https://ko.reactjs.org/docs/handling-events.html
+
+   1) 이벤트 처리 함수는 컴포넌트 안에서 정의한다.
+
+     예>
+         function App(){  // 컴포넌트
+
+	    //이벤트 함수
+	    function handleEvent(){}
+	    var handleEvent=function(){}
+	    var handleEvent=()=>{}
+
+	 }
+
+   2) 이벤트 핸들러는 반드시 카멜표기법을 사용해야 된다.
+
+     예> <button onClick=이벤트함수>
+
+   
+   3) 이벤트 함수 형식 2가지
+
+    가. 콜백함수 형식 ( 함수명만 지정하는 방식임 )
+
+     예> <button onClick={handleEvent}>
+
+       - 임의의 파라미터값을 전달 불가
+       - 자동으로 이벤트 객체가 전달됨.
+
+	예>  
+	    function handleEvent(e){
+	      console.log("handleEvent", e)
+	    }
+
+	     <h2>1. 콜백 형식</h2>
+             <button onClick={handleEvent}>OK1</button>
+
+    나. arrow 함수 작성하고 직접 이벤트함수 호출 형식
+
+
+     예> <button onClick={()=>handleEvent(}>
+
+      - 임의의 파라미터값을 전달 가능
+      - 자동으로 이벤트 객체가 전달안되기 때문에
+        명시적으로 전달해야 된다.
+
+     예>
+
+        function handleEvent2(e, n){
+         console.log("handleEvent2", e, n)
+        }
+
+	 <button onClick={(e)=>handleEvent2(e, 100)}>OK3</button>
+
+/////////////////////////////////////////////////////////////////////////////
