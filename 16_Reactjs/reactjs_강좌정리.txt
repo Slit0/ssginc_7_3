@@ -40,7 +40,8 @@ Reactjs v18.2.0 강좌정리
 
 4. React 프로젝트 생성
 
-   https://ko.legacy.reactjs.org/docs/create-a-new-react-app.html#createreact-app
+    https://ko.legacy.reactjs.org/docs/create-a-new-react-app.html#createreact-app ( 18.2.0 해당 )
+    https://ko.react.dev/ ( v19 )
 
    1) 문법
 
@@ -61,7 +62,7 @@ Reactjs v18.2.0 강좌정리
 
 	- 수정후 다시 다운로드 받기
 	  cd my-app
-	  npm install 
+	  npm install   <== package.json의 변경사항을 반영.
  
      다. 성능측정 코드 삭제
 
@@ -120,20 +121,33 @@ Reactjs v18.2.0 강좌정리
 
     1) 클래스형 기반
       - 거의 사용 안함.
+      - 초창기에는 클래스형 기반으로 개발함.
+        이유는 클래스형에서 사용가능하나 함수형에서는 사용 못하는 기능들이 많았음.
+	나중에 함수형에서도 사용가능하도록 기능을 추가했음.(hook 이라고 함. useXXX )
 
     2) 함수형 기반 (***********)
 
       가. 함수 선언 ( 반드시 첫글자는 대문자로 지정, 일반적인 html태그와 구별하기 위함. )
 
-         function Home(){
+         // 함수선언식 ( 이름있는 함수)
+         function Home(){   <=== 화면 전체 또는 화면의 일부분이 된다. MVC 에서 View 담당하는 역할임.
 
 	 }
+	 // 함수 표현식 ( 이름없는 함수, 익명함수)
+         const Home = function (){
+
+	 };
+
+	 // arrow 
+         const Home = ()=>{
+
+	 };
 
       나. 함수안에서 화면을 구성(JSX)하고 return 해야 된다.
 
 	 function Home(){
 
-	    return (
+	    return (  <== () 생략가능한 경우는 JSX 한줄인 경우에 가능함.
 
 		 JSX 문법 ( html 비슷)
 	    );
@@ -169,7 +183,7 @@ Reactjs v18.2.0 강좌정리
        예>  return <div className="bottom">bottom 화면입니다.</div>
 
    3)특징
-     가.반드시 단 하나의 root 태그가 존재해야 된다.
+     가.반드시 단 하나의 root 태그가 존재해야 된다. ( XML 문법 )
      나.일반 html태그에서는 종료태그가 없는 태그가 존재가능( 예> <hr> , <br> , <img> )
        하지만 JSP에서는 반드시 종료태그가 존재해야 됨.  ( 예> <hr></hr>, <br></br> )
 
@@ -184,6 +198,8 @@ Reactjs v18.2.0 강좌정리
 	    { age > 10 && age < 20 }
 
        단, 논리값(true/false), null, undefiend 는 {변수값} 사용시 출력안됨.
+          출력할려면 {조건식?"true":"false"}
+	          {조건식?"null":null}
     
 
      마. JSX에서 CSS 적용하는 방법 2가지
@@ -238,6 +254,8 @@ Reactjs v18.2.0 강좌정리
 
      문법: {/*  JSX   */}
 
+    차. JSX에서 {json객체} 출력불가
+
  ////////////////////////////////////////////////////////////////////////////////////
 
   8. image 사용하기
@@ -247,7 +265,7 @@ Reactjs v18.2.0 강좌정리
       예> src/assets 에 이미지를 저장
 
 
-    - 사용할때는 import 해서 사용한다.
+    - 사용할때는 import 해서 사용한다. ( 권장 )
 
        예>
          import daum from './assets/daum.png'
@@ -257,15 +275,17 @@ Reactjs v18.2.0 강좌정리
 
     - 이유는 public에 저장하면 npm run build 할때 누락이 자주 되기 때문이다.
 
+  ==> 화면 레이아웃은 계층적인 구조로 만든다. ( JSP의 include 기능과 비슷 )
+/////////////////////////////////////////////////////////////////
 
  9. props 
 https://ko.reactjs.org/docs/components-and-props.html
 
    1) 개요
-     - 계층적인 구조에서 부모컴포넌트에서 자식컴포넌트로 데이터를 전달하는 방법. 
+     - 계층적인 구조에서 부모컴포넌트에서 자식컴포넌트로 데이터를 전달하는 방법.  
 
    2) 특징
-      - 단방향 ( 부모에서 자식으로만 전달 가능)
+      - 단방향 ( 부모에서 자식으로만 전달 가능, 자식에서 부모로 데이터 전달은 불가능.)
       - 전달되는 데이터는 모든 데이터 가능 ( 논리값, 문자(열),숫자,함수,배열,json,... )
         전달하는 방법은 문자열 제외하고 {값} 형식을 사용해야된다.
 
@@ -279,7 +299,10 @@ https://ko.reactjs.org/docs/components-and-props.html
        
         - 자식코드에서는 함수 컴포넌트의 파라미터인 props로 부모에서 전달하는 데이터를 참조할 수 있다.
 	  props 변수에는 {속성명:속성값, 속성명:속성값} 형식으로 전달됨
-         function 자식컴포넌트(props){}
+         function 자식컴포넌트(props){
+		
+		props.속성명 으로 참조
+	 }
 
 
         - 자식코드에서는 함수 컴포넌트의 파라미터에서 직접 객체분해할당에서 데이터를 참조할 수 있다.
@@ -326,4 +349,16 @@ https://ko.reactjs.org/docs/components-and-props.html
 		     props.children 참조
 		     props.속성명     참조
 		 }
+
+   ====> 계층구조가 많아지면 최상위 부모에서 최하위 자식에게 데이터를 전달하기 위한 방법이 복잡해질 수 있음.( props drilling 문제)
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+10.  배열 데이터를 JSX에서 반복해서 출력하기.
+
+  - JSX에서는 {json객체} 출력 불가
+  - 반복처리시 개별적인 JSX태그를 구별하기 위한 unique 값을 설정해야 됨.
+    key="unique값"
+    이유는 React는 화면랜더링할 때 매번 똑같은 화면을 랜더링하지 않고
+    수정된 항목만 랜더링한다. 이때 비교하기 위한 unique한 값이 필요함.
+
+ //////////////////////////////////////////////////////////////////////////
