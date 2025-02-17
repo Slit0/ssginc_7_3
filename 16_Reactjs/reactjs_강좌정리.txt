@@ -441,8 +441,10 @@ https://ko.reactjs.org/docs/components-and-props.html
     예> 
         function App() {
 
+
 	  //부모가 아닌 자식에서 호출
 	  function handleEvent(n){
+	 
 	    console.log("handleEvent", n)
 	  }
 
@@ -452,3 +454,47 @@ https://ko.reactjs.org/docs/components-and-props.html
 	      <Home onHandleEvent={handleEvent}/>
 	    </div>
 	  );
+
+//////////////////////////////////////////////////////////////////
+
+13. 상태관리 (***************) 
+
+   1) 개요
+     - 특정 컴포넌트에서 발생된 데이터인 상태값을 관리하는 방법임.
+       일반적인 다음과 같은 변수형태로 데이터를 관리하지 않음.
+        예>  var name = "홍길동";
+
+   2) 문법
+
+      import {useState} from 'react';
+
+      const [변수명, set메서드명] = useState(초기값); // 훅(hook)
+
+      예>  var name = "홍길동";  // 사용안함
+
+         const [name, setName] = useState('홍길동');
+
+    3) 특징
+     
+      - state 에 저장되는 데이터는 모든 데이터 가능 ( 문자열, 수치, 배열, JSON, 함수 )
+      - state 값 변경은 직접 변수명="새로운값" 형식으로 사용하면 안되고
+        반드시 set메서드로만 수정이 가능하다. (**********)
+	props는 자식에서 수정이 불가(read only)
+      - set메서드로 값이 변경되면 자동으로 화면이 재랜더링됨. (***************)
+      - 모든 hook은 반드시 최상위 컴포넌트 함수에서만 사용이 가능하다. ( 조건문, 반복문, 이벤트함수내에서 사용불가)
+      - state 값 JSX에서 출력은 {변수} 사용.
+
+    
+    4) set메서드
+
+       문법1:  set메서드(변경값)
+            예> setNum(num+1);
+	       setNum(num>0?num-1:0); // 3항연산자
+
+       문법2:  set메서드(arrow함수)
+
+            예> setNum(변수=>리턴값)
+	       
+	       setNum(num=>num+1)
+
+
