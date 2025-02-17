@@ -431,3 +431,24 @@ https://ko.reactjs.org/docs/components-and-props.html
 	 <button onClick={(e)=>handleEvent2(e, 100)}>OK3</button>
 
 /////////////////////////////////////////////////////////////////////////////
+12. 계층적 이벤트 처리
+ 
+   1)개념
+    
+     기본적으로 부모에서 자식으로만 데이터 전달이 가능하다. ( props 이용)
+     계층적 이벤트를 사용하면 자식에서 부모에게 데이터 전달이 가능해짐. ( 이벤트함수 + props 이용 )
+
+    예> 
+        function App() {
+
+	  //부모가 아닌 자식에서 호출
+	  function handleEvent(n){
+	    console.log("handleEvent", n)
+	  }
+
+	  return (
+	    <div className="App">
+	      {/* 부모에서 자식에게 부모의 이벤트함수를 props로 전달함 */}
+	      <Home onHandleEvent={handleEvent}/>
+	    </div>
+	  );
