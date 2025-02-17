@@ -528,3 +528,18 @@ https://ko.reactjs.org/docs/components-and-props.html
 	   -  arrow 함수 지정 :  매번 실행됨. 따라서 num값은 두번 변경됨
 		setNum(num=>num-1); // arrow 함수
 		setNum(num=>num-1); // arrow 함수	
+
+    
+     5) state 이용한 조건문 랜더링 방법
+
+          // 버튼 클릭 여부 저장하는 state 생성
+          const [isShow, setIsShow] = useState(true)
+
+	  function handleEvent(){
+	    //  setIsShow(!isShow) // OLD 방법
+	      setIsShow(isShow=>!isShow); // 논리값 수정은 arrow 함수 권장함.
+	  }
+
+	  <h2>state 이용한 조건부 랜더링3- && 연산자 이용(권장방법)</h2>
+          {isShow && <><Home/></> }
+          <button onClick={handleEvent}>{isShow?'감추기':'보여주기'}</button>
