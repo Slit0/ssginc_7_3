@@ -496,6 +496,18 @@ https://ko.reactjs.org/docs/components-and-props.html
 	    var x = [10,20,30];  // x는 100번지 
 	    var n_x = [...x,40]  // n_x  는 200번지
 	    var x = n_x;          // 100번지에 새로운 200번지 할당해서 reactjs 가 변경되었음을 알수 있음.
+
+	  reactjs 코드
+	  예>
+	        //json 관리용 state 작성
+		  const [user, setUser] = useState({username:'', age: 0})
+
+		  //배열 관리용 state 작성
+		  const [num, setNum] = useState([])
+
+
+		  setNum([...num, 10])
+		  setUser({...user, username:'홍길동', age: 20})
     
     4) set메서드
 
