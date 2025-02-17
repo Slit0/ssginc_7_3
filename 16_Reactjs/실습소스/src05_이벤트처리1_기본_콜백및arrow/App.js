@@ -5,7 +5,7 @@ import './App.css';
 function App() {
 
    function handleEvent(){
-    console.log("handleEvent", e)
+    console.log("handleEvent")
    }
    function handleEvent2(n){
     console.log("handleEvent2", n)
