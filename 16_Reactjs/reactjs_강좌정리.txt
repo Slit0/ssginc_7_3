@@ -697,4 +697,155 @@ https://ko.reactjs.org/docs/components-and-props.html
        // 자식호출 방법
        home_ref.current.open();
 
+
+14. useRef4- 모달창
+
+        import logo from './logo.svg';
+	import './App.css';
+
+	import {forwardRef, useRef, useImperativeHandle} from 'react'
+
+	//자식
+	const Child = forwardRef(function(props, ref){
+
+	  // modal을 보여주는 자식함수(App의 handleEvent가 호출할 예정)
+	  function modal_show(){
+	    modal_dialog.current.showModal()
+	  }
+
+	  // 자식함수 등록
+	  useImperativeHandle(ref,()=>({modal_show}));
+
+	  //modal 참조하는 ref 작성
+	  const modal_dialog = useRef(null)
+
+	  return(
+	    <>
+	       <dialog ref={modal_dialog} >
+		<p>Greetings, one and all!</p>
+		<form method="dialog">
+		  <button>OK</button>
+		  <button>close</button>
+		</form>
+	      </dialog> 
+	    </>
+	  );
+	});
+
+	// 부모
+	function App() {
+	  const modal_ref = useRef(null)
+
+	  function handleEvent(){
+	    modal_ref.current.modal_show()
+	  }
+
+	  return (
+	    <div className="App">
+	    <button onClick={handleEvent}>모달열기</button>
+	      <Child ref={modal_ref}/>
+	    </div>
+	  );
+	}
+
+	export default App;
+
+
 ///////////////////////////////////////////////////////////////////
+
+15. Context API
+
+  1) 개요
+   - 깊이가 있는 계층구조인 경우 최상의 부모에서 최하의 자식에게 
+     데이터 전달을 props로 한다면 여러번 중간 자식들을 거치게 된다.
+     매우 비효율적임. 해결: Context API
+
+     예> App  <== <UserContext.Provider value>	 
+                    <Home />
+		 </UserContext.Provider>
+          Home <== username  사용
+	   
+	    Menu  <== sayEcho 사용
+	       
+	        MenuItem
+
+  2) 특징
+    - 원하는 하위 컴포넌트에서 직접 데이터 사용할 수 있다.
+
+  3) 구현
+
+    가. 데이터 저장하는 역할
+ https://react.dev/reference/react/createContext 
+
+
+    나. 데이터를 사용하는 역할
+ https://react.dev/reference/react/useContext 
+
+
+  4) 데이터 저장하는 역할 패턴
+
+    가. 저장소 생성 ( 외부파일로 작성)
+	
+	# store/UserContext.js
+
+        import { createContext } from 'react';
+
+	const 첫글자대문자식별자 = createContext(기본값)
+
+           //( 첫글자는 반드시 대문자, <컨텍스트명 /> 태그 형식으로 사용됨)
+      예>  const UserContext = createContext({
+           username:'', 
+	   sayEcho:()=>{}  // 함수도 저장가능
+	  })
+
+	
+          export default UserContext;
+
+
+    나.  생성된 UserContext의 Provider 제공
+
+         export function  UserContextProvider({children}){
+
+	    //createContext에서 생성된 JSON 데이터관리
+	     const [ username, setUserName] = useState('홍길동');
+	
+	   //createContext에서 생성된 함수 구현 ( 일반적인 구현은 state값 변경작업이 될 것이다. )
+	    function sayEcho(){}
+
+	    //최종적으로 JSON데이터와 함수를 저장
+	    const userCtx = {
+	        username:username
+		sayEcho:sayEcho
+
+	    }		
+	    return <UserContext.Provider value={userCtx}>
+		      {children}
+	           </UserContext.Provider> 
+	 }
+
+
+	// 기존 사용
+	<UserContext.Provider value>	 
+                    <Home />
+	</UserContext.Provider>
+
+	//변경된 사용
+	<UserContextProvider>
+           <Home />
+	</UserContextProvider>
+
+
+    다. App.js에서 UserContextProvider 설정
+       import { UserContextProvider } from './store/UserContext';
+
+        <UserContextProvider>
+           <Home />        <== Home 및 Home 하위 컴포넌트들은 직접 createContext에서 생성한 username과 sayEcho사용가능
+	</UserContextProvider>
+
+
+   5) 사용하는 쪽 패턴
+
+       import UserContext from "../store/UserContext";
+
+        const userCtx = useContext(UserContext)
+////////////////////////////////////////////////////////////////////////
