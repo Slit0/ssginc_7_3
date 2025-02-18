@@ -613,10 +613,50 @@ https://ko.reactjs.org/docs/components-and-props.html
 			}
 		    }
 
+   
+////////////////////////////////////////////////////////////////////////////
 
+14. useRef1- 기본
 
+ https://ko.reactjs.org/docs/hooks-reference.html#useref
 
+  1) 개요
+    - JSX의 특정 태그를 참조하는 기능. ( 일반적인 데이터를 저장하는 역할도 가능 )
+     예> <input> 
 
+  2) 문법
+   
+    가. import
+      
+       import {useRef} from 'react'
+
+    나. useRef 생성
+
+        const 참조변수 = useRef(기본값)
+
+    다. JSX 태그에 설정
+
+       <input ref={참조변수} />
+
+    마. 컴포넌트에서 JSX태그 접근 방법
+
+        참조변수.current
+	참조변수.current.value
+
+14. useRef2-  forwardRef() 사용
+
+  https://ko.legacy.reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components
+
+   1) 개요
+    
+    부모컴포넌트에서 자식컴포넌트에게 ref 설정해서 참조가능.
+    이때 자식컴포넌트에서 반드시  forwardRef(자식함수컴포넌트) 해야된다.
+     예>
+         function App(){
+
+	   return(
+	      <Home ref={child_ref} />
+	   )
 
 
 
