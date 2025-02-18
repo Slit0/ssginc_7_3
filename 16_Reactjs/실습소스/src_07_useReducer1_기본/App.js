@@ -23,6 +23,7 @@ function App() {
         return state + 1
      } 
       if(action.type === 'DOWN'){
+        console.log(action.payload)
         return state>0?state-1:0
      } 
   }
