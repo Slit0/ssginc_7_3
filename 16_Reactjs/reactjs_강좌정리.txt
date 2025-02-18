@@ -457,7 +457,7 @@ https://ko.reactjs.org/docs/components-and-props.html
 
 //////////////////////////////////////////////////////////////////
 
-13. 상태관리 (***************) 
+13. 상태관리-1 useState 이용 (***************) 
 
    1) 개요
      - 특정 컴포넌트에서 발생된 데이터인 상태값을 관리하는 방법임.
@@ -543,3 +543,90 @@ https://ko.reactjs.org/docs/components-and-props.html
 	  <h2>state 이용한 조건부 랜더링3- && 연산자 이용(권장방법)</h2>
           {isShow && <><Home/></> }
           <button onClick={handleEvent}>{isShow?'감추기':'보여주기'}</button>
+
+
+    6) state 와 input 처리
+     
+       - state값을 input태그의 value={state} 형식으로 지정한 경우에는 반드시 onChange 이벤트를 구현해서
+         사용자가 입력한 input 태그값을 set메서드 로 state를 수정해야 된다. (***************)
+
+       - 이유는 기본적으로 <input> 태그의 입력값은 html의 value 속성이 관리함.
+         현재는 value={state} 만 지정했기 때문에 state값이 변경이 안됨. 즉 value속성값과 state값이 동기화가 안된 상태이기
+	 때문에 input 태그에 입력이 안됨.
+	 onChanage로 value속성값과 state값이 동기화 해주면 해결됨.
+
+	예>
+
+	    //userid 와 passwd 관리할 state 작성
+            const [userid, setUserid] = useState('')
+            const [passwd, setPasswd] = useState('')
+
+	     function handleChange(e){
+		    // value값과 state 동기화
+		    console.log(e.target.value)
+		    setUserid(e.target.value)
+	     }	
+
+	    <form onSubmit={handleEvent}>
+		아이디:<input type="text" name="userid" value={userid} onChange={handleChange}/> <br></br>
+		비번:<input type="text" name="passwd" value={passwd} onChange={handleChange2}/> <br></br>
+		<button>로그인</button>
+	    </form>
+
+
+13. 상태관리-2 useReducer 이용
+
+     1) 개요
+      - useState와 동일하게 상태관리 기능을 가짐.
+      - state 보다 좀더 구조화된 방식으로 state 관리
+
+    
+     2) 문법
+      
+         import {useReducer}  from 'react'
+
+	 const [state, dispatch] = useReducer(reducer, 초기값 );
+
+	 state : 상태값 저장
+
+	 dispatch: 실제 state를 변경하는 함수를 요청하는 위임함수.
+		   dispatch({type:'UP'})
+		   dispatch({type:'DOWN', payload:전달값})
+		   호출하면 reducer 실행된다.
+		   이벤트 함수에서 dispatch 함수를 호출한다.
+		   예>
+		     function handleEvent(){
+			dispatch({type:'UP'})
+		     }
+
+	 reducer: 상태값을 실제로 변경하는 함수.
+	          변경된 state값을 반드시 리턴.
+
+		  예>
+		    function reducer(state, action){
+			if(action.type === 'UP'){
+			   action.payload
+			   return state+1
+			}
+			if(action.type === 'DOWN'){
+			   return state-1
+			}
+		    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
