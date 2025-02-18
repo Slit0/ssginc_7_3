@@ -672,11 +672,29 @@ https://ko.reactjs.org/docs/components-and-props.html
 	const Home = forwardRef((props,ref)=>{})
 
 
+14. useRef3-   useImperativeHandle() 사용
+
+ https://ko.legacy.reactjs.org/docs/hooks-reference.html#useimperativehandle
 
 
+     1) 개요
+       - 부모컴포넌트에서 자식컴포넌트의 함수를 호출할 수 있는 기능
+       - forwardRef() 안에서 사용됨.
 
+     2) 문법
+       import {forwardRef, useImperativeHandle} from 'react' 
 
+       const Home = forwardRef(function(props,ref){
+       
+	    //자식 함수
+	    function open(){}  <== 부모인 App에서 호출
+            function open2(){}
 
+	    // useImperativeHandle() 이용해서 부모에서 호출할 수 있는 함수 등록
+	   useImperativeHandle(ref,()=>({open,open2}))	
+       })
 
+       // 자식호출 방법
+       home_ref.current.open();
 
-
+///////////////////////////////////////////////////////////////////
