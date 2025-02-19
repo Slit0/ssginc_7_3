@@ -977,3 +977,19 @@ https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
 			  method: 'delete',
 			  url: '/user?ID=12345'
 			})
+
+    3) axios 인스턴스
+     
+      - 중복되는 URL 값 또는 파라미터, header 값들을 미리 설정해놓고 참조해서 사용하는 방식.
+
+      예>
+           // 설정
+             const instance = axios.create({
+		  baseURL: 'https://reqres.in/api',
+		  timeout: 1000,
+		  headers: {'Content-Type':'application/json'}
+		});
+
+
+           // 사용
+	    const response = await instance({methdo:'get', url:`/users?page=${n}`})
