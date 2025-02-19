@@ -886,3 +886,94 @@ https://ko.reactjs.org/docs/hooks-effect.html
       두번째부터 실행이 된다. 따라서 의존성배열은 [] 비어있는 배열이면 안된다.
 
 ////////////////////////////////////////////////////////////////////////////
+
+17. 서버연동1- fetch API 이용
+https://developer.mozilla.org/ko/docs/Web/API/Window/fetch
+https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
+
+    1) 문법
+     
+      const reseponse = fetch( url, {method:'get', headers:{'Content-Type':'application/json',..}} );
+
+    2) 구현
+
+      가. api/httpService.js 
+      
+
+
+
+17. 서버연동2- axios API 이용
+   
+   https://axios-http.com/kr/
+
+    1)설치
+     
+     npm install axios  <== my-app 프로젝트안에서 실행, 
+                            package.json 에서 "axios": "^1.7.9" 확인 가능
+
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+	
+     - fetch 는 응답에 데이터를 response.json() 메서드를 명시적으로 사용해야 된다.
+       axios 는 자동으로 JSON으로 변환해서 반환한다.
+
+    2) 사용
+
+     가. import 
+
+        import axios from 'axios'
+
+
+     나. 문법
+
+      GET  방식:
+       
+        const response = await axios.get('/user?ID=12345'); 
+	const response = await axios.get('/user',{
+						   params:{
+						     ID:12345
+						   }
+ 	                                          }); 
+	const response = await axios({
+			  method: 'get',
+			  url: '/user?ID=12345'
+			})
+
+	
+	POST (PUT) 방식:
+	  
+	 const response  =await axios({
+				  method: 'post',
+				  url: '/user/12345',
+				  data: {
+				    firstName: 'Fred',
+				    lastName: 'Flintstone'
+				  },
+				  headers:{
+				    'Content-Type':'application/json'	
+				  }
+				});
+
+
+	const response = await axios.post('/user/12345', {
+				    firstName: 'Fred',
+				    lastName: 'Flintstone'
+				  },{
+				       headers:{
+					  'Content-Type':'application/json'	
+				        }	
+				     }
+				  )
+
+    DELETE  방식:
+       
+        const response = await axios.delete('/user?ID=12345'); 
+	const response = await axios.delete('/user',{
+						   params:{
+						     ID:12345
+						   }
+ 	                                          }); 
+	const response = await axios({
+			  method: 'delete',
+			  url: '/user?ID=12345'
+			})
