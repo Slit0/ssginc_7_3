@@ -854,3 +854,27 @@ https://ko.reactjs.org/docs/components-and-props.html
 1. src/UserContext.js 에서 useState 관리를 useReducer로 변경
 2. 이름:<input type="text" name="username" ref={input_ref}/> <br></br>
    나이:<input type="text" name="age" /> <br></br>
+
+////////////////////////////////////////////////////////////////////////
+
+16.  useEffect 
+https://ko.reactjs.org/docs/hooks-effect.html
+   1)개요
+    - 부수효과(side effect) 처리 담당.
+    - 기본적인 프로세스에 영향을 미치지 않는 특별한 기능을 담당.
+      예> 서버연동( fetch API,  axios )
+
+    
+   2)문법
+
+    import { useEffect } from 'react';
+
+    useEffect(부수함수,[]|[값])
+
+
+    부수함수: return 문을 가질수 있음. 역할은 clean-up 작업 처리.
+    *의존성 배열에 따른 부수함수의 실행여부가 결정됨.
+    [] 없는 경우: 컴포넌트가 재랜더링될 때 매번 부수함수가 실행됨.
+    [] 빈 배열:  맨 처음 한번만 실해됨
+    [값,..] 배열: 지정된 값이 변경된 경우에만 부수함수가 다시 실행됨. 
+                일반적으로 state 또는 부수함수의 로컬변수값임
