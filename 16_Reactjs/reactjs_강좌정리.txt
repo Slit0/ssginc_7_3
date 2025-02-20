@@ -1084,3 +1084,50 @@ https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
 
 	  타겟 컴포넌트에서는 다음과 같이 useLocation() 이용하여 참조가능.
 	  const {state} =  useLocation();
+
+
+   5) 메뉴 역할의 컴폰넌트 작성 
+     
+     https://reactrouter.com/en/main/start/tutorial#nested-routes
+
+
+      # pages/RootLayout.js
+
+	function RootLayout(){
+
+	    return(
+		<>
+		<div>
+		    <Link to="/">Home</Link>
+		    <Link to="/signup">signup</Link>
+		</div>
+	    <hr/>
+		<div id="detail">
+		     <Outlet />
+		</div>
+		</>
+	    )
+	}
+	export default RootLayout;
+
+      
+      # Main.js
+
+         const router = createBrowserRouter([
+		  {
+		    path:"/",
+		    element:<RootLayout/>,
+		    children:[
+		      {
+			path: "/",  // http://localhost:3000/
+			element: <Home />
+			
+		      },
+		      {
+			path: "/signup", // http://localhost:3000/signup
+			element: <Signup />,
+			
+		      },
+		    ]
+		  }
+		]);
