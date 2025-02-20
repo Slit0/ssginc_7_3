@@ -1283,4 +1283,31 @@ https://reactrouter.com/6.29.0/hooks/use-params
 	==> Home 컴포넌트에서 다음과 같이 useLoaderData() 이용해서 참조할 수 있다.
 	   const data = useLoaderData();
 
+     나. 예외처리
+       - loader에서 발생된 예외는 errorElement:ErrorPage 가 담당.
+       - 기존에 예외처리했던 다음 코드는 수정할 것이다.
+          throw new Error("fetchUserList 예외발생")      // 예외 정보가 빈약
+
+	  throw new Response("예외 메시지", {status:500}) // 부족한 예외정보 추가
+	  
+	  실제 ErrorPage에서는 Response객체에 담긴 status 값을 비교해서 적합한 예외메시지를 출력가능.
+
+	    function ErrorPage(){
+	    const error = useRouteError();
+	    console.error(error); 
+	  
+	    let message = "의도하지 에러";
+	    let status = 404;
+
+	    if(error.status === 404){
+	      status = 404;
+	      message = error.data;
+	    }
+
+	    if(error.status === 500){
+	      status = 500;
+	      message = error.data;
+	    }
+
+
   12) action 함수
