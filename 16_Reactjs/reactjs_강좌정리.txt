@@ -1205,3 +1205,19 @@ https://reactrouter.com/en/main/start/tutorial#handling-not-found-errors
 		    <NavLink to="/signup" className={({isActive})=>isActive?'menu':undefined}>signup</NavLink>
 		    <NavLink to="/login"className={({isActive})=>isActive?'menu':undefined}>login</NavLink>
 		</div>
+
+
+   8) 링크 적용 - 프로그래밍 이용
+
+     https://reactrouter.com/6.29.0/hooks/use-navigate
+
+      Home --> Login
+
+    - 구현방법
+      
+      import { useNavigate } from "react-router-dom";
+
+      const navigate = useNavigate();
+
+      navigate(경로);
+      navigate(경로,  { state: { key: value } }); <== <Link>와 동일하게  useLocation() 이용해서 참조 가능.
