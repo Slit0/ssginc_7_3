@@ -1171,3 +1171,37 @@ https://reactrouter.com/en/main/start/tutorial#handling-not-found-errors
 	    element:<RootLayout/>,
 	    errorElement:<ErrorPage />,
 	    children:[
+
+ 7) 링크 적용하기 위한 방법 3가지
+
+   가. <a href="">
+   나. <Link to="">
+      - 사용자에게 피드백 제공 안됨.
+  
+   다. <NavLink to="">
+   https://reactrouter.com/6.29.0/components/nav-link
+      - 사용자에게 피드백 제공됨.
+      - 자동으로 다음과 같이 className이 설정된다.
+
+        <NavLink to=""> ==> <NavLink to="" className="active">
+
+      - 필요시 커스텀 css 설정도 가능하다.
+
+         # css 
+
+	    .active{
+		    color:red
+		}
+
+		.menu{
+		    color:red;
+		    background-color: yellow;
+		}
+
+	 # <NavLink> 설정
+	   
+	       <div>
+		    <NavLink to="/" className={({isActive})=>isActive?'menu':undefined}>Home</NavLink>
+		    <NavLink to="/signup" className={({isActive})=>isActive?'menu':undefined}>signup</NavLink>
+		    <NavLink to="/login"className={({isActive})=>isActive?'menu':undefined}>login</NavLink>
+		</div>
