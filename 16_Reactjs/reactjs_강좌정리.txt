@@ -1131,3 +1131,43 @@ https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
 		    ]
 		  }
 		]);
+
+
+   6) 404 예외처리
+https://reactrouter.com/en/main/start/tutorial#handling-not-found-errors
+     - 기본적으로 404 예외발생시 다음과 같은 메시지가 출력된다.
+        Unexpected Application Error!
+	404 Not Found
+
+     - 필요시 예외처리 페이지를 구현할 수 있음.
+
+      # ErrorPage.js
+
+                import { useRouteError,Link } from "react-router-dom";
+		import MenuNavigation from "../components/MenuNavigation";
+		function ErrorPage(){
+		    const error = useRouteError();
+		    console.error(error);
+		  
+		    return (
+		      <div id="error-page">
+			  <MenuNavigation />
+			<hr/>
+			<h1>404에러</h1>
+			<p>요청한 경로는 존재하지 않는 url경로입니다. 확인하세요</p>
+			<p>
+			  <i>{error.statusText || error.message}</i>
+			</p>
+		      </div>
+		    );
+		}
+		export default ErrorPage;
+
+
+      # Main.js
+
+           {
+	    path:"/",
+	    element:<RootLayout/>,
+	    errorElement:<ErrorPage />,
+	    children:[
