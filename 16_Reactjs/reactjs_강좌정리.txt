@@ -1022,3 +1022,65 @@ https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
 	    // 응답 오류가 있는 작업 수행
 	    return Promise.reject(error);
 	  });
+
+/////////////////////////////////////////////////////////////////////////////
+
+18. 라우팅
+
+  1)개요
+
+    메뉴:      로그인 회원가입
+             ------------
+
+
+  2) 설치
+
+   https://reactrouter.com/6.29.0 
+
+   npm install react-router-dom@6.29.0
+
+   package.json에 "react-router-dom": "^6.29.0" 추가됨.
+
+  
+  3)기본적인 라우팅 구조 작업
+
+    # Main.js
+
+	import {createBrowserRouter,RouterProvider} from "react-router-dom";
+
+	const router = createBrowserRouter([
+	  {
+	    path: "/",  // http://localhost:3000/
+	    element: <div>Home 컴포넌트입니다.</div>
+	    
+	  },
+	  {
+	    path: "/signup", // http://localhost:3000/signup
+	    element: <div>Signup 컴포넌트입니다</div>,
+	  },
+	]);
+
+	function Main() {
+	  return (
+	    <RouterProvider router={router} />
+	  );
+	}
+
+	export default Main;
+
+
+   4) 컴포넌트간 연결 방법
+
+     가. <a href="">
+        - 전체 페이지가 새롭게 로딩되기 때문에 네트워크 동작이 발생됨.
+
+
+     나. <Link to="">
+        - 내부적으로 화면이 새롭게 랜더링 되기 때문에 네트워크 동작이 발생 안됨. 
+	  성능적으로 우수.
+
+	- 필요시 타겟 컴포넌트에서 파라미터 전달 가능.
+	  <Link to="/signup" state={{username:'홍길동'}}>
+
+	  타겟 컴포넌트에서는 다음과 같이 useLocation() 이용하여 참조가능.
+	  const {state} =  useLocation();
