@@ -1348,3 +1348,27 @@ https://reactrouter.com/6.29.0/route/action
           const formData =   request.formData()
 
 	  var userid = formData.get("userid");
+
+
+  13) 네트워트 지연 관련 추가 작업
+
+    - 요청에 대한 작업을 열심히 하고 있음을 알려줘야됨.
+     
+    - useNavigation() 이용
+
+   예>
+      function RootLayout(){
+
+	    const navigation = useNavigation();
+
+	    return(
+		<>
+	       <MenuNavigation />
+	    <hr/>
+		<div id="detail">
+		 {navigation === 'loading' && <p>열심히 로딩중입니다.....</p> }
+		    <Outlet />
+		</div>
+		</>
+	    )
+	}
