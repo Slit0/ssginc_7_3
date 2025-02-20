@@ -1221,3 +1221,30 @@ https://reactrouter.com/en/main/start/tutorial#handling-not-found-errors
 
       navigate(경로);
       navigate(경로,  { state: { key: value } }); <== <Link>와 동일하게  useLocation() 이용해서 참조 가능.
+
+    
+   9) 동적라우팅 ( 파라미터 전송 방법 )
+
+      가.  url 포함하여 전송 ( path variable )
+         예>  /users/2, /users/1
+https://reactrouter.com/6.29.0/hooks/use-params
+          - useParams() 이용
+
+          Spring :  @GetMappring("/users/{id}") <== @PathVariable Long id
+	  ReactJS:  path:'/users/:id'           <== useParams() 이용
+ 
+	  Spring :  @GetMappring("/users/{id}/{email}") <== @PathVariable Long id
+	  ReactJS:  path:'/users/:id/:email'           <== useParams() 이용
+
+
+	    const xxx = useParams(); // {id: '1'}
+            const {id} = useParams(); // 
+
+      나. query string 전송
+         예>  /products?id=2
+
+          - useSearchParams() 이용
+
+             let [searchParams, setSearchParams] = useSearchParams();
+		console.log(searchParams)
+	   var userid = searchParams.get("userid")
