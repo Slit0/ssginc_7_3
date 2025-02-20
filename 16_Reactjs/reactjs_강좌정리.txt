@@ -1309,5 +1309,29 @@ https://reactrouter.com/6.29.0/hooks/use-params
 	      message = error.data;
 	    }
 
+   다. loader에게 파라미터 전달 가능 
+
+      a. path variable
+        
+	  // /usersParam/2 요청시 2값이 params 파라미터로 전달됨
+		async function users_loader2({params}){
+		  console.log("users_loader2:", params) // {id: '1'}
+		  const resonse = await fetchUserList(params.id);
+
+		  return resonse;
+		}
+
+      b. query string 
+
+         // usersQueryString?id=2 요청시 2값이 request 파라미터로 전달됨
+		async function users_loader3({request}){
+		  console.log("users_loader3:", request) //
+		  const url = new URL(request.url);
+		  const id = url.searchParams.get("id");
+		  const resonse = await fetchUserList(id);
+
+		  return resonse;
+		}
+  
 
   12) action 함수
