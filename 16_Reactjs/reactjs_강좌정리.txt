@@ -1264,3 +1264,23 @@ https://reactrouter.com/6.29.0/hooks/use-params
       <Link to=".." relative="route">뒤로</Link>  http://localhost:3000/
 
       <Link to=".." relative="path">뒤로</Link>   http://localhost:3000/cart
+
+   
+
+  11) loader 함수 
+  https://reactrouter.com/6.29.0/route/loader
+
+     가. 문법
+       
+        {
+	   path:'',
+	   element:<Home/>,
+	   loader: 함수
+	}
+
+	==> Home 컴포넌트가 생성되기 전에 loader함수가 실행되어 서버와 연동해서 데이터를 가져와서 리턴함.
+	    리턴한 데이터를 Home 컴포넌트가 생성될때 참조 가능.
+	==> Home 컴포넌트에서 다음과 같이 useLoaderData() 이용해서 참조할 수 있다.
+	   const data = useLoaderData();
+
+  12) action 함수
