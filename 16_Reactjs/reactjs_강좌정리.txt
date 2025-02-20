@@ -1248,3 +1248,19 @@ https://reactrouter.com/6.29.0/hooks/use-params
              let [searchParams, setSearchParams] = useSearchParams();
 		console.log(searchParams)
 	   var userid = searchParams.get("userid")
+
+
+  10) useParams() 방식에서의 <Link to=""  relative="route|path"> 차이점
+  https://reactrouter.com/6.29.0/components/link#relative
+
+
+     # 현재 경로는 다음과 같다.
+      http://localhost:3000/cart/P2   
+
+       현재route(경로): cart/P2  한개임
+       현재path(경로):  cart 와  P2  2개임
+                 
+
+      <Link to=".." relative="route">뒤로</Link>  http://localhost:3000/
+
+      <Link to=".." relative="path">뒤로</Link>   http://localhost:3000/cart
