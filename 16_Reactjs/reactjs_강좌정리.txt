@@ -1372,3 +1372,175 @@ https://reactrouter.com/6.29.0/route/action
 		</>
 	    )
 	}
+
+ 14) useActionData()
+
+  - https://reactrouter.com/6.29.0/hooks/use-action-data
+
+  1) 개요
+   action 및 loader 함수에서 return {key:value} 하면 
+   현재 컴포넌트에서 리턴한 {key:value} 참조할 수 있음.
+   이때 사용할 수 있음.
+  
+
+   예>  # Signup.js
+
+
+	   // return response 된 데이터 참조
+           const data = useActionData();
+           console.log("useActionData.data", data);	
+
+      
+	  //리턴되는 json을 현재컴포넌트인 Signup에서 useActionData()로 참조가능하다.
+	  if(true){
+	    return response;  // response 대신 {key:value} 수정가능
+	  }
+
+ 15) useRouteLoaderData() 사용
+
+ https://reactrouter.com/6.29.0/hooks/use-route-loader-data
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+19. CSS 적용
+ 
+  - Reactjs의 CSS 적용과 일반 HTML의 CSS 적용이 다르다.
+    가장 신경써야되는 부분이 컴포넌트당 동일한 class 명임.
+
+  1) className , style
+
+    # App.css
+       .menu{
+         color:red
+       }
+
+    import './App.css'	
+
+    className="menu"
+    
+    style={{color:red, backgroundColor:'yellow'}} // 반드시 카멜표기법
+
+  2) CSS module 이용
+
+    - 자동으로 unique한 class 명을 제공함.
+
+    가. 문법
+       
+      a. 모듈명.module.css 파일을 작성
+      b. import 식별자 from '모듈명.module.css'
+
+      c. 사용
+         className={식별자.클래스명}
+
+
+  3) styled components 이용
+
+    가. 설치
+     
+      npm install styled-components
+
+
+    나. import
+
+      import styled from 'styled-components'
+
+
+    다. 문법
+
+      const 첫글자대문자컴포넌트 = styled.태그명`
+      
+			        css속성명:속성값,	
+	                        css속성명:속성값,
+                             `;
+
+    예> const ButtonComponent = styled.button`
+				  color:red;
+				  속성명:${(props)=> props.$속성명 || 초기값  }
+                                `;
+
+      스타일적용안된 버튼: <button>OK</button>
+      스타일적용된 버튼: <ButtonComponent>OK명1/ButtonComponent>
+                    <ButtonComponent $속성명=속성값>OK2</ButtonComponent> // 일반컴포넌트의 속성과 구별하기 위해서
+                                                                         $속성명으로 지정하는 것이 관례임.
+
+
+  4) bootstrap 
+
+    가. 설치
+
+       npm install bootstrap
+
+     
+    나. import 
+
+      다음을 전역적으로 사용하기 위해서 index.js에 추가한다.
+
+      import 'bootstrap/dist/css/bootstrap.min.css'
+      import 'bootstrap/dist/js/bootstrap.min.js'
+
+/////////////////////////////////////////////////////////////////////////////
+
+20. 성능향상 기법
+
+ 1) momo 함수
+   
+    - 기능:
+      부모에서 자식으로 고정된 값을 props로 전달할때
+      자식 컴포넌트가 매번 생성되지 않도록 지원하는 기능.
+
+      예>
+        import {memo} from 'react'
+
+	const Home2 = memo(({data}) =>{
+
+	  console.log("Home2");
+	  return (
+	    <div >
+	      <h2>Home2 컴포넌트</h2>
+	      값:{data}
+	    </div>
+	  );
+	});
+
+ 2) useMemo  ( 메모이제이션 기법 )
+https://react.dev/reference/react/useMemo
+  - 기능은 복잡한 연산식을 구현하는 함수에 적용할 수 있음.
+  예>
+	  // complext_fun2 는 함수가 아니고 리턴값임.
+	  const complext_fun2= useMemo( ()=>{
+	    console.log("complext_fun2")
+	    return 3456*2456*4.2;
+	  },[]); 
+
+
+ 3) useCallback
+https://react.dev/reference/react/useCallback
+  
+  - 기능은 이벤트함수 처리시 화면이 재랜더링 되며 이벤트함수도 매번 재생성됨.
+    이것을 한번만 생성해서 재사용하도록 하는 방법임.
+
+    실제 성능을 눈으로 확인할 수 없기 때문에 new Set() 이용하여 확인함.
+    const set = new Set(); // 중복안됨
+
+	function App() {
+
+	  //num 값을 저장할 state 작성
+	  const [num, setNum] = useState(0);
+
+	  const up =useCallback(()=>{
+	    console.log("up")
+	    setNum(num=>num+1);
+	  },[]);
+	   
+	  const down= ()=>{
+	    console.log("down")
+	      //setNum(num>0?num-1:0); // 3항연산자
+	      setNum(num-1)
+	  };
+
+	  // up 또는 down 함수
+	  // set.add(up)  // set에 하나의 up함수만 저장됨.
+	  set.add(down)    // set에 매번 새롭게 생성된 down함수가 저장됨.   
+	  console.log(set)
