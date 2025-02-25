@@ -406,3 +406,64 @@ spring.jpa.hibernate.ddl-auto=create
 		
 		Person p3 = em.find(Person.class, 2L); // 엔티티 컨텍스트에 없기 때문에 select문이 발생됨.
 		log.info("3. 2L 조회:{}", p3);
+
+
+
+15. 데이터 수정
+
+   - 개념: 엔티티 수정 의미
+
+
+   - 아키텍쳐
+    실습전에 spring.jpa.hibernate.ddl-auto=create 설정하자. 이유는 새로운 테이블 생성 실습.
+
+
+    개발자                           엔티티 컨텍스트                            DB
+   ----------------------------------------------------------------------
+                                                                         1 홍길동 20
+									 2 이순신 10
+
+1)홍길동->유관순 변경   2)엔티티컨테스트에서 찾음.
+                     없으면 select문
+  find(1L)   ------------------------>
+
+                                            <-------------------------------
+					         3)select문 실행
+					
+				    4)영속상태인  영속객체
+				    Person(1L,홍길동,20)
+      <----------------------------
+           5) Person(1L,홍길동,20) 응답
+
+6)이름변경                             7)영속객체도 변경
+ p.setUsername("유관순") ------------>Person(1L,유관순,20)                    1 홍길동 20
+
+                                             9) 영속객체와 실제DB비교한후 동기화처리
+					      즉 update문 실행
+  8) commit()호출  --------------------------------------------------------> 
+									   10)최종적으로 DB변경
+                                                                           1 유관순 20 
+
+ ==> 현재상황은 username만 변경했음에도 불구하고 update문을 보면 age까지 수정됨.
+
+     실행결과:
+            update
+		person 
+	    set
+		age=?,
+		name=? 
+	    where
+		id=?
+
+ ==> 모두 컬럼이 아니고 수정된 컬럼만 update 시키자 ( @DynamicUpdate )
+
+     @DynamicUpdate
+     public class Person {
+
+    실행결과:
+       update
+        person 
+    set
+        name=? 
+    where
+        id=?
