@@ -1,0 +1,116 @@
+JPA 강좌정리
+
+1. JPA
+
+   SpringBoot2.X ( Java Persistence API)
+   SpringBoot3.X ( Jakarta Persistence API)
+
+
+2. JPA 등장배경
+ 
+   가. 이전에는 SQL 중심 개발
+      - 테이블에 컬럼이 추가되면 자바의 DTO에 변수가 됨.
+
+   나. 객체(클래스)와 SQL 패러다임 불일치
+
+      객체: 상속, 다형성, 은닉화 .....
+
+      SQL: 상속,다형성,은닉화 지원안됨.
+
+   다. 탐색이 자유롭지 못함.
+
+    SQL문: A테이블 ---> B테이블 ---> C테이블
+
+    객체:  A클래스 <----> B클래스 <---> C클래스
+          B b         C c          B b
+	              A a
+
+3. JPA 와 Hibernate 관계
+ 
+     JPA ( 스펙, 인터페이스 )
+      |
+   Hibernate ( 구현체, 클래스 )
+
+   https://docs.jboss.org/hibernate/orm/6.4/userguide/html_single/Hibernate_User_Guide.html
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+4. 환경설정
+
+  1) 의존성
+
+      	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-data-jpa</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>8.0.33</version>
+        </dependency>
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	</dependency>
+
+  2) appplication.properties 설정
+
+        logging.level.root=info
+	logging.level.com.exam==info
+	logging.level.org.springframework=info
+
+	server.port=8090
+	server.servlet.context-path=/app
+
+	# MySQL 연동
+	spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+	spring.datasource.url=jdbc:mysql://localhost:3306/testdb2
+	spring.datasource.username=root
+	spring.datasource.password=1234
+
+
+	# JPA
+	# JPA가 자동으로 생성하는 SQL문 보기
+	logging.level.org.hibernate.SQL=trace
+	# 위의 SQL문을 보기 좋게 보기
+	spring.jpa.properties.hibernate.format_sql=true
+	logging.level.org.hibernate.type=info
+
+	# 자동으로 테이블 생성( create: drop+create )
+	# @Entity 지정된 클래스에 해당하는 테이블을 자동생성
+	spring.jpa.hibernate.ddl-auto=create  
+
+	# 자동으로 생성된 SQL문에서 사용되는 파라미터 보기
+	logging.level.org.hibernate.orm.jdbc.bind=trace
+
+	# 트랜잭션 처리후에 Connection 사용하고 pool에 반환여부( 기본값은 true이고 반환안함 )
+	spring.jpa.open-in-view=false
+
+	# JPA 버전이 낮은 경우에 지정했음. 실제 접속하는 DB용 SQL문 작성위한 정보임.
+	#spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+	  
+	spring.mvc.pathmatch.matching-strategy=ant-path-matcher
+	spring.mvc.format.date=yyyy-MM-dd
+
+5. 엔티티 (entity)
+
+  1) @Entity 어노테이션
+    
+     - DB의 table 과 맵핑역할.
+  
+  2) @Id 
+    - DB의 table의 pk 맵핑여할.
+
+    예>
+        자바(객체)                               DB 
+      --------------------------           --------------------------        
+        @Entity                   
+        public class Member{                member 테이블
+
+	    @Id
+	    @GeneratedValue
+	    Long id;                        id 컬럼 (pk), auto_increment 기능
+	    Strng name;                     name 컬럼
+	
+	}
+
