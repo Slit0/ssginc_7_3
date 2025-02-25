@@ -194,3 +194,30 @@ JPA 강좌정리
 
        spring.sql.init.schema-locations=classpath*:sql/table.sql
        spring.sql.init.data-locations=classpath*:sql/insert.sql
+
+//////////////////////////////////////////////////////////////////////////
+9. 객체와 테이블 맵핑
+
+  @Entity : JPA 가 관리하는 객체로서 DB 의 테이블과 맵핑됨
+  @Id     : DB의 테이블의 PK와 맵핑됨.
+  @GeneratedValue: DB의 auto_increment 맵핑
+  @Table(테이블명) : 기본적으로 DB이 테이블명은 클래스명으로 생성됨.
+                   @Table 사용하면 지정된 테이블명으로 생성됨.
+
+
+   예> 
+        @Entity
+	@Table(name = "TB_MEMBER")
+	public class Member2 {
+
+		@Id // pk 역할
+		Long id;
+		
+		String name;
+
+	}
+
+
+
+
+
