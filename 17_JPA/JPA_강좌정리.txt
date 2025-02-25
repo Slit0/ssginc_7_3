@@ -218,6 +218,41 @@ JPA 강좌정리
 	}
 
 
+//////////////////////////////////////////////////////////////////////////
+10. 테이블 자동 생성
+
+create:        drop 하고 create 함
+create-drop:   create 동일. 종료할 때 drop
+update:        변경사항만 반영
+validate:      엔티티와 테이블간 잘 맵핑되었는지만 확인
+none:          사용안함
+
+spring.jpa.hibernate.ddl-auto=create  
 
 
+==> 기본적으로 처음 create 지정하고 이후에는 none 지정해서 테이블과 저장된 데이터를 유지시킴.
 
+//////////////////////////////////////////////////////////////////////////
+11. 변수(필드)와 컬럼 맵핑
+
+   - @Column(옵션)
+   - 옵션기능 컬럼명지정, null허용여부, String인 경우 length 등 지정가능.
+
+   예> 
+       @Column(name="username")
+       String name;
+
+  - enum 타입은 @Enumerated(EnumType.STRING)  // EnumType.ORDINAL(수치로 관리)
+
+  - 기본적으로 엔티티내의 모든 변수는 컬럼으로 만들어짐.
+    이때 컬럼으로 만드는 작업에서 제외시킬 수 있음.( @Transient 지정 )
+
+  - 주의할점
+    
+    만약 변수명이 카멜표기법으로 되어있으면 자동으로 생성되는 컬럼명은 _(스네이크표기법)로 생성된다.
+    예> createDate       ---> create_date
+       lastModifiedDate  --> last_modified_date 
+
+    _(스네이크표기법) 자동방지 기능
+    spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
