@@ -1,0 +1,81 @@
+
+# 일대일 연관관계 맵핑
+
+-- data.sql
+
+  insert into locker(locker_id,name)
+		values(40001,'E123456');
+		insert into locker(locker_id,name)
+		values(40002,'N123457');
+		insert into locker(locker_id,name)
+		values(40003,'L123890');
+		insert into locker(locker_id,name)
+		values(40004,'Z999999');
+
+		insert into member(member_id,username, locker_id)
+		values(20001,'Ranga', 40001);
+		insert into member(member_id,username, locker_id)
+		values(20002,'Adam', 40002);
+		insert into member(member_id,username, locker_id)
+		values(20003,'Jane', 40003);
+		insert into member(member_id,username, locker_id)
+		values(20004,'Jane2', null);
+		commit;
+
+
+# 다대일 연관관계 맵핑
+
+  -- data.sql
+
+    insert into Team(team_id,name, location)
+		values(90001,'E123456','해운대구');
+		insert into Team(team_id,name, location)
+		values(90002,'N123457','강남구');
+		insert into Team(team_id,name, location)
+		values(90003,'L123890','서귀포');
+
+		insert into member(member_id,username, team_id)
+		values(20001,'Ranga', 90001);
+		insert into member(member_id,username, team_id)
+		values(20002,'Adam', 90001);
+		insert into member(member_id,username, team_id)
+		values(20003,'Jane1', 90002);
+		insert into member(member_id,username, team_id)
+		values(20004,'Jane2', 90002);
+		insert into member(member_id,username, team_id)
+		values(20005,'Jane3', 90002);
+		insert into member(member_id,username, team_id)
+		values(20006,'John', 90003);
+
+		commit;
+
+# 상속
+ -- data.sql
+
+    insert into teacher(id, name, email) values ( 20001, 'John', 'john@google.com');
+	insert into teacher(id, name, email) values ( 20002, 'Maria', 'Maria@google.com');
+	insert into teacher(id, name, email) values ( 20003, 'Jim', 'Jim@google.com');
+
+
+	insert into student(id, name, address) values ( 30001, 'hong', '서울 강남점');
+	insert into student(id, name, address) values ( 30002, 'park', '부산 센텀점');
+	insert into student(id, name, address) values ( 30003, 'lee', '제주 서귀포점');
+
+	commit;
+
+
+# JPQL - Todo 엔티티
+   -- data.sql
+
+  	insert into todo(id, description, createdDate, lastUpdatedDate, done) 
+		values(10001,'JPA in 50 Steps', DATE_ADD(current_date(), INTERVAL -5 MONTH),  DATE_ADD(current_date(), INTERVAL -1 MONTH),false);
+		insert into  todo(id, description, createdDate, lastUpdatedDate,done) 
+		values(10002,'Spring in 50 Steps', DATE_ADD(current_date(), INTERVAL -2 MONTH),  DATE_ADD(current_date(), INTERVAL -15 DAY),false);
+		insert into  todo(id, description, createdDate, lastUpdatedDate,done) 
+		values(10003,'Spring Boot in 100 Steps', DATE_ADD(current_date(), INTERVAL -4 MONTH),  DATE_ADD(current_date(), INTERVAL -2 MONTH),false);
+		commit;
+
+
+
+
+  
