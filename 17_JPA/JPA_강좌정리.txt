@@ -256,3 +256,32 @@ spring.jpa.hibernate.ddl-auto=create
     _(스네이크표기법) 자동방지 기능
     spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
     spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+
+//////////////////////////////////////////////////////////////////////////
+12. 영속성 관리
+
+  1) 영속성객체
+    - @Entity 지정한 클래스 의미.
+    - 영속성객체(엔티티)관리는 EntityManager 하고 
+      EntityManager는 EntityManagerFactory에서 만들어짐.
+
+  2) 데이터 CRUD 의미
+
+     # JPA 미사용시	
+
+	 개발자  ---------------------------------> 테이블
+		      sql문 직접 전송
+
+     # JAP 사용시		
+                           엔티티컨텍스트(컨테이너)           DB
+      개발자  ---------------> 엔티티  ------------------> 테이블
+                                       sql문 자동생성
+
+    데이터 생성? 엔티티 생성 의미
+    데이터 삭제? 엔티티 삭제 의미
+    데이터 수정? 엔티티 수정 의미
+    데이터 조회? 엔티티 조회 의미
+
+    반드시 트랜잭션 범위내에서 작업을 해야 된다. (*************************)
