@@ -179,3 +179,18 @@ JPA 강좌정리
        # always는 프로그램실행시 매번 실행.
        spring.sql.init.mode=always
      
+
+8. 외부파일이용해서 테이블생성 및 데이터 저장하기 ( 저장위치 및 파일명 마음대로 )
+
+    1) src/main/resouces/sql 폴더에 저장
+
+         table.sql
+	 insert.sql
+
+    2) 경로 설정
+	
+	# classpath는 기본적으로 *.class 파일이 있는 경로 의미하고
+	  기본적으로 src/main/java 와 src/main/resource는 알고 있음.
+
+       spring.sql.init.schema-locations=classpath*:sql/table.sql
+       spring.sql.init.data-locations=classpath*:sql/insert.sql
