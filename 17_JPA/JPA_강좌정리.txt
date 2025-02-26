@@ -761,5 +761,16 @@ public class Team {
 
       toString(){
        return id + username + t.get();
-
+ 
     
+////////////////////////////////////////////////////////////////////////
+
+18. 엔티티 생성시간과 수정시간을 자동으로 저장하는 기능
+
+    - 생성시간:   @CreationTimestamp
+	       @Column(updatable = false)
+	       LocalDateTime createDate;  // 저장할 때만 자동저장하고 수정할때는 저장하면 안됨.
+
+    - 수정시간: @UpdateTimestamp
+	     @Column(insertable = false)
+	     LocalDateTime updateDate; // 저장할 때만 자동저장안하고 수정할때만 저장하면 됨.
