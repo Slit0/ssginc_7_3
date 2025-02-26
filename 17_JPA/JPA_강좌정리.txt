@@ -658,3 +658,46 @@ public class Locker {
 		//Locker 이용해서 Member 접근
 		Member mem = locker.getMember();
 		log.info("LOGGER: Member:{}", mem.getUsername());
+
+
+ 6) 실습1 - 다대일 단방향
+
+     # Member.java
+
+      @Entity
+	public class Member {
+
+		@Id // pk 역할
+		@Column(name = "member_id")
+		Long id;
+		
+		String username;
+
+		@ManyToOne(fetch = FetchType.EAGER)
+		@JoinColumn(name="team_id")
+		Team team;
+	}
+
+     # Team.java
+  
+       @Entity
+public class Team {
+
+	@Id // pk 역할
+	@Column(name = "team_id")
+	Long id;
+	
+	String name;
+	String location;
+
+}
+
+    # Application.java
+
+       // Member 조회
+		Member findMember = em.find(Member.class, 20001L);
+		log.info("LOGGER: findMember:{}", findMember.getUsername());
+		
+		Team findTeam = findMember.getTeam();
+		log.info("LOGGER: findTeam:{},{}", findTeam.getName(), findTeam.getLocation());
+		
