@@ -845,13 +845,58 @@ https://docs.jboss.org/hibernate/orm/7.0/querylanguage/html_single/Hibernate_Que
     가. 조회1 - 엔티티 타입으로 전체 컬럼 반환하는 경우
      예> SQL :  select * from todo;
         JPQL:  select  t   from Todo as t
-
+	
+      샘플코드:
+        List<Todo> todoList = em.createQuery("select t from Todo as t", Todo.class)
+				              .getResultList();
+		log.info("LOGGER: 1. 전체조회:{}", todoList);
     
     나. 조회2 - 엔티티내의 하나의 컬럼만 반환하는 경우
      예> SQL :  select id from todo;
         JPQL:  select t.id from Todo as t
 
+      샘플코드:
+        TypedQuery<String> query =
+				em.createQuery("select t.description from Todo as t", String.class);
+        List<String> strList = query.getResultList();
+        log.info("LOGGER: 1. description만 출력:{}", strList);
 
     나. 조회3 - 엔티티내의 2개이상 일부 컬럼만 반환하는 경우
      예> SQL :  select id, description from todo;
         JPQL:  select t.id, t.description from Todo as t
+
+     샘플코드:
+       // 엔티티에서 두개이상의 변수만 반환하는 경우
+		// 1.6.2. Queries with multiple projected items 참조
+		
+		// 1.  Object[] 이용
+		TypedQuery< Object[]> query =
+				em.createQuery("select t.id,  t.description from Todo as t", Object[].class);
+        List<Object[]> results = query.getResultList();
+        for (var result : results) {
+        	Long id = (Long) result[0];
+		    String description = (String) result[1];
+		    log.info("LOGGER: 1. id와 description 출력:{}, {}", id, description);
+		}
+        
+        // 2.  Tuple 이용
+        List<Tuple> tuples =
+                em.createQuery("select t.id as id,  t.description as desc from Todo as t",
+                                          Tuple.class)
+                    .getResultList();
+        for (Tuple tuple : tuples) {
+        	Long id = tuple.get("id", Long.class);
+            String description = tuple.get("desc", String.class);
+            log.info("LOGGER: 2. id와 description 출력:{}, {}", id, description);
+        }
+	     
+        //3. Map 이용
+        List<Map> mapLst =
+                em.createQuery("select t.id as id,  t.description as desc from Todo as t", Map.class)
+                    .getResultList();
+        for (Map map : mapLst) {
+        	Long id = (Long) map.get("id");
+            String description = (String) map.get("desc");
+            log.info("LOGGER: 3. id와 description 출력:{}, {}", id, description);
+        }
+        
