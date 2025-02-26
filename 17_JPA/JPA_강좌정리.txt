@@ -774,3 +774,44 @@ public class Team {
     - 수정시간: @UpdateTimestamp
 	     @Column(insertable = false)
 	     LocalDateTime updateDate; // 저장할 때만 자동저장안하고 수정할때만 저장하면 됨.
+
+
+19.  상속지원
+
+   1) 상속전
+
+     @Entity
+      Student
+       @Id
+       Long id;
+       Strign name;
+       String address;
+
+
+     @Entity
+     Teacher
+        @Id
+       Long id;
+       String name;
+       String email;
+
+
+    ==> 모든 엔티티에 id와 name이 중복됨.
+
+
+    2) 상속
+
+      //상위클래스( @Entity지정안함. 직접 사용안함 )
+
+      @MappedSuperclass
+      public abstract class BaseEntity{
+	   @Id
+           Long id;
+           String name;
+      }
+
+      @Entity
+      Student extends BaseEntity{}
+
+      @Entity
+      Teacher extends BaseEntity{}
