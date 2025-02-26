@@ -519,3 +519,107 @@ spring.jpa.hibernate.ddl-auto=create
 		//트랜잭션 종료
 		tx.commit();   // delete 문 실행
 ////////////////////////////////////////////////////////////////////////////////////////////
+17. 엔티티간 연관관계 맵핑
+https://docs.jboss.org/hibernate/orm/7.0/introduction/html_single/Hibernate_Introduction.html#introduction  3.16. Associations
+
+  1) 개요
+    - DB의 테이블은 fk 이용해서 연관관계를 맺음.
+      JPA의 엔티티는 참조변수(reference variable) 연관관계를 맺음.
+
+     예>
+        DB:
+	     emp                                 dept
+	   -------                             ----------------
+	   empno ...  deptno(fk)               deptno  dname loc
+	                 10                     10
+			 10			20
+			 20			30
+			  .			40
+
+	
+	JPA: 단방향
+	   @Entity                              @Entity
+	     Emp                                 Dept
+	    int empno,                          int deptno;
+	    ..                                  String dname;
+                                                String loc;
+	    Dept dept;
+
+       JPA: 양방향 ( 개발자의 편의 목적임)
+	   @Entity                              @Entity
+	     Emp                                 Dept
+	    int empno,                          int deptno;
+	    ..                                  String dname;
+                                                String loc;
+	    Dept dept;                           Emp emp;
+
+  2) 방향(direction)
+
+     - 단반향 ( unidirectional ) 
+     - 양방향 ( bidirectional ): 순수하게 개발자 편의 목적임.
+
+
+  3) 다중성(multiplicity)
+
+     - 일대일 ( @OneToOne ) 
+        예> member와 locker
+
+     - 다대일 ( @ManyToOne )
+        예> member와 team
+
+ 4) fetch 정책
+  
+   - DB에서 조회할때 연관된 데이터까지 포함해서 미리 가져오냐 아니면 필요할때 가져오냐 결정.
+   - EAGER: 기본, 미리 연관된 데이터까지 가져옴.
+     LAZY:  필요한 시점에 가져옴. (권장)
+
+ 5) 실습1 - 일대일 단방향
+
+    -- Member.java
+       @Entity
+	public class Member {
+
+		@Id // pk 역할
+		@Column(name = "member_id")
+		Long id;
+		
+		String username;
+
+		@OneToOne(fetch = FetchType.LAZY)
+		@JoinColumn(name="locker_id")
+		Locker locker;
+	}
+
+   -- Locker.java
+
+      @Entity
+public class Locker {
+
+	@Id // pk 역할
+	@Column(name = "locker_id")
+	Long id;
+	
+	String name;
+
+}
+
+  -- Application.java
+     	// Member 조회
+		Member findMember = em.find(Member.class, 20001L);
+		log.info("LOGGER: findMember:{}", findMember.getUsername());
+		
+		Locker locker = findMember.getLocker();
+		log.info("LOGGER: locker:{}", locker.getName());
+		
+		/*
+			 EAGER 경우
+			 - Member를 find했음에도 불구하고 Locker 정보도 가져옴.
+			  따라서 엔티티 컨텍스트에 Member와 Locker 모두 존재함.
+			  결국 Locker 정보조회시 select문 실행안됨.
+		
+		     LAZY 경우
+		     - Member만 가져옴.
+			   결국 엔티티 컨텍스트에 Member만 존재함.
+			   따라서 Locker 정보조회시 select문 실행됨.
+		*/
+		//트랜잭션 종료
