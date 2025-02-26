@@ -701,3 +701,65 @@ public class Team {
 		Team findTeam = findMember.getTeam();
 		log.info("LOGGER: findTeam:{},{}", findTeam.getName(), findTeam.getLocation());
 		
+
+6) 실습2 - 다대일 양방향
+
+   # Manager.java
+     @Entity
+public class Member {
+
+	@Id // pk 역할
+	@Column(name = "member_id")
+	Long id;
+	
+	String username;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="team_id")
+	Team team;
+}
+   # Team.java
+
+      @Entity
+public class Team {
+
+	@Id // pk 역할
+	@Column(name = "team_id")
+	Long id;
+	
+	String name;
+	String location;
+	
+	//양방향
+	@OneToMany(mappedBy = "team" )
+	List<Member> members;
+
+}
+
+   # Application.java
+
+     	// Member 조회
+		Member findMember = em.find(Member.class, 20001L);
+		log.info("LOGGER: findMember:{}", findMember.getUsername());
+		
+		// 단방향: Member 이용해서 Team 접급
+		Team findTeam = findMember.getTeam();
+		log.info("LOGGER: findTeam:{},{}", findTeam.getName(), findTeam.getLocation());
+		
+		// 양방향: Team 이용해서 Member 들 접근
+		List<Member> memberList= findTeam.getMembers();
+		for (Member member : memberList) {
+			log.info("LOGGER: {}", member.getUsername());
+		}
+
+==> 양방향에서는 toString()는 사용하지 않음을 권장한다. ( 무한루프 발생 가능성 있음)
+
+    예>
+       Member            Team
+
+       Team t;           Member m;    toString(){ id+name+m.get()}
+
+      toString(){
+       return id + username + t.get();
+
+    
