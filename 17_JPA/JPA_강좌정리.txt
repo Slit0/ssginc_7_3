@@ -1049,6 +1049,64 @@ https://docs.jboss.org/hibernate/orm/7.0/querylanguage/html_single/Hibernate_Que
 			log.info("2.  N+1 문제 해결:{}", t);
 		}
 
+   6) 서브쿼리
 
+     예> 이름이 4글자인 사원의 Team 출력하시오.
+       
+       String jpql = """
+					  select t
+					  from Team as t
+					  where t IN ( select m.team   from Member as m where length(m.username)=4)
+				      """;
+		TypedQuery<Team> query =
+				em.createQuery(jpql, Team.class);
+		
+		List<Team> list = query.getResultList();
+		for(Team t : list) {
+			log.info("1. 이름이 4글자인 사원의 Team 출력:{}", t);
+		}
+
+    7) 벌크연산( INSERT/DELETE/UPDATE )
+      - INSERT는 기본적으로 지원안됨. 따라서 native 메서드를 사용해야됨.
+         em.createNativeQuery() 사용
+      - DELETE/UPDATE 지원됨.
+         em.createQuery()  사용
+
+	샘플코드:
+	 //1. 데이터 저장. native 메서드 사용
+		String jpql ="""
+					  insert into Member (id, name) values( 1001, '홍길동')
+				     """;
+		
+		Query query = em.createNativeQuery(jpql); // JDBC의 PreparedStatement와 동일한 기능 
+		int n = query.executeUpdate();
+		log.info("LOGGER: 1. insert 갯수:{}", n);
+		
+		//2. 데이터 수정. 
+		String jpql2 ="""
+					  update Member as m
+					  set m.name = ?1
+					  where m.id = ?2
+				     """;
+		
+		Query query2 = em.createQuery(jpql2); // JDBC의 PreparedStatement와 동일한 기능
+		query2.setParameter(1, "이순신");
+		query2.setParameter(2,1001);
+		int n2 = query2.executeUpdate();
+		log.info("LOGGER: 2. update 갯수:{}", n2);
+		
+		
+		//3. 데이터 삭제. 
+				String jpql3 ="""
+							  delete from Member as m
+							  where m.id = ?1
+						     """;
+				
+			Query query3 = em.createQuery(jpql3); // JDBC의 PreparedStatement와 동일한 기능
+			query3.setParameter(1,1001);
+			int n3 = query3.executeUpdate();
+			log.info("LOGGER: 3. delete 갯수:{}", n3);
+		
+   
 //////////////////////////////////////////////////////////////////////////////
 21. 
