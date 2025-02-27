@@ -983,3 +983,42 @@ https://docs.jboss.org/hibernate/orm/7.0/querylanguage/html_single/Hibernate_Que
 	            log.info("LOGGER: 1. Team:{}, cnt:{}, max:{}, min:{}, sum:{}", team, cnt, max,min , sum);
 	        }
 		
+
+  4) JPQL 조인
+   
+   3.2. Declaring joined entities 참조
+
+   가. 종류
+     - 명시적 종류 ( ANSI )
+        
+	문법:
+	     select
+	     from Member as m 
+	     JOIN Locker as x
+	     ON m.locker = x;
+
+	 Member                    Locker
+         id                         id
+	 username                   name
+	 locker
+
+     - 묵시적 조인
+             select 
+	     from Member as m
+	     JOIN m.locker as x;
+
+    ==> N+1 문제가 발생됨. 해결은 fetch 조인	
+
+   나. INNER 조인과 OUTER 조인
+
+      - OUTER 조인 : LEFT OUTER JOIN, RIGHT OUTER JOIN
+                    FULL OUTER JOIN 지원안됨.
+
+
+  5) Fetch 조인
+
+  3.2.4. Association fetching
+
+
+//////////////////////////////////////////////////////////////////////////////
+21. 
