@@ -1107,6 +1107,100 @@ https://docs.jboss.org/hibernate/orm/7.0/querylanguage/html_single/Hibernate_Que
 			int n3 = query3.executeUpdate();
 			log.info("LOGGER: 3. delete 갯수:{}", n3);
 		
-   
+  지금까지는 Hibernate 기본문법이었음.
+
 //////////////////////////////////////////////////////////////////////////////
-21. 
+21.  Spring Data JPA
+
+https://docs.spring.io/spring-data/jpa/reference/jpa.html
+
+ 1) Todo 단일 엔티티 이용한 CRUD 실습
+								JpaRepository<Todo,Long>	
+                                       TodoService                    |
+ 웹브라우저 -----> TodoController ------> TodoServiceImpl -------> TodoRepository (인터페이스)
+					
+				     				Todo(엔티티)
+
+				     TodoDTO <==> Todo
+
+ # stream API 이용
+ TodoDTO ---> Todo
+ Todo    ---> TodoDTO
+ List<TodoDTO> --> List<Todo>
+ List<Todo> --> List<TodoDTO> 
+
+
+ # JpaRepository 인터페이스내에 미리 구현된 메서드가 제공된다.
+   
+   - 전체엔티티 조회:  findAll():List
+   - 특정엔티티 조회:  findById(ID id):Optional
+   - 엔티티 저장:     save(entity)
+
+   - 엔티티 삭제
+      전체삭제:  deleteAll()
+      id로 삭제: deleteById(ID id)
+      엔티티로 삭제: delete(T entity)
+
+   - 엔티티 수정:  메서드 지원없이 더티체킹 이용.
+   - 엔티티 갯수: count()
+
+  만약에 name 이용해서 검색?
+	가. JPQL 이용
+	나. Query method 이용 ( 사용자가 직접 메서드를 구현하는 방식 )
+	  - 반드시 규칙에 맞는 메서드명을 지정해야 된다.
+          https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
+
+
+  2) Todo 엔티티 + JPQL 적용
+
+
+        //JPQL
+	//1. 조회1: 엔티티로 반환
+	@Query("select t from Todo as t")
+	List<Todo> findAllTodoList();
+	@Query("select t from Todo as t where t.id = ?1")
+	Todo findByIdTodo(Long id);
+	
+	//1. 조회2: 값 하나로 반환
+	@Query("select t.description from Todo as t")
+	List<String> findAllDescription();
+	
+	
+	//1. 조회3: 값 두개이상 반환
+	@Query("select t.id as id,  t.description as desc from Todo as t")
+	List<Map> findAllIdAndDescripion();
+
+
+
+    3) Query Methods
+
+    https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html 반드시 참조해서 사용
+
+	
+public interface EmpRepository extends JpaRepository<Emp, Long> {
+
+	//1. JpaRepository 에서 기본으로 제공하는 CRUD 메서드
+	//2. @Query(JPQL)
+	
+	//3. Query Method
+	
+	//가. ename으로 검색
+	List<Emp> findByEname(String ename);
+	
+	
+	//나. ename 또는 sal 로 검색
+	List<Emp> findByEnameOrSal(String ename, Long sal);
+	
+	//다.지정된 sal보다 작은 사원 검색
+	List<Emp> findBySalLessThan(Long sal);
+	
+	//라. ename중에서  A 글자를 포함하는 사원 검색
+	List<Emp> findByEnameContaining(String ename);
+	
+	
+	//마. comm 이 null 값을 가진 사원 검색
+	List<Emp> findByCommIsNull();
+}
+
+
+    4) QueryDSL 
