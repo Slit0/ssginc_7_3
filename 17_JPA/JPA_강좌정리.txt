@@ -1020,5 +1020,35 @@ https://docs.jboss.org/hibernate/orm/7.0/querylanguage/html_single/Hibernate_Que
   3.2.4. Association fetching
 
 
+       // N+1 문제 발생
+		String jpql ="""
+					  select m
+					  from Member as m
+					  JOIN m.team as t
+				     """;
+		TypedQuery<Member> query =
+				em.createQuery(jpql, Member.class);
+		
+		List<Member> list = query.getResultList();
+		for(Member m : list) {
+			Team t = m.getTeam();
+			log.info("1.  N+1 문제 발생:{}", t);
+		}
+		 // N+1 문제 해결
+		String jpql2 ="""
+					  select m
+					  from Member as m
+					  JOIN FETCH m.team as t
+				     """;
+		TypedQuery<Member> query2 =
+				em.createQuery(jpql2, Member.class);
+		
+		List<Member> list2 = query.getResultList();
+		for(Member m : list2) {
+			Team t = m.getTeam();
+			log.info("2.  N+1 문제 해결:{}", t);
+		}
+
+
 //////////////////////////////////////////////////////////////////////////////
 21. 
