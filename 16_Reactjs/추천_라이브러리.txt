@@ -2,6 +2,9 @@
 Zustand  ( recoil 보다 더 많이 사용됨 )
 https://zustand-demo.pmnd.rs/
 
+2) 비동기 상태관리 ( tanstack query )
+https://tanstack.com/query/latest
+
 2) 챠트
 Chart.js
 https://www.chartjs.org/docs/latest/
