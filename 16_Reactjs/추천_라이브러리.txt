@@ -1,0 +1,43 @@
+1) 상태관리 
+Zustand  ( recoil 보다 더 많이 사용됨 )
+https://zustand-demo.pmnd.rs/
+
+2) 챠트
+Chart.js
+https://www.chartjs.org/docs/latest/
+
+3) QRCode 및 Barcode
+Zxing
+https://www.npmjs.com/package/react-zxing
+
+
+4) Swiper
+https://swiperjs.com/get-started
+https://www.npmjs.com/package/react-swipeable
+https://www.npmjs.com/package/react-photoswipe-gallery
+
+5) react daum 주소
+https://www.npmjs.com/package/react-daum-postcode
+
+
+6) 리액트 로딩 ( spinner )
+https://www.npmjs.com/package/react-spinners
+
+
+7) 툴팁
+https://www.npmjs.com/package/react-tooltip
+https://www.npmjs.com/package/react-tippy
+
+8) icons
+https://react-icons.github.io/react-icons/
+
+9) I18N ( 다국어 )
+https://react.i18next.com/
+
+
+10) 쿠키 사용
+https://www.npmjs.com/package/react-cookie
+https://www.npmjs.com/package/js-cookie
+
+11) LLM
+https://www.npmjs.com/package/@nlux/react
